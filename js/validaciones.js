@@ -402,8 +402,41 @@ function inicializarProducto() {
     });
 }
 
+function inicializarAlertaStock() {
+    const stock = document.getElementById("stock");
+    const stockCritico = document.getElementById("stock-critico");
+    const alerta = document.getElementById("alerta-stock");
+
+    if (!stock || !stockCritico || !alerta) {
+        return;
+    }
+
+    function actualizar() {
+        const hayStock = stock.value !== "";
+        const hayCritico = stockCritico.value !== "";
+
+        if (!hayStock || !hayCritico) {
+            alerta.hidden = true;
+            return;
+        }
+
+        if (Number(stock.value) <= Number(stockCritico.value)) {
+            alerta.textContent = "Atención: el stock está en nivel crítico.";
+            alerta.hidden = false;
+        } else {
+            alerta.textContent = "";
+            alerta.hidden = true;
+        }
+    }
+
+    stock.addEventListener("input", actualizar);
+    stockCritico.addEventListener("input", actualizar);
+    actualizar();
+}
+
 inicializarContacto();
 inicializarLogin();
 inicializarFormularioUsuario("form-registro", "resultado-registro");
 inicializarFormularioUsuario("form-usuario", "resultado-usuario");
 inicializarProducto();
+inicializarAlertaStock();
