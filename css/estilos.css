@@ -96,6 +96,54 @@ header .logo-titulo {
 }
 
 /* ===== Presentación ===== */
+.seccion-presentacion {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 40px;
+    max-width: 1100px;
+    margin: 20px auto;
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+}
+
+.texto-presentacion,
+.imagen-portada {
+    flex: 1;
+}
+
+.titulo-presentacion {
+    color: var(--color-secundario);
+    font-size: 2.2rem;
+    margin: 0 0 15px 0;
+}
+
+.descripcion-presentacion {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+}
+
+.enlace-ver-productos {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: var(--color-principal);
+    color: var(--color-blanco);
+    text-decoration: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.enlace-ver-productos:hover {
+    background-color: var(--color-secundario);
+}
+
+.imagen-portada {
+    height: 320px;
+    object-fit: cover;
+    border-radius: 12px;
+}
 
 /* ===== Productos ===== */
 
