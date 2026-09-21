@@ -327,7 +327,48 @@ function inicializarTablaProductos() {
     });
 }
 
+function inicializarEdicionProducto() {
+    const formulario = document.getElementById("form-producto");
+
+    if (!formulario) {
+        return;
+    }
+
+    const producto = buscarProducto(new URLSearchParams(location.search).get("id"));
+
+    if (!producto) {
+        formulario.hidden = true;
+
+        const alerta = document.getElementById("alerta-stock");
+
+        if (alerta) {
+            alerta.hidden = true;
+        }
+
+        const main = document.querySelector("main");
+
+        if (main) {
+            main.appendChild(crearMensajeNoEncontrado("productos.html"));
+        }
+
+        return;
+    }
+
+    document.getElementById("codigo").value = producto.codigo;
+    document.getElementById("nombre").value = producto.nombre;
+    document.getElementById("descripcion").value = producto.descripcion;
+    document.getElementById("precio").value = producto.precio;
+    document.getElementById("stock").value = producto.stock;
+    document.getElementById("stock-critico").value = producto.stockCritico;
+    document.getElementById("categoria").value = producto.categoria;
+
+    if (typeof inicializarAlertaStock === "function") {
+        inicializarAlertaStock();
+    }
+}
+
 inicializarListadoProductos();
 inicializarDestacados();
 inicializarDetalle();
 inicializarTablaProductos();
+inicializarEdicionProducto();
