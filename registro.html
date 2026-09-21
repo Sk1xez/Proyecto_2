@@ -48,7 +48,7 @@
 
                 <h1 class="titulo-formulario">Registrar usuario</h1>
 
-                <form action="#" method="post" class="formulario-generico" novalidate>
+                <form action="#" method="post" class="formulario-generico" id="form-registro" novalidate>
                     <fieldset class="grupo-formulario">
                         <legend class="leyenda-formulario">Datos personales</legend>
 
@@ -98,11 +98,13 @@
                             <div class="grupo-campo">
                                 <label for="fecha-nacimiento" class="etiqueta-campo">Fecha de nacimiento:</label>
                                 <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" class="entrada-campo" autocomplete="bday">
+                                <p class="mensaje-error" id="error-fecha-nacimiento"></p>
                             </div>
 
                             <div class="grupo-campo">
                                 <label for="telefono" class="etiqueta-campo">Teléfono:</label>
-                                <input type="tel" id="telefono" name="telefono" class="entrada-campo" autocomplete="tel" placeholder="+56 9 1234 5678">
+                                <input type="tel" id="telefono" name="telefono" class="entrada-campo" autocomplete="tel" maxlength="9" placeholder="Ej: 912345678">
+                                <p class="mensaje-error" id="error-telefono"></p>
                             </div>
                         </div>
                     </fieldset>
@@ -137,6 +139,8 @@
 
                     <button type="submit" class="boton-enviar">Registrarse</button>
                 </form>
+
+                <p class="mensaje-exito" id="resultado-registro" hidden>Usuario registrado correctamente.</p>
 
                 <p class="enlace-registro">¿Ya tienes cuenta? <a href="login.html" class="miga-enlace">Inicia sesión</a></p>
             </section>

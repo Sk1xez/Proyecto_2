@@ -6,7 +6,10 @@ const LIMITES = {
     correo: 100,
     comentario: 500,
     claveMinima: 4,
-    claveMaxima: 10
+    claveMaxima: 10,
+    nombreUsuario: 50,
+    apellidosUsuario: 100,
+    direccion: 300
 };
 
 const MENSAJES = {
@@ -14,7 +17,10 @@ const MENSAJES = {
     maximo: "El texto es demasiado largo.",
     correoDominio: "El correo debe terminar en @duocuc.cl, @profesor.duocuc.cl o @gmail.com.",
     claveLargo: "La contraseña debe tener entre 4 y 10 caracteres.",
-    runInvalido: "El RUN no es válido."
+    runInvalido: "El RUN no es válido.",
+    claveNoCoincide: "Las contraseñas no coinciden.",
+    fechaFutura: "La fecha no puede ser en el futuro.",
+    telefonoLargo: "El teléfono debe tener 9 dígitos."
 };
 
 /* ===== Validaciones basicas ===== */
@@ -29,6 +35,19 @@ function largoMaximo(texto, maximo) {
 function largoEntre(texto, minimo, maximo) {
     const largo = texto.trim().length;
     return largo >= minimo && largo <= maximo;
+}
+
+function esFechaFutura(fecha) {
+    if (fecha === "") {
+        return false;
+    }
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const elegida = new Date(fecha + "T00:00:00");
+
+    return elegida.getTime() > hoy.getTime();
 }
 
 function correoPermitido(correo) {
@@ -232,5 +251,69 @@ function inicializarLogin() {
     });
 }
 
+/* ===== Formulario de registro y de usuario del panel ===== */
+function inicializarFormularioUsuario(idFormulario, idResultado) {
+    const formulario = document.getElementById(idFormulario);
+
+    if (!formulario) {
+        return;
+    }
+
+    const run = document.getElementById("run");
+    const nombre = document.getElementById("nombre");
+    const apellidos = document.getElementById("apellidos");
+    const correo = document.getElementById("correo");
+    const contrasena = document.getElementById("contrasena");
+    const confirmar = document.getElementById("confirmar-contrasena");
+    const fecha = document.getElementById("fecha-nacimiento");
+    const telefono = document.getElementById("telefono");
+    const tipo = document.getElementById("tipo-usuario");
+    const region = document.getElementById("region");
+    const comuna = document.getElementById("comuna");
+    const direccion = document.getElementById("direccion");
+
+    const campos = [
+        { campo: run, configuracion: { esRut: true } },
+        { campo: nombre, configuracion: { maximo: LIMITES.nombreUsuario } },
+        { campo: apellidos, configuracion: { maximo: LIMITES.apellidosUsuario } },
+        { campo: correo, configuracion: { maximo: LIMITES.correo, correoPermitido: true } },
+        { campo: contrasena, configuracion: { minimo: LIMITES.claveMinima, maximo: LIMITES.claveMaxima, mensajeLargo: MENSAJES.claveLargo } },
+        { campo: confirmar, configuracion: { igualA: function () { return contrasena.value; } } },
+        { campo: fecha, configuracion: { opcional: true, noFechaFutura: true } },
+        { campo: region, configuracion: {} },
+        { campo: comuna, configuracion: {} },
+        { campo: direccion, configuracion: { maximo: LIMITES.direccion } }
+    ];
+
+    if (telefono) {
+        campos.push({ campo: telefono, configuracion: { opcional: true, minimo: 9, maximo: 9, mensajeLargo: MENSAJES.telefonoLargo } });
+    }
+
+    if (tipo) {
+        campos.push({ campo: tipo, configuracion: {} });
+    }
+
+    configurarFormulario(idFormulario, campos, function () {
+        const resultado = document.getElementById(idResultado);
+
+        if (resultado) {
+            resultado.hidden = false;
+        }
+
+        formulario.reset();
+
+        campos.forEach(function (item) {
+            limpiarError(item.campo);
+        });
+    });
+
+    contrasena.addEventListener("blur", function () {
+        if (textoRequerido(confirmar.value)) {
+            validarCampo(confirmar, campos[5].configuracion);
+        }
+    });
+}
+
 inicializarContacto();
 inicializarLogin();
+inicializarFormularioUsuario("form-registro", "resultado-registro");
