@@ -48,14 +48,6 @@ function obtenerTodosLosUsuarios() {
     return USUARIOS.concat(leerUsuariosRegistrados());
 }
 
-function buscarUsuarioPorId(id) {
-    const numero = Number(id);
-
-    return obtenerTodosLosUsuarios().find(function (usuario) {
-        return usuario.id === numero;
-    }) || null;
-}
-
 function buscarUsuarioPorCorreo(correo) {
     const valor = String(correo).trim().toLowerCase();
 

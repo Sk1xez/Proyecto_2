@@ -254,3 +254,11 @@ body.cuerpo-admin {
 .badge-cliente {
     background-color: #7A8A6A;
 }
+
+/* ===== Vista del vendedor (solo lectura de productos) ===== */
+body.vista-vendedor #opcion-usuarios,
+body.vista-vendedor .encabezado-pagina .boton-admin-principal,
+body.vista-vendedor .tabla-admin th:last-child,
+body.vista-vendedor .tabla-admin td:last-child {
+    display: none;
+}
