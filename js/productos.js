@@ -103,7 +103,7 @@ const PRODUCTOS = [
         precio: 2990,
         stock: 25,
         stockCritico: 5,
-        imagen: "snacks.jpg"
+        imagen: "snacksparaperros.jpeg"
     }
 ];
 

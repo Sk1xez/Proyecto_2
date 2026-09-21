@@ -17,7 +17,7 @@ const USUARIOS = [
         apellidos: "Muñoz",
         correo: "vicente.munoz@duocuc.cl",
         contrasena: "1234",
-        rol: "Vendedor"
+        rol: "Administrador"
     },
     {
         id: 3,
@@ -27,6 +27,15 @@ const USUARIOS = [
         correo: "camila.silva@gmail.com",
         contrasena: "1234",
         rol: "Cliente"
+    },
+    {
+        id: 4,
+        run: "21555228",
+        nombre: "Alexis",
+        apellidos: "Valencia",
+        correo: "alexis.valencia@duocuc.cl",
+        contrasena: "1234",
+        rol: "Administrador"
     }
 ];
 
