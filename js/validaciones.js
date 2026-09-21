@@ -299,16 +299,29 @@ function inicializarLogin() {
     ];
 
     configurarFormulario("form-login", campos, function () {
-        const resultado = document.getElementById("resultado-login");
+        const sesion = iniciarSesion(correo.value.trim(), contrasena.value);
 
-        if (resultado) {
-            resultado.hidden = false;
+        if (!sesion) {
+            const error = document.getElementById("error-login");
+
+            if (error) {
+                error.textContent = "Correo o contraseña incorrectos.";
+                error.hidden = false;
+            }
+
+            return;
+        }
+
+        if (sesion.rol === "Cliente") {
+            location.replace("index.html");
+        } else {
+            location.replace("admin/index.html");
         }
     });
 }
 
 /* ===== Formulario de registro y de usuario del panel ===== */
-function inicializarFormularioUsuario(idFormulario, idResultado) {
+function inicializarFormularioUsuario(idFormulario, idResultado, alGuardar) {
     const formulario = document.getElementById(idFormulario);
 
     if (!formulario) {
@@ -351,6 +364,10 @@ function inicializarFormularioUsuario(idFormulario, idResultado) {
 
     configurarFormulario(idFormulario, campos, function () {
         const resultado = document.getElementById(idResultado);
+
+        if (alGuardar && alGuardar() === false) {
+            return;
+        }
 
         if (resultado) {
             resultado.hidden = false;
@@ -436,7 +453,45 @@ function inicializarAlertaStock() {
 
 inicializarContacto();
 inicializarLogin();
-inicializarFormularioUsuario("form-registro", "resultado-registro");
+inicializarFormularioUsuario("form-registro", "resultado-registro", function () {
+    const mensajeRegistro = document.getElementById("error-registro");
+    const run = document.getElementById("run").value.trim().toUpperCase();
+    const correo = document.getElementById("correo").value.trim();
+
+    function avisar(mensaje) {
+        if (mensajeRegistro) {
+            mensajeRegistro.textContent = mensaje;
+            mensajeRegistro.hidden = false;
+        }
+    }
+
+    if (buscarUsuarioPorCorreo(correo)) {
+        avisar("Ese correo ya está registrado.");
+        return false;
+    }
+
+    if (buscarUsuarioPorRun(run)) {
+        avisar("Ese RUN ya está registrado.");
+        return false;
+    }
+
+    if (mensajeRegistro) {
+        mensajeRegistro.hidden = true;
+        mensajeRegistro.textContent = "";
+    }
+
+    agregarUsuarioRegistrado({
+        id: proximoIdUsuario(),
+        run: run,
+        nombre: document.getElementById("nombre").value.trim(),
+        apellidos: document.getElementById("apellidos").value.trim(),
+        correo: correo,
+        contrasena: document.getElementById("contrasena").value,
+        rol: "Cliente"
+    });
+
+    return true;
+});
 inicializarFormularioUsuario("form-usuario", "resultado-usuario");
 inicializarProducto();
 inicializarAlertaStock();
