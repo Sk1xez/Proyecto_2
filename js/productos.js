@@ -271,6 +271,63 @@ function inicializarDetalle() {
     listarProductos(contenedor, relacionados, "img/productos/");
 }
 
+function inicializarTablaProductos() {
+    const tbody = document.getElementById("tabla-productos");
+
+    if (!tbody) {
+        return;
+    }
+
+    PRODUCTOS.forEach(function (producto) {
+        const fila = document.createElement("tr");
+
+        if (producto.stock <= producto.stockCritico) {
+            fila.className = "fila-stock-critico";
+        }
+
+        const celdaCodigo = document.createElement("td");
+        celdaCodigo.textContent = producto.codigo;
+
+        const celdaNombre = document.createElement("td");
+        celdaNombre.textContent = producto.nombre;
+
+        const celdaCategoria = document.createElement("td");
+        celdaCategoria.textContent = CATEGORIAS[producto.categoria] || producto.categoria;
+
+        const celdaPrecio = document.createElement("td");
+        celdaPrecio.textContent = formatoPrecio(producto.precio);
+
+        const celdaStock = document.createElement("td");
+        celdaStock.textContent = String(producto.stock);
+
+        const celdaAcciones = document.createElement("td");
+
+        const enlaceEditar = document.createElement("a");
+        enlaceEditar.className = "boton-admin-secundario enlace-editar";
+        enlaceEditar.href = "producto-editar.html?id=" + producto.id;
+        enlaceEditar.textContent = "Editar";
+
+        const botonEliminar = document.createElement("button");
+        botonEliminar.type = "button";
+        botonEliminar.className = "boton-admin-eliminar boton-eliminar-producto";
+        botonEliminar.textContent = "Eliminar";
+        botonEliminar.dataset.id = producto.id;
+
+        celdaAcciones.appendChild(enlaceEditar);
+        celdaAcciones.appendChild(botonEliminar);
+
+        fila.appendChild(celdaCodigo);
+        fila.appendChild(celdaNombre);
+        fila.appendChild(celdaCategoria);
+        fila.appendChild(celdaPrecio);
+        fila.appendChild(celdaStock);
+        fila.appendChild(celdaAcciones);
+
+        tbody.appendChild(fila);
+    });
+}
+
 inicializarListadoProductos();
 inicializarDestacados();
 inicializarDetalle();
+inicializarTablaProductos();

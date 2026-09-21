@@ -183,6 +183,10 @@ body.cuerpo-admin {
     background-color: #F7F3EC;
 }
 
+.tabla-admin .fila-stock-critico td {
+    background-color: #FFF3CD;
+}
+
 /* ===== Formulario de producto ===== */
 .formulario-producto {
     max-width: 800px;
