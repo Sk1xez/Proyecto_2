@@ -183,6 +183,27 @@ body.cuerpo-admin {
     background-color: #F7F3EC;
 }
 
+/* ===== Formulario de producto ===== */
+.formulario-producto {
+    max-width: 800px;
+}
+
+.alerta-stock {
+    background-color: #FFF3CD;
+    border: 1px solid #FFC107;
+    color: #856404;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    max-width: 800px;
+}
+
+.acciones-formulario {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
 @media (max-width: 768px) {
     body.cuerpo-admin {
         flex-direction: column;
