@@ -1084,3 +1084,10 @@ footer .logo-titulo {
         padding: 20px;
     }
 }
+
+@media (min-width: 1440px) {
+    .imagen-historia {
+        width: auto;
+        flex: 1;
+    }
+}
