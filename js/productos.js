@@ -106,3 +106,65 @@ const PRODUCTOS = [
         imagen: "snacks.jpg"
     }
 ];
+
+function formatoPrecio(precio) {
+    return "$" + precio.toLocaleString("es-CL");
+}
+
+function crearTarjeta(producto, baseImagen) {
+    const article = document.createElement("article");
+    article.className = "producto";
+
+    const enlace = document.createElement("a");
+    enlace.className = "enlace-producto";
+    enlace.href = "detalle-producto.html?id=" + producto.id;
+
+    const imagen = document.createElement("img");
+    imagen.src = baseImagen + producto.imagen;
+    imagen.alt = producto.nombre;
+    imagen.className = "imagen-producto";
+
+    const nombre = document.createElement("h3");
+    nombre.className = "nombre-producto";
+    nombre.textContent = producto.nombre;
+
+    enlace.appendChild(imagen);
+    enlace.appendChild(nombre);
+    article.appendChild(enlace);
+
+    const precio = document.createElement("p");
+    precio.className = "precio-producto";
+    precio.textContent = formatoPrecio(producto.precio);
+    article.appendChild(precio);
+
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "boton-agregar";
+    boton.textContent = "Añadir";
+    boton.dataset.id = producto.id;
+    article.appendChild(boton);
+
+    return article;
+}
+
+function listarProductos(contenedor, productos, baseImagen) {
+    if (!contenedor) {
+        return;
+    }
+
+    productos.forEach(function (producto) {
+        contenedor.appendChild(crearTarjeta(producto, baseImagen));
+    });
+}
+
+function inicializarListadoProductos() {
+    const contenedor = document.getElementById("lista-productos");
+
+    if (!contenedor) {
+        return;
+    }
+
+    listarProductos(contenedor, PRODUCTOS, "img/productos/");
+}
+
+inicializarListadoProductos();
