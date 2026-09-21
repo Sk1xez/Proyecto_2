@@ -83,6 +83,106 @@ body.cuerpo-admin {
     margin: 0;
 }
 
+/* ===== Botones del panel ===== */
+.boton-admin-principal {
+    display: inline-block;
+    background-color: var(--color-principal);
+    color: var(--color-blanco);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+}
+
+.boton-admin-principal:hover {
+    background-color: var(--color-secundario);
+}
+
+.boton-admin-secundario {
+    display: inline-block;
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+}
+
+.boton-admin-secundario:hover {
+    background-color: var(--color-principal);
+}
+
+.boton-admin-eliminar {
+    background-color: #C62828;
+    color: var(--color-blanco);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+}
+
+.boton-admin-eliminar:hover {
+    background-color: #8E1D1D;
+}
+
+/* ===== Tabla del panel ===== */
+.encabezado-pagina {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.tabla-contenedor {
+    overflow-x: auto;
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-admin {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.tabla-admin caption {
+    text-align: left;
+    padding: 15px 20px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--color-secundario);
+}
+
+.tabla-admin th {
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.tabla-admin td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.tabla-admin tbody tr:nth-child(even) {
+    background-color: #F7F3EC;
+}
+
 @media (max-width: 768px) {
     body.cuerpo-admin {
         flex-direction: column;
