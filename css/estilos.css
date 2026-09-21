@@ -481,6 +481,117 @@ header .logo-titulo {
     font-weight: bold;
 }
 
+/* ===== Blogs ===== */
+.seccion-blogs {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.contenedor-blogs {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.tarjeta-blog {
+    display: flex;
+    background-color: #F2F2F2;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tarjeta-blog-invertida {
+    flex-direction: row-reverse;
+}
+
+.texto-blog {
+    flex: 1;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+}
+
+.titulo-blog {
+    margin: 0;
+    color: var(--color-secundario);
+    font-size: 1.4rem;
+}
+
+.descripcion-blog {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.imagen-blog {
+    flex: 1;
+    object-fit: cover;
+    min-height: 220px;
+}
+
+/* ===== Detalle de blog ===== */
+.articulo-blog {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.articulo-blog p {
+    line-height: 1.8;
+    font-size: 1.02rem;
+}
+
+.figura-blog {
+    margin: 0 0 20px 0;
+}
+
+.imagen-articulo {
+    width: 100%;
+    border-radius: 12px;
+}
+
+.pie-imagen {
+    margin: 8px 0 0 0;
+    font-size: 0.9rem;
+    color: #666666;
+    text-align: center;
+}
+
+.figura-video {
+    margin: 25px 0;
+}
+
+.marco-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.marco-video iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.enlace-volver {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: var(--color-secundario);
+    font-weight: bold;
+}
+
+.enlace-volver:hover {
+    color: var(--color-principal);
+}
+
 /* ===== Footer ===== */
 footer {
     background-color: var(--color-texto);
@@ -952,5 +1063,24 @@ footer .logo-titulo {
 
     .contenedor-mision-vision {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ===== Responsive Blogs y detalle ===== */
+@media (max-width: 768px) {
+    .tarjeta-blog {
+        flex-direction: column;
+    }
+
+    .tarjeta-blog-invertida {
+        flex-direction: column;
+    }
+
+    .imagen-blog {
+        min-height: 180px;
+    }
+
+    .articulo-blog {
+        padding: 20px;
     }
 }
