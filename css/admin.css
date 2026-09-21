@@ -1,1 +1,110 @@
 /* ===== Panel de administrador ===== */
+body.cuerpo-admin {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.menu-admin {
+    width: 220px;
+    min-height: 100vh;
+    flex-shrink: 0;
+    background-color: var(--color-texto);
+    color: var(--color-blanco);
+    padding: 20px 0;
+}
+
+.logo-admin {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--color-blanco);
+    padding: 0 20px 20px 20px;
+}
+
+.lista-admin {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.lista-admin li a {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--color-blanco);
+    transition: background-color 0.2s ease;
+}
+
+.lista-admin li a:hover {
+    background-color: var(--color-principal);
+}
+
+.lista-admin li a[aria-current="page"] {
+    background-color: var(--color-secundario);
+}
+
+.contenido-admin {
+    flex: 1;
+    background-color: var(--color-fondo-claro);
+    padding: 25px;
+}
+
+.titulo-admin {
+    color: var(--color-secundario);
+    margin: 0 0 25px 0;
+}
+
+.tarjetas-admin {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.tarjeta-admin {
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    min-width: 180px;
+    text-align: center;
+}
+
+.titulo-tarjeta-admin {
+    color: var(--color-secundario);
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+}
+
+.numero-tarjeta-admin {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--color-principal);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    body.cuerpo-admin {
+        flex-direction: column;
+    }
+
+    .menu-admin {
+        width: 100%;
+        min-height: auto;
+        padding: 10px;
+    }
+
+    .logo-admin {
+        padding: 0 10px 10px 10px;
+    }
+
+    .lista-admin {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .lista-admin li a {
+        padding: 10px 14px;
+    }
+}
