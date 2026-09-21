@@ -45,7 +45,7 @@
                 <h1 class="titulo-formulario">Contacto</h1>
                 <p class="descripcion-contacto">¿Tienes dudas o consultas sobre nuestras mascotas o productos? Escríbenos y te responderemos a la brevedad.</p>
 
-                <form action="#" method="POST" class="formulario-contacto" novalidate>
+                <form action="#" method="POST" class="formulario-contacto" id="form-contacto" novalidate>
                     <div class="grupo-campo">
                         <label for="nombre" class="etiqueta-campo">Nombre completo:</label>
                         <input type="text" id="nombre" name="nombre" class="entrada-campo" autocomplete="given-name" maxlength="100" placeholder="Ej: Maria González" required>
@@ -73,11 +73,14 @@
                     <div class="grupo-campo">
                         <label for="comentario" class="etiqueta-campo">Comentario:</label>
                         <textarea id="comentario" name="comentario" rows="4" class="entrada-campo area-texto" maxlength="500" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                        <p class="contador-caracteres" id="contador-comentario">0 / 500</p>
                         <p class="mensaje-error" id="error-comentario"></p>
                     </div>
 
                     <button type="submit" class="boton-enviar">Enviar Mensaje</button>
                 </form>
+
+                <p class="mensaje-exito" id="resultado-contacto" hidden>Mensaje enviado correctamente.</p>
             </section>
         </main>
 

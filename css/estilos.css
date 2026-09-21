@@ -371,6 +371,24 @@ header .logo-titulo {
     min-height: 1em;
 }
 
+.campo-invalido {
+    border-color: #C62828 !important;
+}
+
+.campo-valido {
+    border-color: #2E7D32 !important;
+}
+
+.mensaje-exito {
+    background-color: #E8F5E9;
+    border: 1px solid #2E7D32;
+    color: #1B5E20;
+    padding: 10px 14px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
 .enlace-registro {
     text-align: center;
     margin: 15px 0 0 0;
