@@ -379,6 +379,16 @@ header .logo-titulo {
     border-color: #2E7D32 !important;
 }
 
+.aviso-no-encontrado {
+    background-color: #FFEBEE;
+    border: 1px solid #F5C6CB;
+    color: #721C24;
+    padding: 14px 18px;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 .mensaje-exito {
     background-color: #E8F5E9;
     border: 1px solid #2E7D32;

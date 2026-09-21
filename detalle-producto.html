@@ -50,7 +50,7 @@
                         <a href="productos.html" class="miga-enlace">Productos</a>
                     </li>
                     <li>
-                        <span class="miga-actual">Croquetas para Perro Adulto</span>
+                        <span class="miga-actual" id="miga-producto">Croquetas para Perro Adulto</span>
                     </li>
                 </ol>
             </nav>
@@ -58,11 +58,6 @@
             <article class="ficha-producto">
                 <div class="galeria-producto">
                     <img src="img/productos/alimento.jpg" alt="Croquetas para perro adulto" class="imagen-principal" id="imagen-detalle">
-                    <div class="miniaturas">
-                        <img src="img/productos/alimento.jpg" alt="Croquetas para perro adulto" class="miniatura">
-                        <img src="img/productos/snacks.jpg" alt="Snacks para mascotas" class="miniatura">
-                        <img src="img/productos/pelota.jpg" alt="Pelota para mascotas" class="miniatura">
-                    </div>
                 </div>
 
                 <div class="informacion-producto">
@@ -93,35 +88,7 @@
             <section class="seccion-productos">
                 <h2 class="titulo-seccion">Productos Relacionados</h2>
 
-                <div class="contenedor-productos">
-                    <article class="producto">
-                        <a href="detalle-producto.html?id=2" class="enlace-producto">
-                            <img src="img/productos/alimento-gato.avif" alt="Alimento para gatos" class="imagen-producto">
-                            <h3 class="nombre-producto">Alimento para Gato</h3>
-                        </a>
-                    </article>
-
-                    <article class="producto">
-                        <a href="detalle-producto.html?id=3" class="enlace-producto">
-                            <img src="img/productos/cama.avif" alt="Cama suave para mascotas" class="imagen-producto">
-                            <h3 class="nombre-producto">Cama Suave para Mascotas</h3>
-                        </a>
-                    </article>
-
-                    <article class="producto">
-                        <a href="detalle-producto.html?id=4" class="enlace-producto">
-                            <img src="img/productos/collar.avif" alt="Collar para mascotas" class="imagen-producto">
-                            <h3 class="nombre-producto">Collar para Mascotas</h3>
-                        </a>
-                    </article>
-
-                    <article class="producto">
-                        <a href="detalle-producto.html?id=5" class="enlace-producto">
-                            <img src="img/productos/juguete.jpg" alt="Hueso de juguete para perros" class="imagen-producto">
-                            <h3 class="nombre-producto">Hueso de Juguete</h3>
-                        </a>
-                    </article>
-                </div>
+                <div class="contenedor-productos" id="lista-relacionados"></div>
             </section>
         </main>
 
@@ -149,5 +116,6 @@
             <p class="footer-redes">Síguenos en redes sociales: Facebook · Instagram · Twitter</p>
             <p class="footer-contacto">Santiago, Chile · contacto@petshopchile.cl</p>
         </footer>
+    <script src="js/productos.js" defer></script>
     </body>
 </html>

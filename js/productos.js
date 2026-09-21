@@ -177,5 +177,100 @@ function inicializarDestacados() {
     listarProductos(contenedor, PRODUCTOS.slice(0, 3), "img/productos/");
 }
 
+function buscarProducto(id) {
+    const numero = Number(id);
+
+    if (Number.isNaN(numero)) {
+        return null;
+    }
+
+    return PRODUCTOS.find(function (producto) {
+        return producto.id === numero;
+    }) || null;
+}
+
+function crearMensajeNoEncontrado(destino) {
+    const aviso = document.createElement("p");
+    aviso.className = "aviso-no-encontrado";
+    aviso.textContent = "Producto no encontrado. ";
+
+    const enlace = document.createElement("a");
+    enlace.href = destino;
+    enlace.textContent = "Volver al listado";
+    enlace.className = "miga-enlace";
+
+    aviso.appendChild(enlace);
+
+    return aviso;
+}
+
+function inicializarDetalle() {
+    const contenedor = document.getElementById("lista-relacionados");
+
+    if (!contenedor) {
+        return;
+    }
+
+    const producto = buscarProducto(new URLSearchParams(location.search).get("id"));
+
+    if (!producto) {
+        const ficha = document.querySelector(".ficha-producto");
+
+        if (ficha) {
+            ficha.hidden = true;
+        }
+
+        const seccion = contenedor.closest("section");
+
+        if (seccion) {
+            seccion.hidden = true;
+        }
+
+        const main = document.querySelector("main");
+
+        if (main) {
+            main.appendChild(crearMensajeNoEncontrado("productos.html"));
+        }
+
+        return;
+    }
+
+    document.title = "PetShop Chile - " + producto.nombre;
+
+    const nombre = document.getElementById("nombre-detalle");
+    const precio = document.getElementById("precio-detalle");
+    const descripcion = document.getElementById("descripcion-detalle");
+    const imagen = document.getElementById("imagen-detalle");
+    const miga = document.getElementById("miga-producto");
+
+    if (nombre) {
+        nombre.textContent = producto.nombre;
+    }
+
+    if (precio) {
+        precio.textContent = formatoPrecio(producto.precio);
+    }
+
+    if (descripcion) {
+        descripcion.textContent = producto.descripcion;
+    }
+
+    if (imagen) {
+        imagen.src = "img/productos/" + producto.imagen;
+        imagen.alt = producto.nombre;
+    }
+
+    if (miga) {
+        miga.textContent = producto.nombre;
+    }
+
+    const relacionados = PRODUCTOS.filter(function (productoRelacionado) {
+        return productoRelacionado.categoria === producto.categoria && productoRelacionado.id !== producto.id;
+    }).slice(0, 4);
+
+    listarProductos(contenedor, relacionados, "img/productos/");
+}
+
 inicializarListadoProductos();
 inicializarDestacados();
+inicializarDetalle();
