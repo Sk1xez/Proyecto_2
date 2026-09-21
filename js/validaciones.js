@@ -13,7 +13,8 @@ const MENSAJES = {
     requerido: "Este campo es obligatorio.",
     maximo: "El texto es demasiado largo.",
     correoDominio: "El correo debe terminar en @duocuc.cl, @profesor.duocuc.cl o @gmail.com.",
-    claveLargo: "La contraseña debe tener entre 4 y 10 caracteres."
+    claveLargo: "La contraseña debe tener entre 4 y 10 caracteres.",
+    runInvalido: "El RUN no es válido."
 };
 
 /* ===== Validaciones basicas ===== */
@@ -35,6 +36,42 @@ function correoPermitido(correo) {
     return DOMINIOS_CORREO.some(function (dominio) {
         return valor.endsWith(dominio);
     });
+}
+
+/* ===== Validacion del RUN ===== */
+function calcularDigitoVerificador(cuerpo) {
+    let suma = 0;
+    let multiplicador = 2;
+
+    for (let i = cuerpo.length - 1; i >= 0; i--) {
+        suma += Number(cuerpo[i]) * multiplicador;
+        multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+    }
+
+    const resto = suma % 11;
+    let digito = 11 - resto;
+
+    if (digito === 11) {
+        digito = 0;
+    } else if (digito === 10) {
+        digito = "K";
+    }
+
+    return String(digito);
+}
+
+function rutValido(run) {
+    const valor = run.trim().toUpperCase();
+
+    if (!/^\d{6,8}[0-9K]$/.test(valor)) {
+        return false;
+    }
+
+    const cuerpo = valor.slice(0, -1);
+    const digitoEsperado = valor.slice(-1);
+    const digitoCalculado = calcularDigitoVerificador(cuerpo);
+
+    return digitoEsperado === digitoCalculado;
 }
 
 /* ===== Mostrar y limpiar errores ===== */
