@@ -48,12 +48,14 @@
                 <form action="#" method="POST" class="formulario-contacto">
                     <div class="grupo-campo">
                         <label for="nombre" class="etiqueta-campo">Nombre completo:</label>
-                        <input type="text" id="nombre" name="nombre" class="entrada-campo" placeholder="Ej: Maria González" required>
+                        <input type="text" id="nombre" name="nombre" class="entrada-campo" autocomplete="given-name" maxlength="100" placeholder="Ej: Maria González" required>
+                        <p class="mensaje-error" id="error-nombre"></p>
                     </div>
 
                     <div class="grupo-campo">
                         <label for="email" class="etiqueta-campo">Correo electrónico:</label>
-                        <input type="email" id="email" name="email" class="entrada-campo" placeholder="ejemplo@correo.cl" required>
+                        <input type="email" id="email" name="email" class="entrada-campo" autocomplete="email" maxlength="100" placeholder="ejemplo@correo.cl" required>
+                        <p class="mensaje-error" id="error-email"></p>
                     </div>
 
                     <div class="grupo-campo">
@@ -65,11 +67,13 @@
                             <option value="servicios">Reserva de Servicios / Peluquería</option>
                             <option value="reclamo">Sugerencias o Reclamos</option>
                         </select>
+                        <p class="mensaje-error" id="error-asunto"></p>
                     </div>
 
                     <div class="grupo-campo">
                         <label for="comentario" class="etiqueta-campo">Comentario:</label>
-                        <textarea id="comentario" name="comentario" rows="4" class="entrada-campo area-texto" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                        <textarea id="comentario" name="comentario" rows="4" class="entrada-campo area-texto" maxlength="500" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                        <p class="mensaje-error" id="error-comentario"></p>
                     </div>
 
                     <button type="submit" class="boton-enviar">Enviar Mensaje</button>
