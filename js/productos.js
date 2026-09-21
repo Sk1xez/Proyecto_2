@@ -142,6 +142,11 @@ function crearTarjeta(producto, baseImagen) {
     boton.className = "boton-agregar";
     boton.textContent = "Añadir";
     boton.dataset.id = producto.id;
+
+    if (producto.stock === 0) {
+        boton.disabled = true;
+    }
+
     article.appendChild(boton);
 
     return article;

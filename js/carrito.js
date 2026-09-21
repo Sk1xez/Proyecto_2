@@ -87,4 +87,82 @@ function actualizarContadorCarrito() {
     contador.textContent = String(contarUnidades());
 }
 
+function manejarAgregar(evento) {
+    const boton = evento.target.closest(".boton-agregar");
+
+    if (!boton || boton.disabled) {
+        return;
+    }
+
+    const id = Number(boton.dataset.id);
+    const producto = buscarProducto(id);
+
+    if (!producto) {
+        return;
+    }
+
+    const linea = leerCarrito().find(function (lineaActual) {
+        return lineaActual.id === id;
+    });
+
+    if (linea && linea.cantidad >= producto.stock) {
+        boton.textContent = "Stock máximo";
+        setTimeout(function () {
+            boton.textContent = "Añadir";
+        }, 1200);
+        return;
+    }
+
+    agregarProducto(id, 1);
+    actualizarContadorCarrito();
+
+    boton.textContent = "Añadido";
+    setTimeout(function () {
+        boton.textContent = "Añadir";
+    }, 1200);
+}
+
+function configurarBotonesAgregar(contenedor) {
+    if (!contenedor) {
+        return;
+    }
+
+    contenedor.addEventListener("click", manejarAgregar);
+}
+
+function configurarBotonDetalle() {
+    const boton = document.getElementById("boton-agregar");
+    const selector = document.getElementById("cantidad");
+
+    if (!boton || !selector) {
+        return;
+    }
+
+    boton.addEventListener("click", function () {
+        const producto = buscarProducto(new URLSearchParams(location.search).get("id"));
+        const cantidad = Number(selector.value);
+
+        if (!producto || producto.stock === 0 || cantidad < 1 || cantidad > producto.stock) {
+            boton.textContent = "Stock no disponible";
+            setTimeout(function () {
+                boton.textContent = "Añadir al carrito";
+            }, 1500);
+            return;
+        }
+
+        agregarProducto(producto.id, cantidad);
+        actualizarContadorCarrito();
+
+        boton.textContent = "Añadido";
+        setTimeout(function () {
+            boton.textContent = "Añadir al carrito";
+        }, 1200);
+    });
+}
+
+configurarBotonesAgregar(document.getElementById("lista-productos"));
+configurarBotonesAgregar(document.getElementById("lista-destacados"));
+configurarBotonesAgregar(document.getElementById("lista-relacionados"));
+configurarBotonDetalle();
+
 actualizarContadorCarrito();
