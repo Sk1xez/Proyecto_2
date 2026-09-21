@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PetShop Chile - Usuarios</title>
+        <link rel="stylesheet" href="../css/estilos.css">
+        <link rel="stylesheet" href="../css/admin.css">
+    </head>
+    <body class="cuerpo-admin">
+        <!-- menu lateral del panel -->
+        <aside class="menu-admin">
+            <div class="logo-admin">PetShop Chile</div>
+
+            <nav>
+                <ul class="lista-admin">
+                    <li id="opcion-dashboard" class="opcion-admin">
+                        <a href="index.html">Dashboard</a>
+                    </li>
+                    <li id="opcion-productos" class="opcion-admin">
+                        <a href="productos.html">Productos</a>
+                    </li>
+                    <li id="opcion-usuarios" class="opcion-admin">
+                        <a href="usuarios.html" aria-current="page">Usuarios</a>
+                    </li>
+                    <li id="opcion-tienda" class="opcion-admin">
+                        <a href="../index.html">Volver a la tienda</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- contenido principal del panel -->
+        <main class="contenido-admin">
+            <div class="encabezado-pagina">
+                <h1 class="titulo-admin">Usuarios</h1>
+                <a href="usuario-nuevo.html" class="boton-admin-principal">Nuevo usuario</a>
+            </div>
+
+            <!-- tabla de usuarios del panel -->
+            <div class="tabla-contenedor">
+                <table class="tabla-admin">
+                    <caption>Listado de usuarios</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">RUN</th>
+                            <th scope="col">Nombre completo</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Tipo de usuario</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-usuarios">
+                        <tr>
+                            <td>19011022K</td>
+                            <td>Paolo Muñoz</td>
+                            <td>paolo.munoz@duoc.cl</td>
+                            <td><span class="badge-usuario badge-admin">Administrador</span></td>
+                            <td>
+                                <a href="usuario-editar.html?id=1" class="boton-admin-secundario enlace-editar">Editar</a>
+                                <button type="button" class="boton-admin-eliminar boton-eliminar-usuario">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>17345678K</td>
+                            <td>Vicente Muñoz</td>
+                            <td>vicente.munoz@duoc.cl</td>
+                            <td><span class="badge-usuario badge-vendedor">Vendedor</span></td>
+                            <td>
+                                <a href="usuario-editar.html?id=2" class="boton-admin-secundario enlace-editar">Editar</a>
+                                <button type="button" class="boton-admin-eliminar boton-eliminar-usuario">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>18569874K</td>
+                            <td>Alexis Valencia</td>
+                            <td>alexis.valencia@duoc.cl</td>
+                            <td><span class="badge-usuario badge-admin">Administrador</span></td>
+                            <td>
+                                <a href="usuario-editar.html?id=3" class="boton-admin-secundario enlace-editar">Editar</a>
+                                <button type="button" class="boton-admin-eliminar boton-eliminar-usuario">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>20123456K</td>
+                            <td>Camila Silva</td>
+                            <td>camila.silva@gmail.com</td>
+                            <td><span class="badge-usuario badge-cliente">Cliente</span></td>
+                            <td>
+                                <a href="usuario-editar.html?id=4" class="boton-admin-secundario enlace-editar">Editar</a>
+                                <button type="button" class="boton-admin-eliminar boton-eliminar-usuario">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>19987654K</td>
+                            <td>Mateo Silva</td>
+                            <td>mateo.silva@gmail.com</td>
+                            <td><span class="badge-usuario badge-cliente">Cliente</span></td>
+                            <td>
+                                <a href="usuario-editar.html?id=5" class="boton-admin-secundario enlace-editar">Editar</a>
+                                <button type="button" class="boton-admin-eliminar boton-eliminar-usuario">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </body>
+</html>
