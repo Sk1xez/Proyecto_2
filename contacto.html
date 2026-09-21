@@ -1,71 +1,105 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetShop Chile - Artículos y Servicios para Mascotas</title>
-    <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PetShop Chile - Contacto</title>
+        <link rel="stylesheet" href="css/estilos.css">
+    </head>
+    <body>
+        <header>
+            <a href="index.html" class="logo-enlace">
+                <span class="logo-titulo">PetShop Chile</span>
+            </a>
 
-    <header class = "encabezado">
-        <h1 class = "Titulo">Bienvenido a PetShop Chile</h1>
-        <p class = "Subtitulo">Tu tienda de confianza para el cuidado y bienestar de tus mascotas.</p>
-    </header>
+            <nav class="menu-principal">
+                <ul class="menu-lista">
+                    <li>
+                        <a href="index.html" class="menu-enlace">Home</a>
+                    </li>
+                    <li>
+                        <a href="productos.html" class="menu-enlace">Productos</a>
+                    </li>
+                    <li>
+                        <a href="nosotros.html" class="menu-enlace">Nosotros</a>
+                    </li>
+                    <li>
+                        <a href="blogs.html" class="menu-enlace">Blogs</a>
+                    </li>
+                    <li>
+                        <a href="contacto.html" class="menu-enlace" aria-current="page">Contacto</a>
+                    </li>
+                </ul>
+            </nav>
 
-    <hr>
-
-    <main class="contenedor-principal">
-
-        <section id="historia" class="seccion-historia">
-            <h2 class="titulo-seccion">1. Nuestra Historia</h2>
-            <div class="contenido-historia">
-                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=500" alt="Perro feliz en nuestra tienda" class="imagen-historia">
-                <div class="texto-historia">
-                    <p><strong>PetShop Chile</strong> nació en el año <strong>2018</strong> en la ciudad de Santiago.Fue fundada por los hermanos <strong>Camila y Mateo Silva</strong>, dos apasionados veterinarios que buscaban ofrecer alimentos saludables, accesorios de alta calidad y un trato digno para todas las mascotas del país.</p>
-                    <p>Lo que comenzó como una pequeña tienda de barrio, con los años creció gracias a la confianza y recomendación de nuestros clientes.</p>
-                </div>
+            <div class="acciones-usuario">
+                <a href="login.html" class="enlace-accion">Iniciar sesión</a>
+                <a href="registro.html" class="enlace-accion">Registrar usuario</a>
+                <a href="carrito.html" class="enlace-carrito">Carrito (<span id="contador-carrito">0</span>)</a>
             </div>
-        </section>
+        </header>
 
-    
-<section id="contacto" class="seccion-contacto">
-    <h2 class="titulo-seccion">Contacto</h2>
-    <p class="descripcion-contacto">¿Tienes dudas o consultas sobre nuestras mascotas o productos? Escríbenos y te responderemos a la brevedad.</p>
+        <!-- contenido principal: formulario de contacto -->
+        <main>
+            <section class="tarjeta-formulario">
+                <h1 class="titulo-formulario">Contacto</h1>
+                <p class="descripcion-contacto">¿Tienes dudas o consultas sobre nuestras mascotas o productos? Escríbenos y te responderemos a la brevedad.</p>
 
-    <form action="#" method="POST" class="formulario-contacto">
-        
-        <div class="grupo-campo">
-            <label for="nombre" class="etiqueta-campo">Nombre completo:</label>
-            <input type="text" id="nombre" name="nombre" class="entrada-campo" placeholder="Ej: Maria González" required>
-        </div>
+                <form action="#" method="POST" class="formulario-contacto">
+                    <div class="grupo-campo">
+                        <label for="nombre" class="etiqueta-campo">Nombre completo:</label>
+                        <input type="text" id="nombre" name="nombre" class="entrada-campo" placeholder="Ej: Maria González" required>
+                    </div>
 
-        <div class="grupo-campo">
-            <label for="email" class="etiqueta-campo">Correo electrónico:</label>
-            <input type="email" id="email" name="email" class="entrada-campo" placeholder="ejemplo@correo.cl" required>
-        </div>
+                    <div class="grupo-campo">
+                        <label for="email" class="etiqueta-campo">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" class="entrada-campo" placeholder="ejemplo@correo.cl" required>
+                    </div>
 
-        <div class="grupo-campo">
-            <label for="asunto" class="etiqueta-campo">Asunto:</label>
-            <select id="asunto" name="asunto" class="entrada-campo" required>
-                <option value="" disabled selected>Selecciona una opción</option>
-                <option value="consulta">Consulta General</option>
-                <option value="productos">Información de Productos</option>
-                <option value="servicios">Reserva de Servicios / Peluquería</option>
-                <option value="reclamo">Sugerencias o Reclamos</option>
-            </select>
-        </div>
+                    <div class="grupo-campo">
+                        <label for="asunto" class="etiqueta-campo">Asunto:</label>
+                        <select id="asunto" name="asunto" class="entrada-campo" required>
+                            <option value="" disabled selected>Selecciona una opción</option>
+                            <option value="consulta">Consulta General</option>
+                            <option value="productos">Información de Productos</option>
+                            <option value="servicios">Reserva de Servicios / Peluquería</option>
+                            <option value="reclamo">Sugerencias o Reclamos</option>
+                        </select>
+                    </div>
 
-        <div class="grupo-campo">
-            <label for="mensaje" class="etiqueta-campo">Mensaje:</label>
-            <textarea id="mensaje" name="mensaje" rows="4" class="entrada-campo area-texto" placeholder="Escribe tu mensaje aquí..." required></textarea>
-        </div>
+                    <div class="grupo-campo">
+                        <label for="comentario" class="etiqueta-campo">Comentario:</label>
+                        <textarea id="comentario" name="comentario" rows="4" class="entrada-campo area-texto" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                    </div>
 
-        <button type="submit" class="boton-enviar">Enviar Mensaje</button>
+                    <button type="submit" class="boton-enviar">Enviar Mensaje</button>
+                </form>
+            </section>
+        </main>
 
-    </form>
-</section>
-    </main>
-</body>
+        <!-- pie de pagina: enlaces utiles, redes sociales y contacto -->
+        <footer>
+            <a href="index.html" class="logo-enlace">
+                <span class="logo-titulo">PetShop Chile</span>
+            </a>
+            <p class="footer-derechos">© 2026 PetShop Chile</p>
+
+            <nav class="menu-footer">
+                <ul class="menu-footer-lista">
+                    <li>
+                        <a href="productos.html" class="footer-enlace">Productos</a>
+                    </li>
+                    <li>
+                        <a href="nosotros.html" class="footer-enlace">Nosotros</a>
+                    </li>
+                    <li>
+                        <a href="contacto.html" class="footer-enlace">Contacto</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <p class="footer-redes">Síguenos en redes sociales: Facebook · Instagram · Twitter</p>
+            <p class="footer-contacto">Santiago, Chile · contacto@petshopchile.cl</p>
+        </footer>
+    </body>
 </html>
-
