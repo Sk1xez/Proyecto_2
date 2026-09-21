@@ -219,6 +219,105 @@ header .logo-titulo {
     background-color: var(--color-secundario);
 }
 
+/* ===== Detalle ===== */
+.ficha-producto {
+    display: flex;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    padding: 20px;
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+}
+
+.galeria-producto,
+.informacion-producto {
+    flex: 1;
+}
+
+.imagen-principal {
+    width: 100%;
+    border-radius: 12px;
+}
+
+.miniaturas {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.miniatura {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.nombre-detalle {
+    font-size: 2rem;
+    color: var(--color-secundario);
+    margin-top: 0;
+}
+
+.precio-detalle {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--color-principal);
+    margin: 10px 0 15px 0;
+}
+
+.descripcion-detalle {
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.campo-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.etiqueta-cantidad {
+    font-weight: bold;
+}
+
+.select-cantidad {
+    padding: 10px 12px;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    font-family: inherit;
+    background-color: var(--color-blanco);
+}
+
+.migas-pan {
+    max-width: 1100px;
+    margin: 20px auto 0;
+}
+
+.migas-pan-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.migas-pan-lista li + li::before {
+    content: "/";
+    margin: 0 12px;
+    color: var(--color-borde);
+}
+
+.miga-enlace {
+    text-decoration: none;
+    color: var(--color-secundario);
+}
+
+.miga-actual {
+    color: var(--color-texto);
+}
+
 /* ===== Footer ===== */
 footer {
     background-color: var(--color-texto);
@@ -274,6 +373,10 @@ footer .logo-titulo {
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
+    .ficha-producto {
+        flex-direction: column;
+    }
+
     header {
         flex-direction: column;
         align-items: center;
