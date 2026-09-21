@@ -41,7 +41,105 @@
 
         <!-- contenido principal: registro de usuario -->
         <main>
+            <section class="tarjeta-formulario">
+                <div class="encabezado-formulario">
+                    <span class="logo-titulo">PetShop Chile</span>
+                </div>
 
+                <h1 class="titulo-formulario">Registrar usuario</h1>
+
+                <form action="#" method="post" class="formulario-contacto">
+                    <fieldset class="grupo-formulario">
+                        <legend class="leyenda-formulario">Datos personales</legend>
+
+                        <div class="fila-dos-campos">
+                            <div class="grupo-campo">
+                                <label for="run" class="etiqueta-campo">RUN:</label>
+                                <input type="text" id="run" name="run" class="entrada-campo" autocomplete="off" maxlength="9" placeholder="Ej: 19011022K">
+                                <p class="mensaje-error" id="error-run"></p>
+                            </div>
+
+                            <div class="grupo-campo">
+                                <label for="nombre" class="etiqueta-campo">Nombre:</label>
+                                <input type="text" id="nombre" name="nombre" class="entrada-campo" autocomplete="given-name" maxlength="50" placeholder="Ej: María">
+                                <p class="mensaje-error" id="error-nombre"></p>
+                            </div>
+                        </div>
+
+                        <div class="fila-dos-campos">
+                            <div class="grupo-campo">
+                                <label for="apellidos" class="etiqueta-campo">Apellidos:</label>
+                                <input type="text" id="apellidos" name="apellidos" class="entrada-campo" autocomplete="family-name" maxlength="100" placeholder="Ej: González">
+                                <p class="mensaje-error" id="error-apellidos"></p>
+                            </div>
+
+                            <div class="grupo-campo">
+                                <label for="correo" class="etiqueta-campo">Correo:</label>
+                                <input type="email" id="correo" name="correo" class="entrada-campo" autocomplete="email" maxlength="100" placeholder="tucorreo@correo.cl">
+                                <p class="mensaje-error" id="error-correo"></p>
+                            </div>
+                        </div>
+
+                        <div class="fila-dos-campos">
+                            <div class="grupo-campo">
+                                <label for="contrasena" class="etiqueta-campo">Contraseña:</label>
+                                <input type="password" id="contrasena" name="contrasena" class="entrada-campo" autocomplete="new-password" placeholder="Entre 4 y 10 caracteres">
+                                <p class="mensaje-error" id="error-contrasena"></p>
+                            </div>
+
+                            <div class="grupo-campo">
+                                <label for="confirmar-contrasena" class="etiqueta-campo">Confirmar contraseña:</label>
+                                <input type="password" id="confirmar-contrasena" name="confirmar-contrasena" class="entrada-campo" autocomplete="new-password" placeholder="Repite la contraseña">
+                                <p class="mensaje-error" id="error-confirmar-contrasena"></p>
+                            </div>
+                        </div>
+
+                        <div class="fila-dos-campos">
+                            <div class="grupo-campo">
+                                <label for="fecha-nacimiento" class="etiqueta-campo">Fecha de nacimiento:</label>
+                                <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" class="entrada-campo" autocomplete="bday">
+                            </div>
+
+                            <div class="grupo-campo">
+                                <label for="telefono" class="etiqueta-campo">Teléfono:</label>
+                                <input type="tel" id="telefono" name="telefono" class="entrada-campo" autocomplete="tel" placeholder="+56 9 1234 5678">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="grupo-formulario">
+                        <legend class="leyenda-formulario">Ubicación</legend>
+
+                        <div class="fila-dos-campos">
+                            <div class="grupo-campo">
+                                <label for="region" class="etiqueta-campo">Región:</label>
+                                <select id="region" name="region" class="entrada-campo">
+                                    <option value="" selected>Seleccione la región</option>
+                                </select>
+                                <p class="mensaje-error" id="error-region"></p>
+                            </div>
+
+                            <div class="grupo-campo">
+                                <label for="comuna" class="etiqueta-campo">Comuna:</label>
+                                <select id="comuna" name="comuna" class="entrada-campo">
+                                    <option value="" selected>Seleccione la comuna</option>
+                                </select>
+                                <p class="mensaje-error" id="error-comuna"></p>
+                            </div>
+                        </div>
+
+                        <div class="grupo-campo">
+                            <label for="direccion" class="etiqueta-campo">Dirección:</label>
+                            <input type="text" id="direccion" name="direccion" class="entrada-campo" autocomplete="street-address" maxlength="300" placeholder="Calle, número, departamento">
+                            <p class="mensaje-error" id="error-direccion"></p>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" class="boton-enviar">Registrarse</button>
+                </form>
+
+                <p class="enlace-registro">¿Ya tienes cuenta? <a href="login.html" class="miga-enlace">Inicia sesión</a></p>
+            </section>
         </main>
 
         <!-- pie de pagina: enlaces utiles, redes sociales y contacto -->
