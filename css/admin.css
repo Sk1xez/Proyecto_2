@@ -229,3 +229,24 @@ body.cuerpo-admin {
         padding: 10px 14px;
     }
 }
+/* ===== Insignia de tipo de usuario ===== */
+.badge-usuario {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--color-blanco);
+}
+
+.badge-admin {
+    background-color: var(--color-principal);
+}
+
+.badge-vendedor {
+    background-color: var(--color-secundario);
+}
+
+.badge-cliente {
+    background-color: #7A8A6A;
+}
