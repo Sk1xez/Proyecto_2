@@ -431,7 +431,13 @@ footer .logo-titulo {
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
-    .fila-dos-campos {
+.formulario-generico {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fila-dos-campos {
         grid-template-columns: 1fr;
     }
 
