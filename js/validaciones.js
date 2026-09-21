@@ -317,3 +317,4 @@ function inicializarFormularioUsuario(idFormulario, idResultado) {
 inicializarContacto();
 inicializarLogin();
 inicializarFormularioUsuario("form-registro", "resultado-registro");
+inicializarFormularioUsuario("form-usuario", "resultado-usuario");
