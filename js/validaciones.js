@@ -1,5 +1,5 @@
 
-const DOMINIOS_CORREO = ["@duocuc.cl", "@profesor.duocuc.cl", "@gmail.com"];
+const DOMINIOS_CORREO = ["@duoc.cl", "@profesor.duoc.cl", "@gmail.com"];
 
 const LIMITES = {
     nombre: 100,
@@ -19,7 +19,8 @@ const MENSAJES = {
     maximo: "El texto es demasiado largo.",
     minimo: "El texto es demasiado corto.",
     codigoCorto: "El código debe tener al menos 3 caracteres.",
-    correoDominio: "El correo debe terminar en @duocuc.cl, @profesor.duocuc.cl o @gmail.com.",
+    correoFormato: "El correo no tiene un formato válido.",
+    correoDominio: "El correo debe terminar en @duoc.cl, @profesor.duoc.cl o @gmail.com.",
     claveLargo: "La contraseña debe tener entre 4 y 10 caracteres.",
     runInvalido: "El RUN no es válido.",
     claveNoCoincide: "Las contraseñas no coinciden.",
@@ -77,11 +78,20 @@ function tieneMaximosDecimales(texto, maximo) {
     return partes[1].length <= maximo;
 }
 
-function correoPermitido(correo) {
+function motivoCorreoInvalido(correo) {
     const valor = correo.trim().toLowerCase();
-    return DOMINIOS_CORREO.some(function (dominio) {
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
+        return MENSAJES.correoFormato;
+    }
+
+    if (!DOMINIOS_CORREO.some(function (dominio) {
         return valor.endsWith(dominio);
-    });
+    })) {
+        return MENSAJES.correoDominio;
+    }
+
+    return null;
 }
 
 /* ===== Validacion del RUN ===== */
@@ -176,9 +186,13 @@ function validarCampo(campo, configuracion) {
         return false;
     }
 
-    if (configuracion.correoPermitido && !correoPermitido(valor)) {
-        mostrarError(campo, MENSAJES.correoDominio);
-        return false;
+    if (configuracion.correoPermitido) {
+        const motivo = motivoCorreoInvalido(valor);
+
+        if (motivo) {
+            mostrarError(campo, motivo);
+            return false;
+        }
     }
 
     if (configuracion.esRut && !rutValido(valor)) {
@@ -235,6 +249,10 @@ function configurarFormulario(idFormulario, campos, alExito) {
         item.campo.addEventListener("blur", function () {
             validarCampo(item.campo, item.configuracion);
         });
+
+        item.campo.addEventListener("input", function () {
+            validarCampo(item.campo, item.configuracion);
+        });
     });
 
     formulario.addEventListener("submit", function (evento) {
@@ -252,6 +270,22 @@ function configurarFormulario(idFormulario, campos, alExito) {
             alExito();
         }
     });
+}
+
+/* ===== Contador de caracteres ===== */
+function configurarContador(campo, idContador, maximo) {
+    const contador = document.getElementById(idContador);
+
+    if (!campo || !contador) {
+        return;
+    }
+
+    function actualizar() {
+        contador.textContent = campo.value.length + "/" + maximo;
+    }
+
+    campo.addEventListener("input", actualizar);
+    actualizar();
 }
 
 /* ===== Formulario de contacto ===== */
@@ -282,6 +316,8 @@ function inicializarContacto() {
             limpiarError(item.campo);
         });
     });
+
+    configurarContador(document.getElementById("comentario"), "contador-comentario", LIMITES.comentario);
 }
 
 /* ===== Formulario de inicio de sesion ===== */
@@ -385,6 +421,8 @@ function inicializarFormularioUsuario(idFormulario, idResultado, alGuardar) {
             validarCampo(confirmar, campos[5].configuracion);
         }
     });
+
+    configurarContador(direccion, "contador-direccion", LIMITES.direccion);
 }
 
 function inicializarProducto() {
@@ -417,6 +455,8 @@ function inicializarProducto() {
             limpiarError(item.campo);
         });
     });
+
+    configurarContador(document.getElementById("descripcion"), "contador-descripcion", LIMITES.comentario);
 }
 
 function inicializarAlertaStock() {

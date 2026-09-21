@@ -2,7 +2,7 @@ const PERMISOS_ADMIN = {
     "index.html": ["Administrador", "Vendedor"],
     "productos.html": ["Administrador", "Vendedor"],
     "producto-nuevo.html": ["Administrador"],
-    "producto-editar.html": ["Administrador"],
+    "producto-editar.html": ["Administrador", "Vendedor"],
     "usuarios.html": ["Administrador"],
     "usuario-nuevo.html": ["Administrador"],
     "usuario-editar.html": ["Administrador"]
@@ -38,6 +38,14 @@ function adaptarPanelSegunRol() {
 
     if (sesion.rol === "Vendedor") {
         document.body.classList.add("vista-vendedor");
+
+        const formulario = document.getElementById("form-producto");
+
+        if (formulario) {
+            formulario.querySelectorAll("input, textarea, select, button").forEach(function (campo) {
+                campo.disabled = true;
+            });
+        }
     }
 }
 

@@ -318,6 +318,14 @@ function inicializarTablaProductos() {
         botonEliminar.textContent = "Eliminar";
         botonEliminar.dataset.id = producto.id;
 
+        botonEliminar.addEventListener("click", function () {
+            if (!window.confirm("¿Eliminar el producto \"" + producto.nombre + "\"?")) {
+                return;
+            }
+
+            fila.remove();
+        });
+
         celdaAcciones.appendChild(enlaceEditar);
         celdaAcciones.appendChild(botonEliminar);
 

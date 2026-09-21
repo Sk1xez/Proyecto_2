@@ -6,7 +6,7 @@ const USUARIOS = [
         run: "202824846",
         nombre: "Paolo",
         apellidos: "Muñoz",
-        correo: "paolo.munoz@duocuc.cl",
+        correo: "paolo.munoz@duoc.cl",
         contrasena: "1234",
         rol: "Administrador"
     },
@@ -15,7 +15,7 @@ const USUARIOS = [
         run: "17345672",
         nombre: "Vicente",
         apellidos: "Muñoz",
-        correo: "vicente.munoz@duocuc.cl",
+        correo: "vicente.munoz@duoc.cl",
         contrasena: "1234",
         rol: "Administrador"
     },
@@ -30,12 +30,21 @@ const USUARIOS = [
     },
     {
         id: 4,
-        run: "21555228",
+        run: "21555223",
         nombre: "Alexis",
         apellidos: "Valencia",
-        correo: "alexis.valencia@duocuc.cl",
+        correo: "alexis.valencia@duoc.cl",
         contrasena: "1234",
         rol: "Administrador"
+    },
+    {
+        id: 5,
+        run: "20456787",
+        nombre: "Pedro",
+        apellidos: "Soto",
+        correo: "pedro.soto@duoc.cl",
+        contrasena: "1234",
+        rol: "Vendedor"
     }
 ];
 
@@ -99,3 +108,23 @@ function agregarUsuarioRegistrado(usuario) {
 
     return usuario;
 }
+
+function inicializarEliminarUsuarios() {
+    document.querySelectorAll(".boton-eliminar-usuario").forEach(function (boton) {
+        boton.addEventListener("click", function () {
+            const fila = boton.closest("tr");
+
+            if (!fila) {
+                return;
+            }
+
+            const nombre = fila.children[1].textContent;
+
+            if (window.confirm("¿Eliminar el usuario \"" + nombre + "\"?")) {
+                fila.remove();
+            }
+        });
+    });
+}
+
+document.addEventListener("DOMContentLoaded", inicializarEliminarUsuarios);
