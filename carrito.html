@@ -41,7 +41,71 @@
 
         <!-- contenido principal: lista de productos del carrito y resumen -->
         <main>
+            <section class="seccion-carrito">
+                <h1 class="titulo-presentacion">Mi carrito de compras</h1>
 
+                <p class="mensaje-carrito" id="mensaje-vacio" hidden>Tu carrito está vacío.</p>
+
+                <div class="contenedor-carrito">
+                    <div class="lista-carrito" id="lista-carrito">
+                        <article class="item-carrito" data-id="1" data-precio="12990">
+                            <img src="img/productos/alimento.jpg" alt="Croquetas para perro adulto" class="imagen-item">
+                            <div class="info-item">
+                                <h2 class="nombre-item">Croquetas para Perro Adulto</h2>
+                                <p class="precio-item">$12.990</p>
+                            </div>
+                            <div class="control-cantidad">
+                                <button type="button" class="boton-cantidad" aria-label="Disminuir cantidad">−</button>
+                                <input type="number" class="cantidad-input" value="1" min="1" max="10" aria-label="Cantidad de producto">
+                                <button type="button" class="boton-cantidad" aria-label="Aumentar cantidad">+</button>
+                            </div>
+                            <button type="button" class="boton-eliminar">Eliminar</button>
+                        </article>
+
+                        <article class="item-carrito" data-id="2" data-precio="5490">
+                            <img src="img/productos/juguete.jpg" alt="Hueso de juguete para mascotas" class="imagen-item">
+                            <div class="info-item">
+                                <h2 class="nombre-item">Hueso de Juguete</h2>
+                                <p class="precio-item">$5.490</p>
+                            </div>
+                            <div class="control-cantidad">
+                                <button type="button" class="boton-cantidad" aria-label="Disminuir cantidad">−</button>
+                                <input type="number" class="cantidad-input" value="1" min="1" max="10" aria-label="Cantidad de producto">
+                                <button type="button" class="boton-cantidad" aria-label="Aumentar cantidad">+</button>
+                            </div>
+                            <button type="button" class="boton-eliminar">Eliminar</button>
+                        </article>
+
+                        <article class="item-carrito" data-id="3" data-precio="19990">
+                            <img src="img/productos/cama.avif" alt="Cama suave para mascotas" class="imagen-item">
+                            <div class="info-item">
+                                <h2 class="nombre-item">Cama Suave para Mascotas</h2>
+                                <p class="precio-item">$19.990</p>
+                            </div>
+                            <div class="control-cantidad">
+                                <button type="button" class="boton-cantidad" aria-label="Disminuir cantidad">−</button>
+                                <input type="number" class="cantidad-input" value="1" min="1" max="10" aria-label="Cantidad de producto">
+                                <button type="button" class="boton-cantidad" aria-label="Aumentar cantidad">+</button>
+                            </div>
+                            <button type="button" class="boton-eliminar">Eliminar</button>
+                        </article>
+                    </div>
+
+                    <!-- resumen de la compra con total y cupon -->
+                    <aside class="resumen-carrito">
+                        <h2 class="titulo-resumen">Resumen</h2>
+                        <p class="total-carrito" id="total-carrito">Total: <strong>$38.470</strong></p>
+
+                        <div class="grupo-cupon">
+                            <label for="cupon" class="etiqueta-campo">Cupón de descuento:</label>
+                            <input type="text" id="cupon" class="entrada-campo" placeholder="Ingresa tu cupón" autocomplete="off">
+                            <button type="button" class="boton-aplicar">Aplicar</button>
+                        </div>
+
+                        <button type="button" class="boton-pagar">Pagar</button>
+                    </aside>
+                </div>
+            </section>
         </main>
 
         <!-- pie de pagina: enlaces utiles, redes sociales y contacto -->
