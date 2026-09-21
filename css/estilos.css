@@ -102,7 +102,7 @@ header .logo-titulo {
     font-weight: bold;
 }
 
-/* ===== Presentación ===== */
+/* ===== Presentacion ===== */
 .seccion-presentacion {
     display: flex;
     align-items: center;
@@ -196,6 +196,11 @@ header .logo-titulo {
     font-weight: bold;
     color: var(--color-principal);
     margin: 0 0 12px 0;
+}
+
+.enlace-producto {
+    text-decoration: none;
+    color: inherit;
 }
 
 .boton-agregar {
