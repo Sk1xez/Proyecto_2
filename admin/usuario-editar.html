@@ -115,7 +115,7 @@
                             <div class="grupo-campo">
                                 <label for="region" class="etiqueta-campo">Región:</label>
                                 <select id="region" name="region" class="entrada-campo" required>
-                                    <option value="" disabled selected>Seleccione la región</option>
+                                    <option value="" selected>Seleccione la región</option>
                                 </select>
                                 <p class="mensaje-error" id="error-region"></p>
                             </div>
@@ -123,7 +123,7 @@
                             <div class="grupo-campo">
                                 <label for="comuna" class="etiqueta-campo">Comuna:</label>
                                 <select id="comuna" name="comuna" class="entrada-campo" required>
-                                    <option value="" disabled selected>Seleccione la comuna</option>
+                                    <option value="" selected>Seleccione la comuna</option>
                                 </select>
                                 <p class="mensaje-error" id="error-comuna"></p>
                             </div>
@@ -144,6 +144,7 @@
             </form>
         </main>
 
+        <script src="../js/regiones.js" defer></script>
         <script src="../js/validaciones.js" defer></script>
     </body>
 </html>
