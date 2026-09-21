@@ -1,0 +1,1 @@
+/* Arreglo de regiones y comunas de Chile. */

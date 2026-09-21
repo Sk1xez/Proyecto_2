@@ -1,0 +1,1 @@
+/* Funciones del carrito de compras con almacenamiento local. */

@@ -1,0 +1,1 @@
+/* Arreglo de productos y funciones para mostrar la tienda. */
