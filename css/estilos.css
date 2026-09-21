@@ -1,14 +1,15 @@
+/* ===== Variables ===== */
 :root {
-    --color-principal: #1E3A8A;
-    --color-secundario: #0D9488;
-    --color-fondo-claro: #F8FAFC;
-    --color-texto: #1E293B;
+    --color-principal: #E8772E;
+    --color-secundario: #2C5F7C;
+    --color-fondo-claro: #FFF8F0;
+    --color-texto: #2B2B2B;
     --color-blanco: #FFFFFF;
-    --color-borde: #CBD5E1;
+    --color-borde: #E0D8CC;
     --fuente-principal: Arial, sans-serif;
 }
 
-
+/* ===== Base ===== */
 * {
     box-sizing: border-box;
 }
@@ -23,8 +24,20 @@ body {
 
 img {
     max-width: 100%;
+    height: auto;
 }
 
+/* ===== Header ===== */
+
+/* ===== Presentación ===== */
+
+/* ===== Productos ===== */
+
+/* ===== Footer ===== */
+
+/* ===== Responsive ===== */
+
+/* ===== Contacto ===== */
 .encabezado {
     background-color: var(--color-principal);
     color: var(--color-blanco);
@@ -38,7 +51,7 @@ img {
 
 .Subtitulo {
     margin: 10px;
-    color: #CBD5E1;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .contenedor-principal {
@@ -48,7 +61,7 @@ img {
 }
 
 .seccion-historia {
-    background-color: rgba(165, 160, 160, 0.945);
+    background-color: var(--color-blanco);
     border-left: 5px solid var(--color-secundario);
     border-radius: 8px;
     padding: 25px;
@@ -56,7 +69,7 @@ img {
 }
 
 .titulo-seccion {
-    color: var(--color-principal);
+    color: var(--color-secundario);
     margin-top: 0;
     border-bottom: 2px solid var(--color-secundario);
     padding-bottom: 5px;
@@ -79,7 +92,7 @@ img {
 }
 
 .seccion-contacto {
-    background-color: var(--color-fondo-claro);
+    background-color: var(--color-blanco);
     border-left: 4px solid var(--color-secundario);
     border-radius: 8px;
     padding: 16px;
@@ -108,7 +121,7 @@ img {
 
 .etiqueta-campo {
     font-weight: bold;
-    color: var(--color-principal);
+    color: var(--color-secundario);
     font-size: 0.9rem;
 }
 
@@ -119,7 +132,6 @@ img {
     border-radius: 6px;
     font-size: 0.95rem;
     font-family: inherit;
-    box-sizing: border-box;
     background-color: var(--color-blanco);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -127,7 +139,7 @@ img {
 .entrada-campo:focus {
     outline: none;
     border-color: var(--color-secundario);
-    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+    box-shadow: 0 0 0 3px rgba(44, 95, 124, 0.2);
 }
 
 .area-texto {
