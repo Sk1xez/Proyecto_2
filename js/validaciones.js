@@ -1,4 +1,4 @@
-/* ===== Constantes ===== */
+
 const DOMINIOS_CORREO = ["@duocuc.cl", "@profesor.duocuc.cl", "@gmail.com"];
 
 const LIMITES = {
@@ -9,21 +9,28 @@ const LIMITES = {
     claveMaxima: 10,
     nombreUsuario: 50,
     apellidosUsuario: 100,
-    direccion: 300
+    direccion: 300,
+    codigoMinimo: 3,
+    decimalesPrecio: 2
 };
 
 const MENSAJES = {
     requerido: "Este campo es obligatorio.",
     maximo: "El texto es demasiado largo.",
+    minimo: "El texto es demasiado corto.",
+    codigoCorto: "El código debe tener al menos 3 caracteres.",
     correoDominio: "El correo debe terminar en @duocuc.cl, @profesor.duocuc.cl o @gmail.com.",
     claveLargo: "La contraseña debe tener entre 4 y 10 caracteres.",
     runInvalido: "El RUN no es válido.",
     claveNoCoincide: "Las contraseñas no coinciden.",
     fechaFutura: "La fecha no puede ser en el futuro.",
-    telefonoLargo: "El teléfono debe tener 9 dígitos."
+    telefonoLargo: "El teléfono debe tener 9 dígitos.",
+    numeroInvalido: "Debe ingresar un número.",
+    minimoCero: "Debe ser un número mayor o igual a 0.",
+    enteroInvalido: "Debe ser un número entero.",
+    decimalesMaximos: "El precio admite hasta 2 decimales."
 };
 
-/* ===== Validaciones basicas ===== */
 function textoRequerido(texto) {
     return texto.trim().length > 0;
 }
@@ -48,6 +55,26 @@ function esFechaFutura(fecha) {
     const elegida = new Date(fecha + "T00:00:00");
 
     return elegida.getTime() > hoy.getTime();
+}
+
+function numeroDeCampo(campo) {
+    if (campo.validity && campo.validity.badInput) {
+        return null;
+    }
+
+    const valor = Number(campo.value);
+
+    return Number.isNaN(valor) ? null : valor;
+}
+
+function tieneMaximosDecimales(texto, maximo) {
+    const partes = String(texto).split(".");
+
+    if (partes.length < 2) {
+        return true;
+    }
+
+    return partes[1].length <= maximo;
 }
 
 function correoPermitido(correo) {
@@ -144,6 +171,11 @@ function validarCampo(campo, configuracion) {
         return false;
     }
 
+    if (configuracion.minimo && !configuracion.maximo && valor.trim().length < configuracion.minimo) {
+        mostrarError(campo, configuracion.mensajeMinimo || MENSAJES.minimo);
+        return false;
+    }
+
     if (configuracion.correoPermitido && !correoPermitido(valor)) {
         mostrarError(campo, MENSAJES.correoDominio);
         return false;
@@ -162,6 +194,30 @@ function validarCampo(campo, configuracion) {
     if (configuracion.igualA && valor !== configuracion.igualA()) {
         mostrarError(campo, MENSAJES.claveNoCoincide);
         return false;
+    }
+
+    if (configuracion.esNumero) {
+        const numero = numeroDeCampo(campo);
+
+        if (numero === null) {
+            mostrarError(campo, MENSAJES.numeroInvalido);
+            return false;
+        }
+
+        if (configuracion.minimoNumerico !== undefined && numero < configuracion.minimoNumerico) {
+            mostrarError(campo, MENSAJES.minimoCero);
+            return false;
+        }
+
+        if (configuracion.entero && !Number.isInteger(numero)) {
+            mostrarError(campo, MENSAJES.enteroInvalido);
+            return false;
+        }
+
+        if (configuracion.maxDecimales !== undefined && !tieneMaximosDecimales(campo.value, configuracion.maxDecimales)) {
+            mostrarError(campo, MENSAJES.decimalesMaximos);
+            return false;
+        }
     }
 
     marcarValido(campo);
@@ -314,7 +370,40 @@ function inicializarFormularioUsuario(idFormulario, idResultado) {
     });
 }
 
+function inicializarProducto() {
+    const formulario = document.getElementById("form-producto");
+
+    if (!formulario) {
+        return;
+    }
+
+    const campos = [
+        { campo: document.getElementById("codigo"), configuracion: { minimo: LIMITES.codigoMinimo, mensajeMinimo: MENSAJES.codigoCorto } },
+        { campo: document.getElementById("nombre"), configuracion: { maximo: LIMITES.nombre } },
+        { campo: document.getElementById("descripcion"), configuracion: { opcional: true, maximo: LIMITES.comentario } },
+        { campo: document.getElementById("precio"), configuracion: { esNumero: true, minimoNumerico: 0, maxDecimales: LIMITES.decimalesPrecio } },
+        { campo: document.getElementById("stock"), configuracion: { esNumero: true, minimoNumerico: 0, entero: true } },
+        { campo: document.getElementById("stock-critico"), configuracion: { opcional: true, esNumero: true, minimoNumerico: 0, entero: true } },
+        { campo: document.getElementById("categoria"), configuracion: {} }
+    ];
+
+    configurarFormulario("form-producto", campos, function () {
+        const resultado = document.getElementById("resultado-producto");
+
+        if (resultado) {
+            resultado.hidden = false;
+        }
+
+        formulario.reset();
+
+        campos.forEach(function (item) {
+            limpiarError(item.campo);
+        });
+    });
+}
+
 inicializarContacto();
 inicializarLogin();
 inicializarFormularioUsuario("form-registro", "resultado-registro");
 inicializarFormularioUsuario("form-usuario", "resultado-usuario");
+inicializarProducto();
