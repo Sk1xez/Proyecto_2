@@ -10,7 +10,7 @@
         
         <header>
             <a href="index.html" class="logo-enlace">
-                <h1 class="logo-titulo">PetShop Chile</h1>
+                <span class="logo-titulo">PetShop Chile</span>
             </a>
 
             <nav class="menu-principal">
@@ -40,14 +40,66 @@
             </div>
         </header>
 
-        <!--  contenido principal: banner, productos, -->
+<!-- contenido principal: presentación y productos -->
         <main>
+            <section class="seccion-presentacion">
+                <h1 class="titulo-presentacion">Bienvenido a PetShop Chile</h1>
+                <p class="descripcion-presentacion">Tu tienda de confianza para el cuidado y bienestar de tus mascotas.</p>
+                <a href="productos.html" class="enlace-ver-productos">Ver productos</a>
+                <img src="img/home/banner.jpg" alt="Perro feliz dentro de la tienda" class="imagen-portada">
+            </section>
 
+            <section class="seccion-productos">
+                <h2 class="titulo-seccion">Productos Destacados</h2>
+
+                <div class="contenedor-productos">
+                    <article class="producto">
+                        <img src="img/productos/alimento.jpg" alt="Croquetas para perro adulto" class="imagen-producto">
+                        <h3 class="nombre-producto">Croquetas para Perro Adulto</h3>
+                        <p class="precio-producto">$12.990</p>
+                        <button type="button" class="boton-agregar">Añadir</button>
+                    </article>
+
+                    <article class="producto">
+                        <img src="img/productos/juguete.jpg" alt="Hueso de juguete para mascotas" class="imagen-producto">
+                        <h3 class="nombre-producto">Hueso de Juguete</h3>
+                        <p class="precio-producto">$5.490</p>
+                        <button type="button" class="boton-agregar">Añadir</button>
+                    </article>
+
+                    <article class="producto">
+                        <img src="img/productos/cama.jpg" alt="Cama suave para mascotas" class="imagen-producto">
+                        <h3 class="nombre-producto">Cama Suave para Mascotas</h3>
+                        <p class="precio-producto">$19.990</p>
+                        <button type="button" class="boton-agregar">Añadir</button>
+                    </article>
+                </div>
+            </section>
         </main>
 
-        <!--redes sociales -->
+        <!-- pie de página: enlaces útiles, redes sociales y contacto -->
         <footer>
+            <a href="index.html" class="logo-enlace">
+                <span class="logo-titulo">PetShop Chile</span>
+            </a>
+            <p class="footer-derechos">© 2026 PetShop Chile</p>
 
+            <nav class="menu-footer">
+                <ul class="menu-footer-lista">
+                    <li>
+                        <a href="productos.html" class="footer-enlace">Productos</a>
+                    </li>
+                    <li>
+                        <a href="nosotros.html" class="footer-enlace">Nosotros</a>
+                    </li>
+                    <li>
+                        <a href="contacto.html" class="footer-enlace">Contacto</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <p class="footer-redes">Síguenos en redes sociales: Facebook · Instagram · Twitter</p>
+            <p class="footer-contacto">Santiago, Chile · contacto@petshopchile.cl</p>
         </footer>
     </body>
 </html>
