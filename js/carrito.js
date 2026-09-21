@@ -393,6 +393,11 @@ function configurarResumen() {
 
     if (botonPagar) {
         botonPagar.addEventListener("click", function () {
+            if (!estaConSesion()) {
+                location.replace("login.html");
+                return;
+            }
+
             if (leerCarrito().length === 0) {
                 return;
             }
