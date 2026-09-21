@@ -268,6 +268,78 @@ footer .logo-titulo {
 }
 
 /* ===== Responsive ===== */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .menu-lista {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .acciones-usuario {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .seccion-presentacion {
+        flex-direction: column;
+        padding: 25px;
+    }
+
+    .titulo-presentacion {
+        font-size: 1.8rem;
+    }
+
+    .imagen-portada {
+        height: 220px;
+    }
+
+    .seccion-productos {
+        padding: 30px 15px;
+    }
+
+    footer {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .menu-footer-lista {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 12px;
+    }
+
+    header .logo-titulo {
+        font-size: 1.3rem;
+    }
+
+    .titulo-presentacion {
+        font-size: 1.5rem;
+    }
+
+    .descripcion-presentacion {
+        font-size: 1rem;
+    }
+
+    .imagen-portada {
+        height: 180px;
+    }
+
+    .contenedor-productos {
+        grid-template-columns: 1fr;
+    }
+}
 
 /* ===== Contacto ===== */
 .encabezado {
