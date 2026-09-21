@@ -1,0 +1,129 @@
+DECISIONES PARA EL ERS
+Fecha: 21/09/2026
+
+1. CATEGORÍAS DE PRODUCTOS
+- Alimentos
+- Juguetes
+- Accesorios
+- Higiene
+
+2. TABLA PRODUCTOS (tipos de dato y reglas)
+- codigo: texto, requerido, minimo 3 caracteres, sin maximo
+- nombre: texto, requerido, maximo 100 caracteres
+- descripcion: texto largo, opcional, maximo 500 caracteres
+- precio: numerico decimal, requerido, minimo 0 (0 = producto gratis), sin maximo, acepta decimales (step 0.01)
+- stock: numerico entero, requerido, minimo 0, solo enteros (step 1)
+- stock_critico: numerico entero, opcional, minimo 0, solo enteros; si no se define, sin alerta; si stock <= stock_critico se muestra la alerta
+- categoria: enum (Alimentos, Juguetes, Accesorios, Higiene), requerido
+- imagen: archivo, opcional, solo imagenes (accept="image/*")
+
+3. TABLA USUARIOS (reglas ya definidas en registro.html)
+- rut: texto, requerido, 7 a 9 caracteres, sin puntos ni guion
+- nombre: texto, requerido
+- apellido_paterno: texto, requerido
+- apellido_materno: texto, requerido
+- correo: texto, requerido, maximo 100, solo @duoc.cl, @profesor.duoc.cl o @gmail.com (dominios del Anexo 1; se cambio desde duocuc.cl). Se valida el formato: texto antes de una sola arroba y sin espacios.
+- contrasena: texto, requerido, de 4 a 10 caracteres
+- confirmar_contrasena: debe coincidir con contrasena
+- fecha_nacimiento: fecha, opcional
+- telefono: texto, opcional
+- region / comuna: seleccionables desde un arreglo en JavaScript (aun por definir el detalle en ERS)
+- direccion: texto, opcional, maximo 300 caracteres
+- rol: usuario tiene perfil (administrador / usuario). En el panel, JavaScript oculta opciones del menu segun el perfil.
+- Tipos de usuario (vista administrativa): Administrador, Vendedor y Cliente. El select de tipo de usuario SOLO existe en el panel (admin/usuario-nuevo.html y admin/usuario-editar.html), NO en registro.html de la tienda.
+- Al EDITAR un usuario, la contraseña se deja vacia: se mantiene la anterior a menos que se escriba una nueva.
+
+4. REGLAS DEL CARRITO (para proceso de compra)
+- Cantidad minima por producto: 1
+- Cantidad maxima por producto: 10
+- Si un producto ya esta en el carrito, se suma la cantidad (no se duplica la fila)
+- Total = suma de (precio x cantidad)
+- El cupon (aun por definir: codigos validos y porcentaje de descuento) se aplica al total
+- Mensaje de "carrito vacio" cuando no hay productos
+
+5. STOCK CRITICO
+- El administrador define el stock_critico por producto
+- Cuando stock <= stock_critico, JavaScript muestra la alerta (color amarillo/naranja) y puede marcar el producto en el listado
+- Los productos P002 (stock 4) y P003 (stock 3) quedaron con stock bajo de ejemplo para probar la alerta
+Validaciones (JS):
+- RUN: sin puntos ni guion, de 7 a 9 caracteres, ultimo digito o K; digito verificador modulo 11. El RUN de ejemplo del Anexo (19011022K) no pasa el algoritmo (su digito correcto es 2); se probo con 111111111, 123456785 y 1000005K. Se respondera en la presentacion si lo consultan.
+- Telefono (registro): opcional, debe tener 9 digitos.
+- Fecha de nacimiento: opcional, no puede ser futura.
+- Region/comuna: arreglo propio creado para la aplicacion (5 regiones de ejemplo); ambas requeridas.
+- Confirmar contrasena: se revalida al cambiar cualquiera de las dos.
+- Un solo error a la vez por campo (primero encontrado).
+- Validacion en tiempo real: los campos se validan al escribir (evento input) y al salir del campo (blur), ademas de al enviar.
+- Contadores de caracteres en vivo: comentario (500), direccion (300) y descripcion (500), que muestran "usados/maximo".
+- Correo: se exige formato valido (texto antes de una sola arroba, sin espacios) ademas del dominio permitido.
+
+Producto (panel):
+- Precio admite hasta 2 decimales; 0 es precio gratis. El stock y el stock critico son enteros, minimo 0.
+- Alerta de stock critico: se muestra en el formulario de producto cuando stock <= stock critico. Si no se define stock critico, no hay alerta. (Decidido: por ahora solo en el formulario; el listado puede marcarse con color despues.)
+
+Productos desde arreglo:
+- PRODUCTOS en js/productos.js (9 productos, 4 categorias). camino base de imagen se arma por pagina: "img/productos/" o "../img/productos/".
+- Decision al guardar/editar/eliminar: minimo, el formulario valida y muestra el mensaje de exito, pero no modifica el arreglo (sin localStorage). El listado y detalle se generan siempre desde el arreglo.
+- Destacados del home: primeros 3 productos del arreglo.
+- Alerta de stock critico: en el formulario y en la tabla se marcan con color las filas con stock <= critico.
+
+Carrito (reglas definidas por el proyecto):
+- Añadir producto ya existente: suma 1 a su cantidad (no crea linea nueva).
+- Cantidad minima: 1. El boton "−" se bloquea (disabled) al llegar a 1; no elimina la linea.
+- Cantidad maxima: el stock del producto. Al superarlo se muestra aviso ("Stock maximo" en tarjetas, "Stock no disponible" en detalle) y el boton "+" se bloquea.
+- Producto con stock 0: no se puede añadir; boton "Añadir" deshabilitado en las tarjetas.
+- Precio: se lee del arreglo PRODUCTOS al dibujar (no se guarda en localStorage), asi el carrito usa siempre el precio actual.
+- Total: suma de precio por cantidad de cada linea.
+- Carrito vacio: mensaje "Tu carrito esta vacio" con enlace a productos; boton Pagar deshabilitado.
+- Cupon: codigos fijos BIENVENIDO10 (10%) y PETSHOP20 (20%). Descuento aplicado solo en la sesion de la pagina (no se guarda). Mensaje si el codigo no existe.
+- Boton Pagar: mensaje de compra simulada y vacia el carrito.
+- localStorage: clave "carrito" con un arreglo de {id, cantidad}; JSON.parse protegido con try/catch.
+
+7. ROLES, AUTENTICACION Y PROTECCION DEL PANEL (bloque de roles)
+- Aclaracion para la presentacion: todo corre en el navegador y es una SIMULACION de autenticacion y permisos. Cualquier persona puede saltarse esas barreras con las herramientas de desarrollo. La proteccion real (contrasenas cifradas y verificacion en un servidor) es materia de las proximas evaluaciones.
+
+Usuarios de prueba (js/usuarios.js):
+- Administrador: paolo.munoz@duoc.cl / contrasena "1234" (RUN 202824846)
+- Administrador: vicente.munoz@duoc.cl / contrasena "1234" (RUN 17345672)
+- Administrador: alexis.valencia@duoc.cl / contrasena "1234" (RUN 21555223; se corrigio el RUN invalido 21555228)
+- Vendedor: pedro.soto@duoc.cl / contrasena "1234" (RUN 20456787)
+- Cliente: camila.silva@gmail.com / contrasena "1234" (RUN 20123451)
+Las contrasenas quedan en texto plano en el codigo: aceptable para este ejercicio, pero en un sistema real se guardarian con hash (ej. bcrypt) y el servidor verificaria el inicio de sesion, nunca el navegador.
+- Carrera del proyecto: registro publico guarda clientes en localStorage (clave "usuarios-registrados") y el login busca primero en el arreglo y luego en los guardados.
+
+Sesion (js/sesion.js):
+- Se guarda en sessionStorage porque la sesion termina al cerrar la pestana/ventana (mas natural que localStorage, que persiste).
+- Se guarda solo { id, nombre, correo, rol }; NUNCA la contrasena.
+- La lectura usa try/catch: si no hay nada o el contenido esta danado, se trata como "sin sesion".
+
+Login:
+- Mensaje unico "Correo o contrasena incorrectos": no se indica cual fallo, para no ayudar a adivinar cuentas.
+- Redireccion segun rol: Administrador y Vendedor a admin/index.html; Cliente a index.html. Se usa location.replace.
+
+Permisos del panel (js/proteger-admin.js):
+- Tienda publica: Administrador Si, Vendedor Si, Cliente Si
+- admin/index.html: Administrador Si, Vendedor Si, Cliente No
+- admin/productos.html (listado): Administrador Si, Vendedor Si (solo lectura), Cliente No
+- admin/producto-editar.html: Administrador Si, Vendedor Si (solo lectura), Cliente No
+- admin/producto-nuevo.html: Administrador Si, Vendedor No, Cliente No
+- admin/usuarios.html, admin/usuario-nuevo.html, admin/usuario-editar.html: Administrador Si, Vendedor No, Cliente No
+- El guardian se carga en el head SIN defer para evitar el parpadeo: sin sesion -> login.html; rol Cliente -> index.html; Vendedor en pagina prohibida -> admin/index.html. Siempre con location.replace para que el boton "Atras" no vuelva a la pagina prohibida.
+- Vendedor (solo lectura de productos): se ocultan la opcion Usuarios del menu, el boton "Nuevo producto" y las acciones Editar/Eliminar del listado; el encabezado de la columna pasa a "Solo lectura".
+- Vendedor y detalle de producto: la pauta pide que vea la lista y el detalle. Como en el panel el detalle es producto-editar.html, se le permite entrar PERO en modo solo lectura: campos deshabilitados y sin boton "Guardar cambios". El detalle publico de la tienda (detalle-producto.html) tambien queda visible para el Vendedor (pagina publica).
+- Botones Eliminar (productos y usuarios): operativos con confirmacion; quitan la fila de la tabla.
+- El titulo "¡Hola, Administrador!" del dashboard se reemplaza por el nombre del usuario conectado.
+
+Header de la tienda:
+- Sin sesion: enlaces "Iniciar sesion" y "Registrar usuario".
+- Con sesion: saludo "Hola, {nombre}", enlace "Panel" (solo Administrador y Vendedor) y "Cerrar sesion".
+- login.html y registro.html redirigen al Home si ya hay sesion activa.
+- Cerrar sesion borra la sesion y redirige a index.html; tambien esta en el menu lateral del panel.
+
+Registro de clientes:
+- Al registrarse en la tienda se agrega el usuario a localStorage con rol SIEMPRE "Cliente" (el usuario no elige rol). Se busca en el arreglo inicial y en los guardados.
+- Duplicados: si el correo ya existe -> "Ese correo ya esta registrado."; si el RUN ya existe -> "Ese RUN ya esta registrado.". Solo se avisa el primero que falle.
+
+Pago:
+- El boton "Pagar" exige sesion: si no hay, redirige a login.html. Con sesion, hace la compra simulada y vacia el carrito.
+
+Ordenes del Vendedor:
+- La pauta menciona "lista de ordenes y detalle" pero el diagrama de navegacion no incluye paginas de ordenes. DECISION: no se crean; se consulta al docente en la presentacion. Si el docente pide la version simple, se guardaria cada compra al pulsar "Pagar" (en localStorage) y se mostraria en una pagina del panel.
