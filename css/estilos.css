@@ -89,6 +89,12 @@ header .logo-titulo {
     transition: background-color 0.2s ease;
 }
 
+.saludo-usuario {
+    color: var(--color-blanco);
+    padding: 8px 12px;
+    font-weight: bold;
+}
+
 .enlace-accion:hover {
     background-color: var(--color-secundario);
 }
