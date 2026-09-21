@@ -318,6 +318,64 @@ header .logo-titulo {
     color: var(--color-texto);
 }
 
+/* ===== Formularios ===== */
+.tarjeta-formulario {
+    max-width: 640px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.encabezado-formulario {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.encabezado-formulario .logo-titulo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-secundario);
+}
+
+.titulo-formulario {
+    text-align: center;
+    color: var(--color-principal);
+    margin: 10px 0 20px 0;
+}
+
+.grupo-formulario {
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 0 0 15px 0;
+}
+
+.leyenda-formulario {
+    font-weight: bold;
+    color: var(--color-secundario);
+    padding: 0 5px;
+}
+
+.fila-dos-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.mensaje-error {
+    color: #C62828;
+    font-size: 0.85rem;
+    margin: 4px 0 0 0;
+    min-height: 1em;
+}
+
+.enlace-registro {
+    text-align: center;
+    margin: 15px 0 0 0;
+}
+
 /* ===== Footer ===== */
 footer {
     background-color: var(--color-texto);
@@ -373,6 +431,10 @@ footer .logo-titulo {
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
+    .fila-dos-campos {
+        grid-template-columns: 1fr;
+    }
+
     .ficha-producto {
         flex-direction: column;
     }
