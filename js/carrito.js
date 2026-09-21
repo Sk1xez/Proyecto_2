@@ -76,3 +76,15 @@ function calcularTotal(descuento) {
 
     return Math.round(total * (1 - descuento));
 }
+
+function actualizarContadorCarrito() {
+    const contador = document.getElementById("contador-carrito");
+
+    if (!contador) {
+        return;
+    }
+
+    contador.textContent = String(contarUnidades());
+}
+
+actualizarContadorCarrito();
