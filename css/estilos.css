@@ -376,6 +376,111 @@ header .logo-titulo {
     margin: 15px 0 0 0;
 }
 
+/* ===== Nosotros ===== */
+.seccion-pagina {
+    text-align: center;
+    max-width: 1100px;
+    margin: 30px auto 0;
+    padding: 0 20px;
+}
+
+.seccion-pagina .titulo-presentacion {
+    margin-bottom: 10px;
+}
+
+.seccion-historia {
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 1100px;
+    margin: 20px auto;
+}
+
+.contenido-historia {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.imagen-historia {
+    flex: 1;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.texto-historia {
+    flex: 1;
+    line-height: 1.7;
+}
+
+.seccion-mision-vision {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.contenedor-mision-vision {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.tarjeta-mision {
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.titulo-mision {
+    color: var(--color-principal);
+    margin: 0 0 10px 0;
+}
+
+.texto-mision {
+    line-height: 1.6;
+    margin: 0;
+}
+
+.seccion-equipo {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.contenedor-equipo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.integrante {
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.integrante:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.nombre-integrante {
+    margin: 0 0 6px 0;
+    color: var(--color-secundario);
+}
+
+.rol-integrante {
+    margin: 0;
+    color: var(--color-principal);
+    font-weight: bold;
+}
+
 /* ===== Footer ===== */
 footer {
     background-color: var(--color-texto);
@@ -830,5 +935,22 @@ footer .logo-titulo {
     .boton-enviar {
         font-size: 1.1rem;
         padding: 14px 40px;
+    }
+}
+
+/* ===== Responsive Nosotros ===== */
+@media (max-width: 768px) {
+    .contenido-historia {
+        flex-direction: column;
+    }
+
+    .imagen-historia {
+        width: 100%;
+        max-width: none;
+        height: 220px;
+    }
+
+    .contenedor-mision-vision {
+        grid-template-columns: 1fr;
     }
 }
