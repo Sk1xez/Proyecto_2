@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetShop Chile - Artículos y Servicios para Mascotas</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <header class = "encabezado">
+        <h1 class = "Titulo">Bienvenido a PetShop Chile</h1>
+        <p class = "Subtitulo">Tu tienda de confianza para el cuidado y bienestar de tus mascotas.</p>
+    </header>
+
+    <hr>
+
+    <main class="contenedor-principal">
+
+        <section id="historia" class="seccion-historia">
+            <h2 class="titulo-seccion">1. Nuestra Historia</h2>
+            <div class="contenido-historia">
+                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=500" alt="Perro feliz en nuestra tienda" class="imagen-historia">
+                <div class="texto-historia">
+                    <p><strong>PetShop Chile</strong> nació en el año <strong>2018</strong> en la ciudad de Santiago.Fue fundada por los hermanos <strong>Camila y Mateo Silva</strong>, dos apasionados veterinarios que buscaban ofrecer alimentos saludables, accesorios de alta calidad y un trato digno para todas las mascotas del país.</p>
+                    <p>Lo que comenzó como una pequeña tienda de barrio, con los años creció gracias a la confianza y recomendación de nuestros clientes.</p>
+                </div>
+            </div>
+        </section>
+
+    
+<section id="contacto" class="seccion-contacto">
+    <h2 class="titulo-seccion">Contacto</h2>
+    <p class="descripcion-contacto">¿Tienes dudas o consultas sobre nuestras mascotas o productos? Escríbenos y te responderemos a la brevedad.</p>
+
+    <form action="#" method="POST" class="formulario-contacto">
+        
+        <div class="grupo-campo">
+            <label for="nombre" class="etiqueta-campo">Nombre completo:</label>
+            <input type="text" id="nombre" name="nombre" class="entrada-campo" placeholder="Ej: Maria González" required>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="email" class="etiqueta-campo">Correo electrónico:</label>
+            <input type="email" id="email" name="email" class="entrada-campo" placeholder="ejemplo@correo.cl" required>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="asunto" class="etiqueta-campo">Asunto:</label>
+            <select id="asunto" name="asunto" class="entrada-campo" required>
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="consulta">Consulta General</option>
+                <option value="productos">Información de Productos</option>
+                <option value="servicios">Reserva de Servicios / Peluquería</option>
+                <option value="reclamo">Sugerencias o Reclamos</option>
+            </select>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="mensaje" class="etiqueta-campo">Mensaje:</label>
+            <textarea id="mensaje" name="mensaje" rows="4" class="entrada-campo area-texto" placeholder="Escribe tu mensaje aquí..." required></textarea>
+        </div>
+
+        <button type="submit" class="boton-enviar">Enviar Mensaje</button>
+
+    </form>
+</section>
+    </main>
+
