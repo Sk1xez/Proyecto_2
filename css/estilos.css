@@ -28,6 +28,72 @@ img {
 }
 
 /* ===== Header ===== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 30px;
+    background-color: var(--color-principal);
+}
+
+header .logo-enlace {
+    text-decoration: none;
+}
+
+header .logo-titulo {
+    color: var(--color-blanco);
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.menu-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.menu-enlace {
+    text-decoration: none;
+    color: var(--color-blanco);
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.menu-enlace:hover {
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+}
+
+.acciones-usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.enlace-accion {
+    text-decoration: none;
+    color: var(--color-blanco);
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.enlace-accion:hover {
+    background-color: var(--color-secundario);
+}
+
+.enlace-carrito {
+    text-decoration: none;
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+}
 
 /* ===== Presentación ===== */
 
@@ -39,6 +105,7 @@ img {
 
 /* ===== Contacto ===== */
 .encabezado {
+    display: block;
     background-color: var(--color-principal);
     color: var(--color-blanco);
     padding: 40px 2px;
