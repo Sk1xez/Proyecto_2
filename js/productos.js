@@ -167,4 +167,15 @@ function inicializarListadoProductos() {
     listarProductos(contenedor, PRODUCTOS, "img/productos/");
 }
 
+function inicializarDestacados() {
+    const contenedor = document.getElementById("lista-destacados");
+
+    if (!contenedor) {
+        return;
+    }
+
+    listarProductos(contenedor, PRODUCTOS.slice(0, 3), "img/productos/");
+}
+
 inicializarListadoProductos();
+inicializarDestacados();
