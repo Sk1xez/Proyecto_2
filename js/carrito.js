@@ -430,6 +430,11 @@ function inicializarCarrito() {
     configurarResumen();
 }
 
+configurarBotonesAgregar(document.getElementById("lista-productos"));
+configurarBotonesAgregar(document.getElementById("lista-destacados"));
+configurarBotonesAgregar(document.getElementById("lista-relacionados"));
+configurarBotonDetalle();
+
 inicializarCarrito();
 
 actualizarContadorCarrito();
