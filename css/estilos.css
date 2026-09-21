@@ -146,6 +146,66 @@ header .logo-titulo {
 }
 
 /* ===== Productos ===== */
+.seccion-productos {
+    padding: 40px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.contenedor-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.producto {
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.imagen-producto {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.nombre-producto {
+    font-size: 1.1rem;
+    margin: 12px 0 6px 0;
+}
+
+.precio-producto {
+    font-weight: bold;
+    color: var(--color-principal);
+    margin: 0 0 12px 0;
+}
+
+.boton-agregar {
+    background-color: var(--color-principal);
+    color: var(--color-blanco);
+    border: none;
+    padding: 10px 18px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+}
+
+.boton-agregar:hover {
+    background-color: var(--color-secundario);
+}
 
 /* ===== Footer ===== */
 
@@ -185,10 +245,12 @@ header .logo-titulo {
 
 .titulo-seccion {
     color: var(--color-secundario);
-    margin-top: 0;
+    margin: 0 0 25px 0;
+    text-align: center;
     border-bottom: 2px solid var(--color-secundario);
-    padding-bottom: 5px;
-    display: inline-block;
+    padding-bottom: 10px;
+    display: block;
+    font-size: 1.8rem;
 }
 
 .contenido-historia {
