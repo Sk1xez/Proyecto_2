@@ -1,28 +1,19 @@
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Header from './components/Header'
-import Footer from './components/Footer'
+import TiendaLayout from './layouts/TiendaLayout'
+import Home from './pages/Home'
 import Productos from './pages/Productos'
 
 function App() {
-  const [cantidadCarrito, setCantidadCarrito] = useState(0)
-
-  function agregarProducto() {
-    setCantidadCarrito(cantidadCarrito + 1)
-  }
+  const [cantidadCarrito] = useState(0)
 
   return (
-    <>
-      <Header cantidadCarrito={cantidadCarrito} />
-      <button onClick={agregarProducto}>Simular agregar producto</button>
-
-      <Routes>
-        <Route path="/" element={<h1>Home (temporal)</h1>} />
+    <Routes>
+      <Route element={<TiendaLayout cantidadCarrito={cantidadCarrito} />}>
+        <Route path="/" element={<Home />} />
         <Route path="/productos" element={<Productos />} />
-      </Routes>
-
-      <Footer />
-    </>
+      </Route>
+    </Routes>
   )
 }
 
