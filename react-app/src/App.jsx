@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
+import Footer from './components/Footer'
 
 function App() {
   const [cantidadCarrito, setCantidadCarrito] = useState(0)
@@ -12,6 +14,13 @@ function App() {
     <>
       <Header cantidadCarrito={cantidadCarrito} />
       <button onClick={agregarProducto}>Simular agregar producto</button>
+
+      <Routes>
+        <Route path="/" element={<h1>Home (temporal)</h1>} />
+        <Route path="/productos" element={<h1>Productos (temporal)</h1>} />
+      </Routes>
+
+      <Footer />
     </>
   )
 }

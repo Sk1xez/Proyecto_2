@@ -1,34 +1,36 @@
+import { Link } from 'react-router-dom'
+
 function Header(props) {
   return (
     <header>
-      <a href="index.html" className="logo-enlace">
+      <Link to="/" className="logo-enlace">
         <span className="logo-titulo">PetShop Chile</span>
-      </a>
+      </Link>
 
       <nav className="menu-principal">
         <ul className="menu-lista">
           <li>
-            <a href="index.html" className="menu-enlace">Home</a>
+            <Link to="/" className="menu-enlace">Home</Link>
           </li>
           <li>
-            <a href="productos.html" className="menu-enlace">Productos</a>
+            <Link to="/productos" className="menu-enlace">Productos</Link>
           </li>
           <li>
-            <a href="nosotros.html" className="menu-enlace">Nosotros</a>
+            <Link to="/nosotros" className="menu-enlace">Nosotros</Link>
           </li>
           <li>
-            <a href="blogs.html" className="menu-enlace">Blogs</a>
+            <Link to="/blogs" className="menu-enlace">Blogs</Link>
           </li>
           <li>
-            <a href="contacto.html" className="menu-enlace">Contacto</a>
+            <Link to="/contacto" className="menu-enlace">Contacto</Link>
           </li>
         </ul>
       </nav>
 
       <div className="acciones-usuario">
-        <a href="login.html" className="enlace-accion">Iniciar sesión</a>
-        <a href="registro.html" className="enlace-accion">Registrar usuario</a>
-        <a href="carrito.html" className="enlace-carrito">Carrito (<span id="contador-carrito">{props.cantidadCarrito}</span>)</a>
+        <Link to="/login" className="enlace-accion">Iniciar sesión</Link>
+        <Link to="/registro" className="enlace-accion">Registrar usuario</Link>
+        <Link to="/carrito" className="enlace-carrito">Carrito (<span id="contador-carrito">{props.cantidadCarrito}</span>)</Link>
       </div>
     </header>
   )
