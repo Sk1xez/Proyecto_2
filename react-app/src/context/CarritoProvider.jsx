@@ -24,7 +24,7 @@ function CarritoProvider({ children }) {
     }
   }, [lineas])
 
-  function agregar(producto) {
+  function agregar(producto, cantidad = 1) {
     if (!producto || producto.stock === 0) {
       return
     }
@@ -33,14 +33,14 @@ function CarritoProvider({ children }) {
       const existente = actuales.find((linea) => linea.id === producto.id)
 
       if (existente) {
-        const cantidad = Math.min(existente.cantidad + 1, producto.stock)
+        const nuevaCantidad = Math.min(existente.cantidad + cantidad, producto.stock)
 
         return actuales.map((linea) =>
-          linea.id === producto.id ? { ...linea, cantidad } : linea
+          linea.id === producto.id ? { ...linea, cantidad: nuevaCantidad } : linea
         )
       }
 
-      return [...actuales, { id: producto.id, cantidad: 1 }]
+      return [...actuales, { id: producto.id, cantidad: Math.max(cantidad, 1) }]
     })
   }
 

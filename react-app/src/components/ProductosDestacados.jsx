@@ -8,6 +8,7 @@ function ProductosDestacados({ productos, onAgregar }) {
         {productos.map((producto) => (
           <TarjetaProducto
             key={producto.id}
+            id={producto.id}
             nombre={producto.nombre}
             precio={producto.precio}
             imagen={producto.imagen}

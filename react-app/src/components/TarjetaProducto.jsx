@@ -1,14 +1,21 @@
+import { Link } from 'react-router-dom'
 import formatoPrecio from '../utils/precio'
 
-function TarjetaProducto({ nombre, precio, imagen, stock, onAgregar }) {
+function TarjetaProducto({ id, nombre, precio, imagen, stock, onAgregar }) {
   const sinStock = stock === 0
 
   return (
     <article className="h-100">
       <div className="card h-100">
-        <img src={imagen} alt={nombre} className="card-img-top imagen-producto" />
+        <Link to={`/productos/${id}`}>
+          <img src={imagen} alt={nombre} className="card-img-top imagen-producto" />
+        </Link>
         <div className="card-body d-flex flex-column">
-          <h3 className="card-title">{nombre}</h3>
+          <h3 className="card-title">
+            <Link to={`/productos/${id}`} className="link-dark text-decoration-none">
+              {nombre}
+            </Link>
+          </h3>
           <p className="card-text">{formatoPrecio(precio)}</p>
           <button
             type="button"

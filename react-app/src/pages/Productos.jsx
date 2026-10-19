@@ -52,6 +52,7 @@ function Productos() {
           {filtrados.map((producto) => (
             <div className="col" key={producto.id}>
               <TarjetaProducto
+                id={producto.id}
                 nombre={producto.nombre}
                 precio={producto.precio}
                 imagen={producto.imagen}
