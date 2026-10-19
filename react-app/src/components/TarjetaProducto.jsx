@@ -37,7 +37,7 @@ function TarjetaProducto({ id, nombre, precio, imagen, stock, oferta, onAgregar 
             type="button"
             className="btn btn-primary mt-auto"
             disabled={sinStock}
-            onClick={onAgregar}
+            onClick={() => onAgregar(id)}
           >
             {sinStock ? 'Sin stock' : 'Añadir'}
           </button>
