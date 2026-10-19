@@ -1,8 +1,10 @@
 import Header from './components/Header'
 
 function App() {
+  const cantidadCarrito = 1
+
   return (
-    <Header />
+    <Header cantidadCarrito={cantidadCarrito} />
   )
 }
 

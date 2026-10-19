@@ -1,4 +1,4 @@
-function Header() {
+function Header(props) {
   return (
     <header>
       <a href="index.html" className="logo-enlace">
@@ -28,7 +28,7 @@ function Header() {
       <div className="acciones-usuario">
         <a href="login.html" className="enlace-accion">Iniciar sesión</a>
         <a href="registro.html" className="enlace-accion">Registrar usuario</a>
-        <a href="carrito.html" className="enlace-carrito">Carrito (<span id="contador-carrito">0</span>)</a>
+        <a href="carrito.html" className="enlace-carrito">Carrito (<span id="contador-carrito">{props.cantidadCarrito}</span>)</a>
       </div>
     </header>
   )
