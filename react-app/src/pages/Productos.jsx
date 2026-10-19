@@ -1,5 +1,5 @@
 import productos from '../data/productos'
-import TarjetaProducto from './TarjetaProducto'
+import TarjetaProducto from '../components/TarjetaProducto'
 
 function Productos() {
   return (
