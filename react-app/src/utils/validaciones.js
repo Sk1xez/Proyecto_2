@@ -19,6 +19,7 @@ export const MENSAJES = {
   correoDominio: "El correo debe terminar en @duoc.cl, @profesor.duoc.cl o @gmail.com.",
   claveLargo: "La contraseña debe tener entre 4 y 10 caracteres.",
   runInvalido: "El RUN no es válido.",
+  claveNoCoincide: "Las contraseñas no coinciden.",
   fechaFutura: "La fecha no puede ser en el futuro.",
   telefonoLargo: "El teléfono debe tener 9 dígitos."
 }
@@ -51,6 +52,14 @@ export function largoEntre(valor, minimo, maximo, mensaje = MENSAJES.maximo) {
 
 export function contrasenaValida(valor) {
   return largoEntre(valor, LIMITES.claveMinima, LIMITES.claveMaxima, MENSAJES.claveLargo)
+}
+
+export function coincideClave(valor, contrasena) {
+  if (vacio(valor)) {
+    return ""
+  }
+
+  return String(valor) === String(contrasena) ? "" : MENSAJES.claveNoCoincide
 }
 
 export function correoValido(valor) {

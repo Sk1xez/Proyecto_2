@@ -8,6 +8,7 @@ import Ofertas from './pages/Ofertas'
 import CarritoPage from './pages/CarritoPage'
 import Checkout from './pages/Checkout'
 import Login from './pages/Login'
+import Registro from './pages/Registro'
 import PanelAdmin from './pages/admin/PanelAdmin'
 import NotFound from './pages/NotFound'
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/carrito" element={<CarritoPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
         <Route path="/admin" element={<PanelAdmin />} />
         <Route path="*" element={<NotFound />} />
       </Route>
