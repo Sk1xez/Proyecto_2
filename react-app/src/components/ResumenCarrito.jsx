@@ -6,6 +6,7 @@ function ResumenCarrito({
   cupon,
   codigoCupon,
   mensajeCupon,
+  deshabilitado = false,
   onCodigoCuponChange,
   onAplicarCupon,
   onPagar
@@ -41,8 +42,14 @@ function ResumenCarrito({
             placeholder="Código de cupón"
             value={codigoCupon}
             onChange={(evento) => onCodigoCuponChange(evento.target.value)}
+            disabled={deshabilitado}
           />
-          <button type="button" className="btn btn-outline-secondary" onClick={onAplicarCupon}>
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={onAplicarCupon}
+            disabled={deshabilitado}
+          >
             Aplicar
           </button>
         </div>
@@ -53,7 +60,12 @@ function ResumenCarrito({
           </div>
         )}
 
-        <button type="button" className="btn btn-primary w-100" onClick={onPagar}>
+        <button
+          type="button"
+          className="btn btn-primary w-100"
+          onClick={onPagar}
+          disabled={deshabilitado}
+        >
           Pagar
         </button>
       </div>
