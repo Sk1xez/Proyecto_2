@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { useCarrito } from '../context/useCarrito'
+import { useSesion } from '../context/useSesion'
 
-function Header({ cantidadCarrito }) {
+function Header() {
   const [abierto, setAbierto] = useState(false)
+  const { totalUnidades } = useCarrito()
+  const { sesion, cerrarSesion } = useSesion()
 
   function alternarMenu() {
     setAbierto(!abierto)
@@ -13,6 +17,7 @@ function Header({ cantidadCarrito }) {
   }
 
   const claseEnlace = ({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')
+  const esStaff = sesion && (sesion.rol === 'Administrador' || sesion.rol === 'Vendedor')
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark navbar-petshop">
@@ -55,15 +60,35 @@ function Header({ cantidadCarrito }) {
             </li>
           </ul>
 
-          <ul className="navbar-nav" onClick={cerrarMenu}>
+          <ul className="navbar-nav align-items-lg-center" onClick={cerrarMenu}>
+            {sesion ? (
+              <>
+                <li className="nav-item">
+                  <span className="nav-link disabled">Hola, {sesion.nombre}</span>
+                </li>
+                {esStaff && (
+                  <li className="nav-item">
+                    <NavLink to="/admin" className={claseEnlace}>Panel</NavLink>
+                  </li>
+                )}
+                <li className="nav-item">
+                  <button type="button" className="nav-link btn btn-link" onClick={cerrarSesion}>
+                    Cerrar sesión
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <NavLink to="/login" className={claseEnlace}>Iniciar sesión</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink to="/registro" className={claseEnlace}>Registrar usuario</NavLink>
+                </li>
+              </>
+            )}
             <li className="nav-item">
-              <NavLink to="/login" className={claseEnlace}>Iniciar sesión</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/registro" className={claseEnlace}>Registrar usuario</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/carrito" className={claseEnlace}>Carrito ({cantidadCarrito})</NavLink>
+              <NavLink to="/carrito" className={claseEnlace}>Carrito ({totalUnidades})</NavLink>
             </li>
           </ul>
         </div>

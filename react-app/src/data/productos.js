@@ -1,4 +1,6 @@
-const productos = [
+import { crearRepositorio } from './repositorio'
+
+const PRODUCTOS_INICIALES = [
   {
     id: 1,
     codigo: "P001",
@@ -6,6 +8,7 @@ const productos = [
     descripcion: "Alimento balanceado para perros adultos, aporta la energia y los nutrientes necesarios para una vida saludable.",
     categoria: "alimentos",
     precio: 12990,
+    oferta: 10,
     stock: 25,
     stockCritico: 5,
     imagen: "/img/productos/alimento.jpg"
@@ -17,6 +20,7 @@ const productos = [
     descripcion: "Alimento completo para gatos, con proteinas y vitaminas para su desarrollo.",
     categoria: "alimentos",
     precio: 9990,
+    oferta: 0,
     stock: 8,
     stockCritico: 10,
     imagen: "/img/productos/alimento-gato.avif"
@@ -28,6 +32,7 @@ const productos = [
     descripcion: "Cama acolchada y lavable para el descanso de tu mascota.",
     categoria: "accesorios",
     precio: 19990,
+    oferta: 0,
     stock: 4,
     stockCritico: 3,
     imagen: "/img/productos/cama.avif"
@@ -39,6 +44,7 @@ const productos = [
     descripcion: "Collar ajustable, resistente y comodo para pasear a tu mascota.",
     categoria: "accesorios",
     precio: 4990,
+    oferta: 15,
     stock: 20,
     stockCritico: 5,
     imagen: "/img/productos/collar.avif"
@@ -50,6 +56,7 @@ const productos = [
     descripcion: "Juguete de caucho resistente para morder y mantener la higiene dental.",
     categoria: "juguetes",
     precio: 5490,
+    oferta: 0,
     stock: 15,
     stockCritico: 5,
     imagen: "/img/productos/juguete.jpg"
@@ -61,6 +68,7 @@ const productos = [
     descripcion: "Juguete interactivo con plumas para entretener a tu gato.",
     categoria: "juguetes",
     precio: 6990,
+    oferta: 0,
     stock: 3,
     stockCritico: 4,
     imagen: "/img/productos/juguete-gato.jpg"
@@ -72,6 +80,7 @@ const productos = [
     descripcion: "Pelota que rebota y rueda sola para mantener activa a tu mascota.",
     categoria: "juguetes",
     precio: 3990,
+    oferta: 20,
     stock: 8,
     stockCritico: 4,
     imagen: "/img/productos/pelota.jpg"
@@ -83,6 +92,7 @@ const productos = [
     descripcion: "Shampoo suave para el cuidado del pelo y la piel de tu mascota.",
     categoria: "higiene",
     precio: 7490,
+    oferta: 0,
     stock: 6,
     stockCritico: 2,
     imagen: "/img/productos/shampoo.jpg"
@@ -94,10 +104,13 @@ const productos = [
     descripcion: "Snacks crocantes ideales como premio para tu perro.",
     categoria: "alimentos",
     precio: 2990,
+    oferta: 0,
     stock: 25,
     stockCritico: 5,
     imagen: "/img/productos/snacksparaperros.jpeg"
   }
 ];
 
-export default productos;
+const repositorio = crearRepositorio("petshop-productos", PRODUCTOS_INICIALES)
+
+export const { listar, obtenerPorId, crear, actualizar, eliminar } = repositorio

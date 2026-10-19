@@ -12,7 +12,7 @@ function ProductosDestacados({ productos, onAgregar }) {
             precio={producto.precio}
             imagen={producto.imagen}
             stock={producto.stock}
-            onAgregar={onAgregar}
+            onAgregar={() => onAgregar(producto)}
           />
         ))}
       </div>

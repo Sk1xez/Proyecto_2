@@ -1,14 +1,16 @@
-import productos from '../data/productos'
+import { listar } from '../data/productos'
+import { useCarrito } from '../context/useCarrito'
 import Portada from '../components/Portada'
 import ProductosDestacados from '../components/ProductosDestacados'
 
 function Home() {
-  const destacados = productos.slice(0, 3)
+  const { agregar } = useCarrito()
+  const destacados = listar().slice(0, 3)
 
   return (
     <>
       <Portada />
-      <ProductosDestacados productos={destacados} />
+      <ProductosDestacados productos={destacados} onAgregar={agregar} />
     </>
   )
 }

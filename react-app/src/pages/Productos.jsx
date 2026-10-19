@@ -1,7 +1,11 @@
-import productos from '../data/productos'
+import { listar } from '../data/productos'
+import { useCarrito } from '../context/useCarrito'
 import TarjetaProducto from '../components/TarjetaProducto'
 
 function Productos() {
+  const productos = listar()
+  const { agregar } = useCarrito()
+
   return (
     <section className="seccion-productos">
       <h1>Productos</h1>
@@ -13,6 +17,7 @@ function Productos() {
             precio={producto.precio}
             imagen={producto.imagen}
             stock={producto.stock}
+            onAgregar={() => agregar(producto)}
           />
         ))}
       </div>
