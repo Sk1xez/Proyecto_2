@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { obtenerPorId, listar } from '../data/productos'
 import { useCarrito } from '../context/useCarrito'
-import TarjetaProducto from '../components/TarjetaProducto'
+import ListadoProductos from '../components/ListadoProductos'
 import formatoPrecio from '../utils/precio'
 
 function DetalleProducto() {
@@ -103,20 +103,7 @@ function DetalleProducto() {
       {relacionados.length > 0 && (
         <section className="seccion-productos mt-5">
           <h2 className="titulo-seccion">Productos relacionados</h2>
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
-            {relacionados.map((item) => (
-              <div className="col" key={item.id}>
-                <TarjetaProducto
-                  id={item.id}
-                  nombre={item.nombre}
-                  precio={item.precio}
-                  imagen={item.imagen}
-                  stock={item.stock}
-                  onAgregar={() => agregar(item)}
-                />
-              </div>
-            ))}
-          </div>
+          <ListadoProductos productos={relacionados} />
         </section>
       )}
     </section>

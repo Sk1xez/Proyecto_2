@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import { listar } from '../data/productos'
 import { listar as listarCategorias } from '../data/categorias'
-import { useCarrito } from '../context/useCarrito'
-import TarjetaProducto from '../components/TarjetaProducto'
 import FiltrosProductos from '../components/FiltrosProductos'
+import ListadoProductos from '../components/ListadoProductos'
 
 function Productos() {
   const productos = listar()
   const categorias = listarCategorias()
-  const { agregar } = useCarrito()
 
   const [busqueda, setBusqueda] = useState('')
   const [categoria, setCategoria] = useState('')
@@ -43,26 +41,10 @@ function Productos() {
         onOrdenChange={setOrden}
       />
 
-      {filtrados.length === 0 ? (
-        <div className="alert alert-info" role="alert">
-          No se encontraron productos que coincidan con tu búsqueda.
-        </div>
-      ) : (
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
-          {filtrados.map((producto) => (
-            <div className="col" key={producto.id}>
-              <TarjetaProducto
-                id={producto.id}
-                nombre={producto.nombre}
-                precio={producto.precio}
-                imagen={producto.imagen}
-                stock={producto.stock}
-                onAgregar={() => agregar(producto)}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+      <ListadoProductos
+        productos={filtrados}
+        mensajeVacio="No se encontraron productos que coincidan con tu búsqueda."
+      />
     </section>
   )
 }
