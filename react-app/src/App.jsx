@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import Productos from './components/Productos'
 
 function App() {
   const [cantidadCarrito, setCantidadCarrito] = useState(0)
@@ -17,7 +18,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<h1>Home (temporal)</h1>} />
-        <Route path="/productos" element={<h1>Productos (temporal)</h1>} />
+        <Route path="/productos" element={<Productos />} />
       </Routes>
 
       <Footer />
