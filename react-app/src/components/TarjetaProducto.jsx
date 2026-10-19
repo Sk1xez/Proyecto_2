@@ -1,10 +1,12 @@
+import formatoPrecio from '../utils/precio'
+
 function TarjetaProducto({ nombre, precio, imagen }) {
   return (
     <article className="producto">
       <img src={imagen} alt={nombre} />
       <h3>{nombre}</h3>
-      <p>${precio}</p>
-      <button type="button">Añadir</button>
+      <p>{formatoPrecio(precio)}</p>
+      <button type="button" className="btn btn-primary">Añadir</button>
     </article>
   )
 }
