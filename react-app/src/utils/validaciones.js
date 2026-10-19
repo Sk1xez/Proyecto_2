@@ -147,3 +147,39 @@ export function direccionValida(valor) {
 export function comentarioValido(valor) {
   return largoMaximo(valor, LIMITES.comentario)
 }
+
+export function precioValido(valor) {
+  const texto = String(valor ?? "").trim()
+
+  if (texto === "") {
+    return MENSAJES.requerido
+  }
+
+  if (/^-\d+(\.\d+)?$/.test(texto)) {
+    return "Debe ser un número mayor o igual a 0."
+  }
+
+  if (!/^\d+(\.\d+)?$/.test(texto)) {
+    return "Debe ingresar un número."
+  }
+
+  if (!/^\d+(\.\d{1,2})?$/.test(texto)) {
+    return "El precio admite hasta 2 decimales."
+  }
+
+  return ""
+}
+
+export function enteroNoNegativo(valor, requeridoCampo = false) {
+  const texto = String(valor ?? "").trim()
+
+  if (texto === "") {
+    return requeridoCampo ? MENSAJES.requerido : ""
+  }
+
+  if (/^-\d+$/.test(texto)) {
+    return "Debe ser un número mayor o igual a 0."
+  }
+
+  return /^\d+$/.test(texto) ? "" : "Debe ingresar un número entero."
+}
