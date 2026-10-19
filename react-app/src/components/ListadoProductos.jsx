@@ -22,6 +22,7 @@ function ListadoProductos({ productos, mensajeVacio = 'No se encontraron product
             precio={producto.precio}
             imagen={producto.imagen}
             stock={producto.stock}
+            oferta={producto.oferta}
             onAgregar={() => agregar(producto)}
           />
         </div>

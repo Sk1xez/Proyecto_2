@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { obtenerPorId } from '../data/productos'
+import { precioFinal } from '../utils/precio'
 import { CarritoContext } from './CarritoContext'
 
 const CLAVE_CARRITO = 'carrito'
@@ -68,7 +69,7 @@ function CarritoProvider({ children }) {
 
   const total = lineas.reduce((totalLinea, linea) => {
     const producto = obtenerPorId(linea.id)
-    return totalLinea + (producto ? producto.precio * linea.cantidad : 0)
+    return totalLinea + (producto ? precioFinal(producto) * linea.cantidad : 0)
   }, 0)
 
   const valor = { lineas, agregar, cambiarCantidad, eliminar, vaciar, totalUnidades, total }

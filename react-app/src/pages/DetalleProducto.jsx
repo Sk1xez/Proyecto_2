@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { obtenerPorId, listar } from '../data/productos'
 import { useCarrito } from '../context/useCarrito'
 import ListadoProductos from '../components/ListadoProductos'
-import formatoPrecio from '../utils/precio'
+import formatoPrecio, { precioFinal } from '../utils/precio'
 
 function DetalleProducto() {
   const { id } = useParams()
@@ -65,7 +65,17 @@ function DetalleProducto() {
 
         <div className="col-md-6">
           <h1 className="titulo-presentacion">{producto.nombre}</h1>
-          <p className="descripcion-presentacion fs-3">{formatoPrecio(producto.precio)}</p>
+          <p className="descripcion-presentacion fs-3">
+            {producto.oferta > 0 && (
+              <span className="text-decoration-line-through text-muted me-2">
+                {formatoPrecio(producto.precio)}
+              </span>
+            )}
+            <strong>{formatoPrecio(precioFinal(producto))}</strong>
+            {producto.oferta > 0 && (
+              <span className="badge bg-danger ms-2 align-middle">-{producto.oferta}%</span>
+            )}
+          </p>
           <p>{producto.descripcion}</p>
 
           <div className="campo-cantidad mb-3" style={{ maxWidth: '160px' }}>
