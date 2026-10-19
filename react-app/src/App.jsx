@@ -7,6 +7,8 @@ import Categorias from './pages/Categorias'
 import Ofertas from './pages/Ofertas'
 import CarritoPage from './pages/CarritoPage'
 import Checkout from './pages/Checkout'
+import PagoCorrecto from './pages/PagoCorrecto'
+import PagoError from './pages/PagoError'
 import Login from './pages/Login'
 import Registro from './pages/Registro'
 import PanelAdmin from './pages/admin/PanelAdmin'
@@ -24,6 +26,8 @@ function App() {
         <Route path="/ofertas" element={<Ofertas />} />
         <Route path="/carrito" element={<CarritoPage />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/pago-correcto/:numero" element={<PagoCorrecto />} />
+        <Route path="/pago-error/:numero" element={<PagoError />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/admin" element={<PanelAdmin />} />

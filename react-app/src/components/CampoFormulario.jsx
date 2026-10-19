@@ -2,13 +2,14 @@ function CampoFormulario({
   etiqueta,
   id,
   valor,
-  onChange,
+  onChange = () => {},
   error,
   tipo = 'input',
   tipoEntrada = 'text',
   placeholder,
   opciones,
   contador,
+  deshabilitado = false,
   children
 }) {
   const claseControl = error ? 'is-invalid' : ''
@@ -26,6 +27,7 @@ function CampoFormulario({
           rows="4"
           value={valor}
           placeholder={placeholder}
+          disabled={deshabilitado}
           onChange={(evento) => onChange(evento.target.value)}
         />
       )}
@@ -35,6 +37,7 @@ function CampoFormulario({
           id={id}
           className={`form-select ${claseControl}`}
           value={valor}
+          disabled={deshabilitado}
           onChange={(evento) => onChange(evento.target.value)}
         >
           {opciones
@@ -54,6 +57,7 @@ function CampoFormulario({
           className={`form-control ${claseControl}`}
           value={valor}
           placeholder={placeholder}
+          disabled={deshabilitado}
           onChange={(evento) => onChange(evento.target.value)}
         />
       )}
