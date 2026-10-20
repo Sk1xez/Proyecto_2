@@ -3,7 +3,7 @@
 **Proyecto:** PetShop Chile — React + Vite
 **Fecha:** 20/10/2026
 **Comando de ejecución:** `npm test` (dentro de `react-app/`)
-**Resultado:** 18/18 pruebas en verde
+**Resultado:** 20/20 pruebas en verde
 
 ---
 
@@ -11,12 +11,12 @@
 
 ### 1.1 Qué se probó
 
-Las 18 pruebas cubren los módulos críticos del flujo de compra y sus bases (24 archivos instrumentados por `babel-plugin-istanbul`: los que el grafo de webpack de los specs alcanza a importar):
+Las 20 pruebas cubren los módulos críticos del flujo de compra y sus bases (24 archivos instrumentados por `babel-plugin-istanbul`: los que el grafo de webpack de los specs alcanza a importar):
 
 | Módulo | Archivo | Qué se cubre |
 |--------|---------|--------------|
 | Componente | `src/components/TarjetaProducto.jsx` | Render de nombre y precio, evento del botón Añadir, condición sin stock |
-| Componente | `src/components/RutaProtegida.jsx` | Redirección al login sin sesión (rama pública) |
+| Componente | `src/components/RutaProtegida.jsx` | Redirección al login sin sesión, Cliente → `/` y Vendedor → `/admin` en ruta solo de Administrador |
 | Componente | `src/components/ResumenCarrito.jsx` | Aplicar un cupón actualiza el total mostrado |
 | Componente | `src/components/CampoFormulario.jsx` | Render de input, etiqueta y estado (usado indirectamente por Login y Checkout) |
 | Componente | `src/components/ListadoProductos.jsx` | Listado y botones de las tarjetas (usado por Productos) |
@@ -62,13 +62,13 @@ npm install   # primera vez
 npm test      # = karma start karma.conf.js --single-run
 ```
 
-Salida esperada: `TOTAL: 18 SUCCESS` más el resumen de cobertura. El reporte HTML queda en `react-app/coverage/html/index.html` (abrirlo en el navegador) y los datos crudos en `react-app/coverage/lcov/lcov.info`.
+Salida esperada: `TOTAL: 20 SUCCESS` más el resumen de cobertura. El reporte HTML queda en `react-app/coverage/html/index.html` (abrirlo en el navegador) y los datos crudos en `react-app/coverage/lcov/lcov.info`.
 
 **Configuración clave:**
 - `karma.conf.js`: frameworks `jasmine`; archivos `src/**/*.spec.jsx`; preprocesador `webpack`; reporters `progress` y `coverage`; salida `coverage/`; navegador `ChromeHeadlessNoSandbox`.
 - `webpack.test.config.js`: `mode: development`, `inline-source-map`, babel-loader con istanbul solo en test, reglas para CSS e imágenes, `resolve.fullySpecified: false` (por `"type": "module"` del package.json).
 
-## 3. Tabla de pruebas (18)
+## 3. Tabla de pruebas (20)
 
 | # | Archivo spec | Componente / módulo | Qué verifica | Tipo | Concepto clave |
 |---|--------------|---------------------|--------------|------|----------------|
@@ -86,10 +86,12 @@ Salida esperada: `TOTAL: 18 SUCCESS` más el resumen de cobertura. El reporte HT
 | 12 | `repositorio.spec.jsx` | `crearRepositorio()` | `crear` (id = máx + 1), `actualizar` y `eliminar` sobre `localStorage` mockeado | Unitaria + mock | CRUD, `Map` en memoria |
 | 13 | `CarritoProvider.spec.jsx` | CarritoProvider | Agregar dos veces el mismo producto suma la cantidad (RN-04) y persiste | Estado + mock | `spyOn(Storage.prototype, …)`, `act()` |
 | 14 | `RutaProtegida.spec.jsx` | RutaProtegida | Sin sesión redirige a `/login` y no renderiza el panel | Renderizado condicional | `MemoryRouter`, `Navigate` |
-| 15 | `ResumenCarrito.spec.jsx` | ResumenCarrito | Aplicar BIENVENIDO10 cambia el total de $10.000 a $9.000 | Estado + evento | envoltura con `useState`, `fireEvent` |
-| 16 | `Productos.spec.jsx` | Productos | Escribir "croquetas" en el buscador reduce la lista de 3 a 1 | Render + evento | filtro por texto de `FiltrosProductos` |
-| 17 | `Checkout.spec.jsx` | Checkout + pago | Pago aprobado: navega a `/pago-correcto/ORD-0001`, orden "pagada" y stock descontado | Integración + mock | `spyOn(servicioPago, 'procesarPago')`, `findByText` |
-| 18 | `Checkout.spec.jsx` | Checkout + pago | Pago rechazado: navega a `/pago-error/ORD-0001`, orden "fallida" con motivo | Integración + mock | `spyOn` con `and.returnValue`, RN-11 |
+| 15 | `RutaProtegida.spec.jsx` | RutaProtegida | Un Cliente que entra a `/admin` termina en `/` (la tienda) | Roles | `Navigate to="/"` con `sesion.rol` |
+| 16 | `RutaProtegida.spec.jsx` | RutaProtegida | Un Vendedor en `/admin/usuarios` (solo Administrador) termina en `/admin` | Roles | `rolesPermitidos={['Administrador']}` |
+| 17 | `ResumenCarrito.spec.jsx` | ResumenCarrito | Aplicar BIENVENIDO10 cambia el total de $10.000 a $9.000 | Estado + evento | envoltura con `useState`, `fireEvent` |
+| 18 | `Productos.spec.jsx` | Productos | Escribir "croquetas" en el buscador reduce la lista de 3 a 1 | Render + evento | filtro por texto de `FiltrosProductos` |
+| 19 | `Checkout.spec.jsx` | Checkout + pago | Pago aprobado: navega a `/pago-correcto/ORD-0001`, orden "pagada" y stock descontado | Integración + mock | `spyOn(servicioPago, 'procesarPago')`, `findByText` |
+| 20 | `Checkout.spec.jsx` | Checkout + pago | Pago rechazado: navega a `/pago-error/ORD-0001`, orden "fallida" con motivo | Integración + mock | `spyOn` con `and.returnValue`, RN-11 |
 
 Todas siguen el patrón **preparar → actuar → verificar** (`render` con sus mocks → `fireEvent` → `expect`).
 
@@ -98,14 +100,14 @@ Todas siguen el patrón **preparar → actuar → verificar** (`render` con sus 
 ### 4.1 Captura 1 — Resumen de la ejecución (`npm test`)
 
 ```
-Chrome Headless 155.0.0.0 (Linux 0.0.0): Executed 18 of 18 SUCCESS (0 secs / 0.18 secs)
-TOTAL: 18 SUCCESS
+Chrome Headless 155.0.0.0 (Linux 0.0.0): Executed 20 of 20 SUCCESS (0 secs / 0.19 secs)
+TOTAL: 20 SUCCESS
 
 =============================== Coverage summary ===============================
-Statements   : 75.2%  ( 273/363 )
-Branches     : 51.02% ( 124/243 )
+Statements   : 76.3%  ( 277/363 )
+Branches     : 53.49% ( 130/243 )
 Functions    : 74.13% ( 86/116 )
-Lines        : 75.8%  ( 260/343 )
+Lines        : 76.96% ( 264/343 )
 ===============================================================================
 ```
 
@@ -115,9 +117,9 @@ Vista general del reporte (`react-app/coverage/html/index.html`), generada por i
 
 ![Vista general del reporte de cobertura HTML](capturas/cobertura-resumen.png)
 
-Detalle de `Checkout.jsx` (una de las páginas más cubiertas, 89,4% de líneas):
+Detalle de `RutaProtegida.jsx` tras agregar las pruebas de roles (88,9% de líneas y 87,5% de ramas):
 
-![Detalle de cobertura de Checkout.jsx](capturas/cobertura-checkout.png)
+![Detalle de cobertura de RutaProtegida.jsx](capturas/cobertura-rutaprotegida.png)
 
 Las capturas están en `docs/capturas/`. El reporte HTML completo se genera con `npm test` en `react-app/coverage/html/index.html`.
 
@@ -148,8 +150,8 @@ Las capturas están en `docs/capturas/`. El reporte HTML completo se genera con 
 | `components/CampoFormulario.jsx` | 83,3% (5/6) | 66,7% (4/6) | 77,8% (14/18) |
 | `components/ListadoProductos.jsx` | 66,7% (4/6) | 66,7% (2/3) | 33,3% (1/3) |
 | `components/FiltrosProductos.jsx` | 60% (3/5) | 60% (3/5) | — |
-| `components/RutaProtegida.jsx` | 44,4% (4/9) | 100% (1/1) | 12,5% (1/8) |
-| **TOTAL** | **75,8% (260/343)** | **74,13% (86/116)** | **51% (124/243)** |
+| `components/RutaProtegida.jsx` | 88,9% (8/9) | 100% (1/1) | 87,5% (7/8) |
+| **TOTAL** | **76,96% (264/343)** | **74,13% (86/116)** | **53,49% (130/243)** |
 
 Nota: solo aparecen los archivos que el grafo de los specs alcanza a importar; los demás (páginas del panel, layouts, etc.) no están instrumentados y no suman al total.
 
@@ -160,7 +162,7 @@ Nota: solo aparecen los archivos que el grafo de los specs alcanza a importar; l
 1. **Panel administrativo y vistas informativas:** priorizamos el flujo de compra completo y las bases compartidas (repositorio, validaciones, contextos); el panel se dejó para specs específicos porque cada página depende de varios módulos de datos a la vez.
 2. **`data/usuarios.js` (27,3% de líneas):** los specs de Login mockean el contexto de sesión, así que no se ejecutan `buscarPorCorre…`, `buscarPorCredenciales` ni la siembra real de usuarios.
 3. **`utils/validaciones.js` (59,7%):** quedan sin probar `telefonoValido`, `direccionValida`, `precioValido`, `enteroNoNegativo` y las ramas vacías de `largoMaximo`/`largoEntre`.
-4. **Branches globales al 51%:** la mayor parte corresponde a los `catch` de `localStorage`/`sessionStorage` (storage dañado o cuota llena) y a los props con valor por defecto (`deshabilitado = false`, `mensajeVacio`).
+4. **Branches globales al 53,5%:** la mayor parte corresponde a los `catch` de `localStorage`/`sessionStorage` (storage dañado o cuota llena) y a los props con valor por defecto (`deshabilitado = false`, `mensajeVacio`). Las ramas de `RutaProtegida` quedaron cubiertas con las 3 pruebas de roles (87,5%).
 5. **`services/pago.js` (40%):** en Checkout se sustituye con `spyOn`, por eso la función real solo se ejecuta en la siembra de otros specs; se podría cubrir con un spec unitario directo del servicio.
 
 ### Qué mejorarías
@@ -179,7 +181,7 @@ Nota: solo aparecen los archivos que el grafo de los specs alcanza a importar; l
 | `spyOn(Storage.prototype, 'getItem'/'setItem').and.callFake(…)` con un `Map` | CarritoProvider, Checkout, Productos, repositorio | Reemplazar el `localStorage` real por un almacén en memoria: aislamiento total entre pruebas, control de la semilla y verificación de lo que quedó persistido (orden creada, stock descontado). |
 | `spyOn(servicioPago, 'procesarPago').and.returnValue({ok: true/false…})` | Checkout (pruebas 17 y 18) | Simular la pasarela de pago: se prueba el camino de éxito y el de rechazo sin depender del monto; `servicioPago` se exporta como objeto precisamente para poder espiarlo. |
 | `jasmine.clock().install()` + `mockDate` | fechaNoFutura (prueba 9) | Fijar la fecha del navegador al 20/10/2026 para que la validación de "fecha no futura" sea determinista en cualquier máquina y zona horaria. |
-| `MemoryRouter initialEntries={['/login']}` / `{['/checkout']}` / `{['/admin']}` | Login, RutaProtegida, Checkout | Simula la URL de la SPA sin necesidad de navegador real; permite verificar las redirecciones de `Navigate` y el cambio de ruta tras el pago. |
+| `MemoryRouter initialEntries={['/login']}` / `{['/checkout']}` / `{['/admin']}` / `{['/admin/usuarios']}` | Login, RutaProtegida, Checkout | Simula la URL de la SPA sin necesidad de navegador real; permite verificar las redirecciones de `Navigate` (login, tienda, `/admin`) y el cambio de ruta tras el pago. |
 | `act()` y `findByText` de @testing-library/react | CarritoProvider, Checkout | `act()` aplica cambios de estado fuera de eventos; `findByText` espera a que React termine de pintar la ruta destino después de navegar. |
 
 Ningún mock depende de implementaciones internas de React o de librerías de terceros; todos sustituyen límites del sistema (almacenamiento, sesión, ruteo, pago y espías de eventos), que es la recomendación del curso para pruebas estables.

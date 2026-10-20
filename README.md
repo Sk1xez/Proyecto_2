@@ -15,7 +15,7 @@ La aplicación React vive en `react-app/`:
 cd react-app
 npm install   # primera vez: instala dependencias
 npm run dev   # servidor de desarrollo (Vite) en el navegador
-npm test      # suite de pruebas Karma + Jasmine (18 pruebas)
+npm test      # suite de pruebas Karma + Jasmine (20 pruebas)
 ```
 
 Otros comandos útiles: `npm run build` (build de producción en `dist/`) y `npm run lint` (ESLint).

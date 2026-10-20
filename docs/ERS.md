@@ -21,7 +21,7 @@ Tienda online de artículos y servicios para mascotas. Proyecto frontend migrado
 |---------|-------|-------------|
 | V1.0 | 21/09/2026 | Evaluación 1: sitio estático con HTML5, CSS3 y JavaScript puro (sin frameworks). |
 | V2.0 | 20/10/2026 | Evaluación Parcial 2: migración a React + Vite con panel completo y pruebas. |
-| V2.1 | 20/10/2026 | Correcciones: estilos embebidos en `react-app/`, panel como ruta de primer nivel, suite de 18 pruebas y número de orden por máximo. |
+| V2.1 | 20/10/2026 | Correcciones: estilos embebidos en `react-app/`, panel como ruta de primer nivel, suite de 20 pruebas y número de orden por máximo. |
 
 **Resumen de cambios V1.0 → V2.0:**
 
@@ -33,14 +33,14 @@ Tienda online de artículos y servicios para mascotas. Proyecto frontend migrado
 - Protección de rutas con el componente `RutaProtegida` (roles Administrador, Vendedor y Cliente) y layout propio del panel (`AdminLayout`).
 - Capa de datos con CRUD real (`src/data/` + repositorio genérico sobre `localStorage`); los cambios del panel se reflejan en la tienda pública.
 - Formularios reutilizables (`CampoFormulario`, `FormularioProducto`, `FormularioUsuario`, `FormularioCategoria`) sin duplicación de HTML.
-- Entorno de pruebas con **Karma + Jasmine** (compilación con webpack y Babel), 10 pruebas unitarias y reporte de cobertura.
+- Entorno de pruebas con **Karma + Jasmine** (compilación con webpack y Babel), 20 pruebas unitarias y reporte de cobertura.
 - Este ERS actualizado: secciones 2.3, 2.4, 3, 6, 8, 11 y 12, más las nuevas secciones 13 (Arquitectura) y 14 (Plan de Pruebas).
 
 **Resumen de cambios V2.0 → V2.1:**
 
 - `css/estilos.css` se copió a `react-app/src/styles/estilos.css` para que la carpeta `react-app/` sea autosuficiente (build y despliegue sin depender de la raíz del repo).
 - Las rutas del panel salieron del layout de la tienda: `/admin` es ahora ruta de primer nivel envuelta en `RutaProtegida` con `AdminLayout` propio (sin Header ni Footer de la tienda).
-- Suite de pruebas ampliada de 10 a **18** (cupones, precio final con oferta, CRUD del repositorio, Checkout con pago aprobado/rechazado, cupón en el resumen del carrito, filtro del catálogo y `jasmine.clock`).
+- Suite de pruebas ampliada de 10 a **20** (cupones, precio final con oferta, CRUD del repositorio, Checkout con pago aprobado/rechazado, cupón en el resumen del carrito, filtro del catálogo, roles de `RutaProtegida` y `jasmine.clock`).
 - Número de orden calculado como **máximo existente + 1** (antes `length + 1`, que se repetía si se borraban órdenes).
 - `services/pago.js` exporta `servicioPago` como objeto para poder simularlo con `spyOn` en los tests.
 - `jasmine-core` alineado a 4.6.1 (la versión que usa `karma-jasmine`); documento de cobertura actualizado con capturas reales del reporte HTML.
@@ -560,7 +560,7 @@ Capas de soporte: `data/` (repositorio + entidades sobre localStorage), `utils/`
 - **`karma.conf.js`:** frameworks `jasmine`; archivos `src/**/*.spec.jsx`; preprocesador `webpack`; reporters `progress` y `coverage`; salida `coverage/` (HTML, text-summary y lcov); navegador ChromeHeadless con `--no-sandbox`.
 - **Comando:** `npm test` = `karma start karma.conf.js --single-run`.
 
-### 14.2 Pruebas (18)
+### 14.2 Pruebas (20)
 
 | # | Archivo | Prueba (it) | Tipo | Concepto clave |
 |---|---------|-------------|------|----------------|
@@ -578,15 +578,17 @@ Capas de soporte: `data/` (repositorio + entidades sobre localStorage), `utils/`
 | 12 | `repositorio.spec.jsx` | debería crear, actualizar y eliminar elementos en localStorage | Unitaria + mock | CRUD, `spyOn(Storage.prototype, …)` |
 | 13 | `CarritoProvider.spec.jsx` | debería sumar la cantidad al agregar dos veces el mismo producto (RN-04) | Estado + mock | `spyOn(Storage.prototype, …)`, `act()` |
 | 14 | `RutaProtegida.spec.jsx` | debería redirigir al login cuando no hay sesión | Renderizado condicional | `MemoryRouter` + `Navigate` |
-| 15 | `ResumenCarrito.spec.jsx` | debería actualizar el total al aplicar un cupón válido | Estado + evento | envoltura con `useState`, `fireEvent` |
-| 16 | `Productos.spec.jsx` | debería reducir la lista de productos al escribir en el buscador | Render + evento | `fireEvent.change` en el filtro de texto |
-| 17 | `Checkout.spec.jsx` | debería marcar la orden como pagada cuando el pago es aprobado | Integración + mock | `spyOn(servicioPago, 'procesarPago')`, `findByText` |
-| 18 | `Checkout.spec.jsx` | debería marcar la orden como fallida cuando el pago es rechazado | Integración + mock | `spyOn(servicioPago, 'procesarPago')`, RN-11 |
+| 15 | `RutaProtegida.spec.jsx` | debería redirigir a la tienda cuando el rol es Cliente | Roles | `rolesPermitidos`, `Navigate to="/"` |
+| 16 | `RutaProtegida.spec.jsx` | debería redirigir a /admin cuando un Vendedor entra a una ruta solo de Administrador | Roles | `rolesPermitidos={['Administrador']}` |
+| 17 | `ResumenCarrito.spec.jsx` | debería actualizar el total al aplicar un cupón válido | Estado + evento | envoltura con `useState`, `fireEvent` |
+| 18 | `Productos.spec.jsx` | debería reducir la lista de productos al escribir en el buscador | Render + evento | `fireEvent.change` en el filtro de texto |
+| 19 | `Checkout.spec.jsx` | debería marcar la orden como pagada cuando el pago es aprobado | Integración + mock | `spyOn(servicioPago, 'procesarPago')`, `findByText` |
+| 20 | `Checkout.spec.jsx` | debería marcar la orden como fallida cuando el pago es rechazado | Integración + mock | `spyOn(servicioPago, 'procesarPago')`, RN-11 |
 
 Patrón de todas las pruebas: **preparar** (render con providers/mocks), **actuar** (`fireEvent`/`act`), **verificar** (`expect`). Aislamiento: `beforeEach` reconstruye el almacenamiento mockeado; RTL limpia el DOM automáticamente.
 
 ### 14.3 Cobertura
 - Generada por `babel-plugin-istanbul` y reportada por `karma-coverage` en `coverage/` (HTML navegable y `lcov.info`); 24 archivos instrumentados (los que el grafo de los specs alcanza a importar).
-- Métricas actuales (V2.1, 18 pruebas): **statements 75,2%**, **branches 51%**, **functions 74,1%**, **lines 75,8%**.
+- Métricas actuales (V2.1, 20 pruebas): **statements 76,3%**, **branches 53,5%**, **functions 74,1%**, **lines 77%**.
 - Capturas reales del reporte HTML en `docs/capturas/` (`cobertura-resumen.png` y `cobertura-checkout.png`); el detalle por archivo está en `docs/Cobertura-Testing.md`.
 - Las 4 métricas se explican en la presentación: sentencias ejecutadas, caminos `if/else` tomados, funciones invocadas y líneas ejecutadas del total instrumentado.
