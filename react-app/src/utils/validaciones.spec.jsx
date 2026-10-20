@@ -1,4 +1,4 @@
-import { runValido, correoValido, contrasenaValida } from './validaciones'
+import { runValido, correoValido, contrasenaValida, fechaNoFutura, MENSAJES } from './validaciones'
 
 describe('Validaciones de usuario', () => {
   it('debería validar RUN con casos válidos e inválidos (módulo 11)', () => {
@@ -22,5 +22,15 @@ describe('Validaciones de usuario', () => {
     expect(contrasenaValida('1234')).toBe('')
     expect(contrasenaValida('123')).not.toBe('')
     expect(contrasenaValida('12345678901')).not.toBe('')
+  })
+
+  it('debería rechazar una fecha futura usando jasmine.clock', () => {
+    jasmine.clock().install()
+    jasmine.clock().mockDate(new Date(2026, 9, 20, 12, 0, 0))
+
+    expect(fechaNoFutura('2026-10-19')).toBe('')
+    expect(fechaNoFutura('2026-10-21')).toBe(MENSAJES.fechaFutura)
+
+    jasmine.clock().uninstall()
   })
 })
