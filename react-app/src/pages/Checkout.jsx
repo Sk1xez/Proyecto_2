@@ -6,7 +6,7 @@ import { obtenerPorId as obtenerProducto, actualizar as actualizarProducto } fro
 import { obtenerPorId as obtenerUsuario } from '../data/usuarios'
 import { listar as listarRegiones, comunasDe } from '../data/regiones'
 import { crear as crearOrden, actualizar as actualizarOrden, listar as listarOrdenes } from '../data/ordenes'
-import { procesarPago } from '../services/pago'
+import servicioPago from '../services/pago'
 import { totalConCupon } from '../utils/cupon'
 import formatoPrecio, { precioFinal } from '../utils/precio'
 import CampoFormulario from '../components/CampoFormulario'
@@ -67,17 +67,18 @@ function Checkout() {
   })
 
   const [errores, setErrores] = useState(ERRORES_INICIALES)
+  const [pagoConfirmado, setPagoConfirmado] = useState(false)
 
   const totalFinal = totalConCupon(total, cupon)
   const carritoVacio = lineas.length === 0
 
   useEffect(() => {
-    if (carritoVacio) {
+    if (carritoVacio && !pagoConfirmado) {
       navigate('/carrito', { replace: true })
     }
-  }, [carritoVacio, navigate])
+  }, [carritoVacio, pagoConfirmado, navigate])
 
-  if (carritoVacio) {
+  if (carritoVacio && !pagoConfirmado) {
     return null
   }
 
@@ -126,7 +127,11 @@ function Checkout() {
       }
     })
 
-    const numero = 'ORD-' + String(listarOrdenes().length + 1).padStart(4, '0')
+    const numeros = listarOrdenes().map((orden) =>
+      Number(String(orden.numero).replace('ORD-', ''))
+    )
+    const siguiente = (numeros.length ? Math.max(...numeros) : 0) + 1
+    const numero = 'ORD-' + String(siguiente).padStart(4, '0')
 
     const orden = crearOrden({
       numero,
@@ -137,7 +142,7 @@ function Checkout() {
       estado: 'pendiente'
     })
 
-    const resultado = procesarPago(orden)
+    const resultado = servicioPago.procesarPago(orden)
 
     if (resultado.ok) {
       actualizarOrden(orden.id, { estado: 'pagada' })
@@ -148,6 +153,7 @@ function Checkout() {
         actualizarProducto(linea.id, { stock: stockRestante })
       })
 
+      setPagoConfirmado(true)
       vaciar()
       navigate(`/pago-correcto/${orden.numero}`, { replace: true })
       return

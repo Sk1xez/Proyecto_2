@@ -55,30 +55,30 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
 
-        <Route element={<RutaProtegida />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="ordenes" element={<OrdenesAdmin />} />
-            <Route path="ordenes/:numero" element={<DetalleOrdenAdmin />} />
-            <Route path="productos" element={<ProductosAdmin />} />
-            <Route path="productos/:id/editar" element={<ProductoEditar />} />
-            <Route path="categorias" element={<CategoriasAdmin />} />
-            <Route path="categorias/:id/editar" element={<CategoriaEditar />} />
-            <Route path="reportes" element={<Reportes />} />
-            <Route path="perfil" element={<Perfil />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
 
-            <Route element={<RutaProtegida rolesPermitidos={['Administrador']} />}>
-              <Route path="productos/nuevo" element={<ProductoNuevo />} />
-              <Route path="categorias/nueva" element={<CategoriaNueva />} />
-              <Route path="usuarios" element={<UsuariosAdmin />} />
-              <Route path="usuarios/nuevo" element={<UsuarioNuevo />} />
-              <Route path="usuarios/:id/editar" element={<UsuarioEditar />} />
-              <Route path="usuarios/:id/historial" element={<HistorialCompras />} />
-            </Route>
+      <Route element={<RutaProtegida />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="ordenes" element={<OrdenesAdmin />} />
+          <Route path="ordenes/:numero" element={<DetalleOrdenAdmin />} />
+          <Route path="productos" element={<ProductosAdmin />} />
+          <Route path="productos/:id/editar" element={<ProductoEditar />} />
+          <Route path="categorias" element={<CategoriasAdmin />} />
+          <Route path="categorias/:id/editar" element={<CategoriaEditar />} />
+          <Route path="reportes" element={<Reportes />} />
+          <Route path="perfil" element={<Perfil />} />
+
+          <Route element={<RutaProtegida rolesPermitidos={['Administrador']} />}>
+            <Route path="productos/nuevo" element={<ProductoNuevo />} />
+            <Route path="categorias/nueva" element={<CategoriaNueva />} />
+            <Route path="usuarios" element={<UsuariosAdmin />} />
+            <Route path="usuarios/nuevo" element={<UsuarioNuevo />} />
+            <Route path="usuarios/:id/editar" element={<UsuarioEditar />} />
+            <Route path="usuarios/:id/historial" element={<HistorialCompras />} />
           </Route>
         </Route>
-
-        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   )

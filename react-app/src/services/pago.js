@@ -1,6 +1,6 @@
 const MONTO_MAXIMO_SIMULADO = 100000
 
-export function procesarPago(orden) {
+function procesarPago(orden) {
   if (orden.total > MONTO_MAXIMO_SIMULADO) {
     return {
       ok: false,
@@ -10,3 +10,7 @@ export function procesarPago(orden) {
 
   return { ok: true, motivo: "" }
 }
+
+const servicioPago = { procesarPago }
+
+export default servicioPago

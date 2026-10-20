@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { SesionProvider } from './context/SesionProvider'
 import { CarritoProvider } from './context/CarritoProvider'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import '../../css/estilos.css'
+import './styles/estilos.css'
 import './index.css'
 import App from './App.jsx'
 
