@@ -13,7 +13,7 @@ Tienda online de artículos y servicios para mascotas. Proyecto frontend migrado
 
 **Aplicación:** PetShop Chile
 **Fecha:** 20/10/2026
-**Versión:** 2.0
+**Versión:** 2.1
 
 ## Control de Versiones
 
@@ -21,11 +21,12 @@ Tienda online de artículos y servicios para mascotas. Proyecto frontend migrado
 |---------|-------|-------------|
 | V1.0 | 21/09/2026 | Evaluación 1: sitio estático con HTML5, CSS3 y JavaScript puro (sin frameworks). |
 | V2.0 | 20/10/2026 | Evaluación Parcial 2: migración a React + Vite con panel completo y pruebas. |
+| V2.1 | 20/10/2026 | Correcciones: estilos embebidos en `react-app/`, panel como ruta de primer nivel, suite de 18 pruebas y número de orden por máximo. |
 
 **Resumen de cambios V1.0 → V2.0:**
 
 - Todas las páginas HTML se migraron a una SPA con **React 19** y **React Router** (rutas con `BrowserRouter`, `Routes` y `Route`); el HTML solo conserva el contenedor `#root`.
-- Diseño responsivo con **Bootstrap 5** (navbar con `container-fluid`/`collapse`, grid `row/col`, `table-responsive`, `offcanvas`/colapsable en el panel) más los estilos de marca `css/estilos.css` que se mantienen.
+- Diseño responsivo con **Bootstrap 5** (navbar con `container-fluid`/`collapse`, grid `row/col`, `table-responsive`, `offcanvas`/colapsable en el panel) más los estilos de marca `src/styles/estilos.css` (copiados desde `css/estilos.css` de la V1).
 - Estado compartido con **contextos**: `CarritoProvider` (RN-01 a RN-06) y `SesionProvider` (sesión en `sessionStorage`), cada uno separado en archivo de contexto, provider y hook.
 - Nuevas vistas públicas: categorías, ofertas, detalle de producto, checkout, pago correcto, pago con error y blogs (lista + detalle con video).
 - Panel completo: dashboard con totales reales, órdenes y boletas con vista de boleta, productos con stock crítico, categorías, usuarios con historial de compras, reportes y perfil.
@@ -34,6 +35,15 @@ Tienda online de artículos y servicios para mascotas. Proyecto frontend migrado
 - Formularios reutilizables (`CampoFormulario`, `FormularioProducto`, `FormularioUsuario`, `FormularioCategoria`) sin duplicación de HTML.
 - Entorno de pruebas con **Karma + Jasmine** (compilación con webpack y Babel), 10 pruebas unitarias y reporte de cobertura.
 - Este ERS actualizado: secciones 2.3, 2.4, 3, 6, 8, 11 y 12, más las nuevas secciones 13 (Arquitectura) y 14 (Plan de Pruebas).
+
+**Resumen de cambios V2.0 → V2.1:**
+
+- `css/estilos.css` se copió a `react-app/src/styles/estilos.css` para que la carpeta `react-app/` sea autosuficiente (build y despliegue sin depender de la raíz del repo).
+- Las rutas del panel salieron del layout de la tienda: `/admin` es ahora ruta de primer nivel envuelta en `RutaProtegida` con `AdminLayout` propio (sin Header ni Footer de la tienda).
+- Suite de pruebas ampliada de 10 a **18** (cupones, precio final con oferta, CRUD del repositorio, Checkout con pago aprobado/rechazado, cupón en el resumen del carrito, filtro del catálogo y `jasmine.clock`).
+- Número de orden calculado como **máximo existente + 1** (antes `length + 1`, que se repetía si se borraban órdenes).
+- `services/pago.js` exporta `servicioPago` como objeto para poder simularlo con `spyOn` en los tests.
+- `jasmine-core` alineado a 4.6.1 (la versión que usa `karma-jasmine`); documento de cobertura actualizado con capturas reales del reporte HTML.
 
 ## 1. Introducción
 
@@ -88,7 +98,7 @@ Rutas públicas (layout `TiendaLayout` = Header + main + Footer):
 - `/contacto`, `/nosotros`, `/blogs` y `/blogs/:id`.
 - `*` (página no encontrada).
 
-Rutas del panel (layout `AdminLayout` = sidebar/offcanvas + `<Outlet />`, protegidas por `RutaProtegida`):
+Rutas del panel (layout `AdminLayout` = sidebar/offcanvas + `<Outlet />`, protegidas por `RutaProtegida`, ruta de primer nivel sin el Header ni el Footer de la tienda):
 
 - `/admin` (dashboard), `/admin/ordenes`, `/admin/ordenes/:numero`.
 - `/admin/productos`, `/admin/productos/nuevo`, `/admin/productos/:id/editar`.
@@ -104,8 +114,8 @@ Rutas del panel (layout `AdminLayout` = sidebar/offcanvas + `<Outlet />`, proteg
 ### 2.3 Entorno de operación
 - **Framework y librerías:** React 19 (con `react-dom` y hooks) y React Router 7 para el enrutamiento.
 - **Build y desarrollo:** Vite 8 (servidor de desarrollo, HMR y build de producción a `dist/`).
-- **Estilos:** Bootstrap 5.3 (CSS importado en `main.jsx`) más `css/estilos.css` de la marca.
-- **Pruebas:** Karma 6 + Jasmine 5 con navegador ChromeHeadless; como Vite no se integra directo con Karma, las pruebas se compilan con **webpack + babel-loader** (`webpack.test.config.js`) y se instrumentan con **babel-plugin-istanbul** para cobertura.
+- **Estilos:** Bootstrap 5.3 (CSS importado en `main.jsx`) más `src/styles/estilos.css` de la marca (copia de `css/estilos.css`, para que `react-app/` sea autosuficiente).
+- **Pruebas:** Karma 6 + Jasmine 4.6 (`jasmine-core` 4.6.1, el mismo que usa `karma-jasmine`) con navegador ChromeHeadless; como Vite no se integra directo con Karma, las pruebas se compilan con **webpack + babel-loader** (`webpack.test.config.js`) y se instrumentan con **babel-plugin-istanbul** para cobertura.
 - **Herramientas de calidad:** ESLint (`npm run lint`).
 - **Requisitos de máquina:** Node.js 22+ y npm. Chrome para las pruebas: se usa el Chrome for Testing descargado por Puppeteer (el sistema no trae Chrome), con launcher propio `ChromeHeadlessNoSandbox` (`--no-sandbox`) porque Ubuntu 23.10+ restringe los user namespaces.
 - **Comandos:** `npm install`, `npm run dev`, `npm run build`, `npm run lint`, `npm test`.
@@ -240,7 +250,7 @@ Cada campo muestra un solo mensaje de error (el primero encontrado en orden de v
 ## 4. Requerimientos No Funcionales
 
 **RNF-001 USABILIDAD**
-Interfaz coherente entre tienda y panel: mismos colores de marca (`css/estilos.css`), tarjetas y tablas con estilo uniforme, mensajes de éxito y de error consistentes (sección 10).
+Interfaz coherente entre tienda y panel: mismos colores de marca (`src/styles/estilos.css`), tarjetas y tablas con estilo uniforme, mensajes de éxito y de error consistentes (sección 10).
 
 **RNF-002 ACCESIBILIDAD**
 Todos los campos usan `label htmlFor` (generados por `CampoFormulario`), los errores se anuncian con `invalid-feedback`/`role="alert"`, las imágenes tienen texto alternativo, las tablas usan `caption` y `scope`, el video usa título y `loading="lazy"` y el sidebar del panel es navegable con `nav`/`NavLink`.
@@ -450,7 +460,7 @@ Las pruebas se compilan con `webpack.test.config.js` (babel-loader + `@babel/pre
 El equipo no tiene Chrome instalado y sin sudo no se puede instalar; se usa el Chrome for Testing de Puppeteer (`CHROME_BIN` resuelto en `karma.conf.js`) con el launcher personalizado `ChromeHeadlessNoSandbox` porque Ubuntu 23.10+ bloquea los user namespaces.
 
 **12.10 Estilos de marca + Bootstrap**
-Se conserva `css/estilos.css` (identidad EP1) importado en `main.jsx` y se usa Bootstrap 5 para layout, componentes (navbar, tablas, tarjetas, offcanvas, alertas, badges) y responsividad.
+Se conserva `src/styles/estilos.css` (identidad EP1, copia de `css/estilos.css`) importado en `main.jsx` y se usa Bootstrap 5 para layout, componentes (navbar, tablas, tarjetas, offcanvas, alertas, badges) y responsividad.
 
 **12.11 Contextos separados por lint**
 Cada contexto está en tres archivos (`…Context.js`, `…Provider.jsx`, `use….js`) para cumplir la regla `react-refresh/only-export-components`; igual se separaron los formularios reutilizables.
@@ -489,8 +499,8 @@ main.jsx
 │               │   │   ├── Contacto / Nosotros / Blogs / DetalleBlog
 │               │   │   └── NotFound
 │               │   └── Footer
-│               └── <RutaProtegida>         components/RutaProtegida.jsx
-│                   └── <AdminLayout>       layouts/AdminLayout.jsx (sidebar/offcanvas)
+│               ├── <RutaProtegida>         components/RutaProtegida.jsx (ruta de primer nivel, sin el layout de la tienda)
+│               │   └── <AdminLayout>       layouts/AdminLayout.jsx (sidebar/offcanvas)
 │                       ├── Dashboard
 │                       ├── OrdenesAdmin / DetalleOrdenAdmin
 │                       ├── ProductosAdmin (FormularioProducto)
@@ -545,12 +555,12 @@ Capas de soporte: `data/` (repositorio + entidades sobre localStorage), `utils/`
 ## 14. Plan de Pruebas
 
 ### 14.1 Entorno
-- **Frameworks:** Karma 6 (orquestador) + Jasmine 5 (describe/it/expect/beforeEach) en **ChromeHeadless** (launcher `ChromeHeadlessNoSandbox`, binario de Puppeteer).
+- **Frameworks:** Karma 6 (orquestador) + Jasmine 4.6 (`jasmine-core` 4.6.1, el mismo que usa `karma-jasmine`; describe/it/expect/beforeEach/espías) en **ChromeHeadless** (launcher `ChromeHeadlessNoSandbox`, binario de Puppeteer).
 - **Compilación:** `webpack.test.config.js` con `babel-loader` (`@babel/preset-env`, `@babel/preset-react` con runtime automático) y `babel-plugin-istanbul` solo en modo test; reglas para CSS (`style-loader`/`css-loader`) e imágenes (`asset/resource`). `devtool: inline-source-map` para trazar los fallos al archivo original.
 - **`karma.conf.js`:** frameworks `jasmine`; archivos `src/**/*.spec.jsx`; preprocesador `webpack`; reporters `progress` y `coverage`; salida `coverage/` (HTML, text-summary y lcov); navegador ChromeHeadless con `--no-sandbox`.
 - **Comando:** `npm test` = `karma start karma.conf.js --single-run`.
 
-### 14.2 Pruebas (10)
+### 14.2 Pruebas (18)
 
 | # | Archivo | Prueba (it) | Tipo | Concepto clave |
 |---|---------|-------------|------|----------------|
@@ -562,12 +572,21 @@ Capas de soporte: `data/` (repositorio + entidades sobre localStorage), `utils/`
 | 6 | `Login.spec.jsx` | debería llamar a iniciarSesion con el correo y la contraseña al enviar | Evento con mock | mock del contexto, `toHaveBeenCalledWith` |
 | 7 | `validaciones.spec.jsx` | debería validar RUN con casos válidos e inválidos (módulo 11) | Unitaria | función pura, `withContext` |
 | 8 | `validaciones.spec.jsx` | debería validar correo y contraseña con casos válidos e inválidos | Unitaria | función pura |
-| 9 | `CarritoProvider.spec.jsx` | debería sumar la cantidad al agregar dos veces el mismo producto (RN-04) | Estado + mock | `spyOn(Storage.prototype, …)`, `act()` |
-| 10 | `RutaProtegida.spec.jsx` | debería redirigir al login cuando no hay sesión | Renderizado condicional | `MemoryRouter` + `Navigate` |
+| 9 | `validaciones.spec.jsx` | debería rechazar una fecha futura usando jasmine.clock | Unitaria + reloj | `jasmine.clock().install()`, `mockDate` |
+| 10 | `cupon.spec.jsx` | debería aplicar BIENVENIDO10, PETSHOP20 y rechazar un cupón inválido | Unitaria | `totalConCupon`, `buscarCupon` |
+| 11 | `precio.spec.jsx` | debería descontar la oferta o devolver el precio si no tiene oferta | Unitaria | `precioFinal` |
+| 12 | `repositorio.spec.jsx` | debería crear, actualizar y eliminar elementos en localStorage | Unitaria + mock | CRUD, `spyOn(Storage.prototype, …)` |
+| 13 | `CarritoProvider.spec.jsx` | debería sumar la cantidad al agregar dos veces el mismo producto (RN-04) | Estado + mock | `spyOn(Storage.prototype, …)`, `act()` |
+| 14 | `RutaProtegida.spec.jsx` | debería redirigir al login cuando no hay sesión | Renderizado condicional | `MemoryRouter` + `Navigate` |
+| 15 | `ResumenCarrito.spec.jsx` | debería actualizar el total al aplicar un cupón válido | Estado + evento | envoltura con `useState`, `fireEvent` |
+| 16 | `Productos.spec.jsx` | debería reducir la lista de productos al escribir en el buscador | Render + evento | `fireEvent.change` en el filtro de texto |
+| 17 | `Checkout.spec.jsx` | debería marcar la orden como pagada cuando el pago es aprobado | Integración + mock | `spyOn(servicioPago, 'procesarPago')`, `findByText` |
+| 18 | `Checkout.spec.jsx` | debería marcar la orden como fallida cuando el pago es rechazado | Integración + mock | `spyOn(servicioPago, 'procesarPago')`, RN-11 |
 
 Patrón de todas las pruebas: **preparar** (render con providers/mocks), **actuar** (`fireEvent`/`act`), **verificar** (`expect`). Aislamiento: `beforeEach` reconstruye el almacenamiento mockeado; RTL limpia el DOM automáticamente.
 
 ### 14.3 Cobertura
-- Generada por `babel-plugin-istanbul` y reportada por `karma-coverage` en `coverage/` (HTML navegable y `lcov.info`).
-- Métricas actuales (V2.0): **statements 54,5%**, **branches 40%**, **functions 57,6%**, **lines 54,1%**.
+- Generada por `babel-plugin-istanbul` y reportada por `karma-coverage` en `coverage/` (HTML navegable y `lcov.info`); 24 archivos instrumentados (los que el grafo de los specs alcanza a importar).
+- Métricas actuales (V2.1, 18 pruebas): **statements 75,2%**, **branches 51%**, **functions 74,1%**, **lines 75,8%**.
+- Capturas reales del reporte HTML en `docs/capturas/` (`cobertura-resumen.png` y `cobertura-checkout.png`); el detalle por archivo está en `docs/Cobertura-Testing.md`.
 - Las 4 métricas se explican en la presentación: sentencias ejecutadas, caminos `if/else` tomados, funciones invocadas y líneas ejecutadas del total instrumentado.

@@ -1,16 +1,28 @@
-# React + Vite
+# PetShop Chile — React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación de la Evaluación Parcial 2 (DSY1104): tienda online de artículos para mascotas migrada de HTML/CSS/JS a **React 19 + Vite**, con Bootstrap 5, panel de administración, persistencia en `localStorage` y pruebas con Karma + Jasmine.
 
-Currently, two official plugins are available:
+## Comandos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install   # primera vez: instala dependencias
+npm run dev   # servidor de desarrollo con HMR
+npm test      # pruebas (Karma + Jasmine, ChromeHeadless con cobertura)
+npm run build # build de producción en dist/
+npm run lint  # ESLint
+```
 
-## React Compiler
+## Estructura
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `src/pages/` — páginas de la tienda (`Home`, `Productos`, `Checkout`, …) y del panel (`src/pages/admin/`).
+- `src/components/` — componentes reutilizables (`TarjetaProducto`, `ResumenCarrito`, `RutaProtegida`, formularios del panel).
+- `src/layouts/` — `TiendaLayout` (Header + Footer) y `AdminLayout` (sidebar del panel).
+- `src/context/` — contextos de carrito y sesión (cada uno en contexto, provider y hook).
+- `src/data/` — repositorio genérico y entidades (productos, categorías, usuarios, órdenes) sobre `localStorage`.
+- `src/utils/` — funciones puras (`precio`, `cupon`, `validaciones`).
+- `src/services/pago.js` — pasarela de pago simulada.
+- `karma.conf.js` + `webpack.test.config.js` — entorno de pruebas (Karma no se integra con Vite, por eso webpack + babel-loader solo para tests).
 
-## Expanding the ESLint configuration
+## Documentación
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+El ERS, el documento de cobertura de testing y los usuarios de prueba están en la raíz del repositorio (`../docs/` y `../README.md`).
