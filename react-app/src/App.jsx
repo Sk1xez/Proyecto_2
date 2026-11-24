@@ -33,6 +33,7 @@ import HistorialCompras from './pages/admin/HistorialCompras'
 import Reportes from './pages/admin/Reportes'
 import Perfil from './pages/admin/Perfil'
 import NotFound from './pages/NotFound'
+import MisPedidos from './pages/MisPedidos'
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
         <Route path="/pago-error/:numero" element={<PagoError />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
+        <Route path="/mis-pedidos" element={<MisPedidos />} />
 
         <Route path="*" element={<NotFound />} />
       </Route>
