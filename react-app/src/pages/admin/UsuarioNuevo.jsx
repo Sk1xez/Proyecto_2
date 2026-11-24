@@ -1,26 +1,61 @@
+
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { crear, buscarPorCorreo, buscarPorRun } from '../../data/usuarios'
+import { api } from '../../services/api'
 import FormularioUsuario from '../../components/FormularioUsuario'
 
 function UsuarioNuevo() {
   const navigate = useNavigate()
 
-  function verificarUnico(datos) {
-    return {
-      run: buscarPorRun(datos.run) ? 'Ya existe un usuario con este RUN.' : '',
-      correo: buscarPorCorreo(datos.correo) ? 'Ya existe un usuario con este correo.' : ''
-    }
-  }
+  const [guardando, setGuardando] = useState(false)
+  const [error, setError] = useState('')
 
-  function guardar(datos) {
-    crear(datos)
-    navigate('/admin/usuarios')
+  async function guardar(datos) {
+    if (guardando) return
+
+    setGuardando(true)
+    setError('')
+
+    try {
+      await api.post('/usuarios', {
+        run: datos.run.trim(),
+        nombre: datos.nombre.trim(),
+        apellidos: datos.apellidos.trim(),
+        correo: datos.correo.trim().toLowerCase(),
+        contrasena: datos.contrasena,
+        rol: datos.rol.toUpperCase()
+      })
+
+      navigate('/admin/usuarios')
+    } catch (error) {
+      setError(
+        error.message || 'No se pudo crear el usuario.'
+      )
+    } finally {
+      setGuardando(false)
+    }
   }
 
   return (
     <section>
       <h1 className="h3 mb-4">Nuevo usuario</h1>
-      <FormularioUsuario onGuardar={guardar} verificarUnico={verificarUnico} />
+
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
+
+      {guardando && (
+        <div className="alert alert-info" role="status">
+          Guardando usuario en MySQL...
+        </div>
+      )}
+
+      <FormularioUsuario
+        onGuardar={guardar}
+        deshabilitado={guardando}
+      />
     </section>
   )
 }
