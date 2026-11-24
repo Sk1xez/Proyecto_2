@@ -1,5 +1,6 @@
+
 import { useState } from 'react'
-import { buscarPorCredenciales } from '../data/usuarios'
+import { api } from '../services/api'
 import { SesionContext } from './SesionContext'
 
 const CLAVE_SESION = 'sesion'
@@ -7,54 +8,81 @@ const CLAVE_SESION = 'sesion'
 function leerSesion() {
   try {
     const datos = JSON.parse(sessionStorage.getItem(CLAVE_SESION))
-    return datos && datos.correo ? datos : null
+
+    if (!datos?.correo || !datos?.token) {
+      return null
+    }
+
+    const contenido = JSON.parse(atob(datos.token.split('.')[1]))
+
+    if (!contenido.exp || contenido.exp * 1000 <= Date.now()) {
+      sessionStorage.removeItem(CLAVE_SESION)
+      return null
+    }
+
+    return datos
   } catch {
     return null
   }
 }
 
+function convertirRol(rol) {
+  const roles = {
+    CLIENTE: 'Cliente',
+    VENDEDOR: 'Vendedor',
+    ADMINISTRADOR: 'Administrador'
+  }
+
+  return roles[rol] || rol
+}
+
 function SesionProvider({ children }) {
   const [sesion, setSesion] = useState(leerSesion)
 
-  function iniciarSesion(correo, contrasena) {
-    const usuario = buscarPorCredenciales(correo, contrasena)
-
-    if (!usuario) {
-      return { ok: false, error: 'Correo o contraseña incorrectos' }
-    }
-
-    const nueva = {
-      id: usuario.id,
-      nombre: usuario.nombre,
-      apellidos: usuario.apellidos,
-      correo: usuario.correo,
-      rol: usuario.rol
-    }
-
+  async function iniciarSesion(correo, contrasena) {
     try {
+      const respuesta = await api.post('/auth/login', {
+        correo,
+        contrasena
+      })
+
+      if (!respuesta.token) {
+        throw new Error('El servidor no entregó un token JWT')
+      }
+
+      const nueva = {
+        id: respuesta.id,
+        nombre: respuesta.nombre,
+        apellidos: respuesta.apellidos,
+        correo: respuesta.correo,
+        rol: convertirRol(respuesta.rol),
+        token: respuesta.token
+      }
+
       sessionStorage.setItem(CLAVE_SESION, JSON.stringify(nueva))
-    } catch {
-      // sin persistencia disponible
+      setSesion(nueva)
+
+      return { ok: true, usuario: nueva }
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message
+      }
     }
-
-    setSesion(nueva)
-
-    return { ok: true, usuario: nueva }
   }
 
   function cerrarSesion() {
-    try {
-      sessionStorage.removeItem(CLAVE_SESION)
-    } catch {
-      // sin persistencia disponible
-    }
-
+    sessionStorage.removeItem(CLAVE_SESION)
     setSesion(null)
   }
 
-  const valor = { sesion, iniciarSesion, cerrarSesion }
-
-  return <SesionContext.Provider value={valor}>{children}</SesionContext.Provider>
+  return (
+    <SesionContext.Provider
+      value={{ sesion, iniciarSesion, cerrarSesion }}
+    >
+      {children}
+    </SesionContext.Provider>
+  )
 }
 
 export { SesionProvider }
