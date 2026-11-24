@@ -8,37 +8,39 @@ function EnlacesAdmin({ esAdmin, alCerrar, alNavegar }) {
 
   return (
     <>
-      <NavLink to="/admin" end className={claseEnlace} onClick={alNavegar}>
-        Dashboard
-      </NavLink>
+      {esAdmin && (
+        <NavLink to="/admin" end className={claseEnlace} onClick={alNavegar}>
+          Dashboard
+        </NavLink>
+      )}
       <NavLink to="/admin/ordenes" className={claseEnlace} onClick={alNavegar}>
-        Órdenes y boletas
+        Ã“rdenes y boletas
       </NavLink>
       <NavLink to="/admin/productos" className={claseEnlace} onClick={alNavegar}>
         Productos
       </NavLink>
-      <NavLink to="/admin/categorias" className={claseEnlace} onClick={alNavegar}>
-        Categorías
-      </NavLink>
       {esAdmin && (
-        <NavLink to="/admin/usuarios" className={claseEnlace} onClick={alNavegar}>
-          Usuarios
-        </NavLink>
+        <>
+          <NavLink to="/admin/categorias" className={claseEnlace} onClick={alNavegar}>
+            CategorÃ­as
+          </NavLink>
+          <NavLink to="/admin/usuarios" className={claseEnlace} onClick={alNavegar}>
+            Usuarios
+          </NavLink>
+          <NavLink to="/admin/reportes" className={claseEnlace} onClick={alNavegar}>
+            Reportes
+          </NavLink>
+          <NavLink to="/admin/perfil" className={claseEnlace} onClick={alNavegar}>
+            Perfil
+          </NavLink>
+          <hr className="border-secondary" />
+          <Link to="/" className="nav-link" onClick={alNavegar}>
+            Volver a la tienda
+          </Link>
+        </>
       )}
-      <NavLink to="/admin/reportes" className={claseEnlace} onClick={alNavegar}>
-        Reportes
-      </NavLink>
-      <NavLink to="/admin/perfil" className={claseEnlace} onClick={alNavegar}>
-        Perfil
-      </NavLink>
-
-      <hr className="border-secondary" />
-
-      <Link to="/" className="nav-link" onClick={alNavegar}>
-        Volver a la tienda
-      </Link>
       <button type="button" className="btn btn-outline-light btn-sm mt-2" onClick={alCerrar}>
-        Cerrar sesión
+        Cerrar sesiÃ³n
       </button>
     </>
   )

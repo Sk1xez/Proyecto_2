@@ -1,5 +1,6 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import TiendaLayout from './layouts/TiendaLayout'
+import { useSesion } from './context/useSesion'
 import Home from './pages/Home'
 import Productos from './pages/Productos'
 import DetalleProducto from './pages/DetalleProducto'
@@ -36,6 +37,7 @@ import NotFound from './pages/NotFound'
 import MisPedidos from './pages/MisPedidos'
 
 function App() {
+  const { sesion } = useSesion()
   return (
     <Routes>
       <Route element={<TiendaLayout />}>
@@ -62,15 +64,15 @@ function App() {
 
       <Route element={<RutaProtegida />}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={sesion?.rol === "Vendedor" ? <Navigate to="/admin/ordenes" replace /> : <Dashboard />} />
           <Route path="ordenes" element={<OrdenesAdmin />} />
           <Route path="ordenes/:numero" element={<DetalleOrdenAdmin />} />
           <Route path="productos" element={<ProductosAdmin />} />
           <Route path="productos/:id/editar" element={<ProductoEditar />} />
-          <Route path="categorias" element={<CategoriasAdmin />} />
-          <Route path="categorias/:id/editar" element={<CategoriaEditar />} />
-          <Route path="reportes" element={<Reportes />} />
-          <Route path="perfil" element={<Perfil />} />
+          <Route path="categorias" element={sesion?.rol === "Administrador" ? <CategoriasAdmin /> : <Navigate to="/admin/ordenes" replace />} />
+          <Route path="categorias/:id/editar" element={sesion?.rol === "Administrador" ? <CategoriaEditar /> : <Navigate to="/admin/ordenes" replace />} />
+          <Route path="reportes" element={sesion?.rol === "Administrador" ? <Reportes /> : <Navigate to="/admin/ordenes" replace />} />
+          <Route path="perfil" element={sesion?.rol === "Administrador" ? <Perfil /> : <Navigate to="/admin/ordenes" replace />} />
 
           <Route element={<RutaProtegida rolesPermitidos={['Administrador']} />}>
             <Route path="productos/nuevo" element={<ProductoNuevo />} />
