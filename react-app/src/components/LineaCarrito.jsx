@@ -1,8 +1,10 @@
-import { obtenerPorId } from '../data/productos'
+
+import { useCarrito } from '../context/useCarrito'
 import formatoPrecio, { precioFinal } from '../utils/precio'
 
 function LineaCarrito({ linea, onCambiar, onEliminar }) {
-  const producto = obtenerPorId(linea.id)
+  const { obtenerProducto } = useCarrito()
+  const producto = obtenerProducto(linea.id)
 
   if (!producto) {
     return null
@@ -18,7 +20,11 @@ function LineaCarrito({ linea, onCambiar, onEliminar }) {
           <img
             src={producto.imagen}
             alt={producto.nombre}
-            style={{ width: '64px', height: '64px', objectFit: 'cover' }}
+            style={{
+              width: '64px',
+              height: '64px',
+              objectFit: 'cover'
+            }}
             className="rounded"
           />
           <span>{producto.nombre}</span>
@@ -32,16 +38,24 @@ function LineaCarrito({ linea, onCambiar, onEliminar }) {
           <button
             type="button"
             className="btn btn-outline-secondary btn-sm"
-            onClick={() => onCambiar(linea.id, linea.cantidad - 1)}
+            onClick={() =>
+              onCambiar(linea.id, linea.cantidad - 1)
+            }
             aria-label="Restar unidad"
           >
             −
           </button>
-          <span className="fw-bold">{linea.cantidad}</span>
+
+          <span className="fw-bold">
+            {linea.cantidad}
+          </span>
+
           <button
             type="button"
             className="btn btn-outline-secondary btn-sm"
-            onClick={() => onCambiar(linea.id, linea.cantidad + 1)}
+            onClick={() =>
+              onCambiar(linea.id, linea.cantidad + 1)
+            }
             aria-label="Sumar unidad"
           >
             +
