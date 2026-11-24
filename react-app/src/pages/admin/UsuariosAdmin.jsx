@@ -61,8 +61,6 @@ function UsuariosAdmin() {
 
     if (esAdmin) {
       cargarUsuarios()
-    } else {
-      setCargando(false)
     }
 
     return () => {

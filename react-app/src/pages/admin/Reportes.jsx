@@ -72,8 +72,6 @@ function Reportes() {
 
     if (tienePermiso) {
       cargarReportes()
-    } else {
-      setCargando(false)
     }
 
     return () => {

@@ -79,8 +79,6 @@ function HistorialCompras() {
 
     if (esAdmin) {
       cargarHistorial()
-    } else {
-      setCargando(false)
     }
 
     return () => {

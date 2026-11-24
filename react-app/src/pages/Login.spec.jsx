@@ -1,18 +1,47 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor
+} from '@testing-library/react'
+
+import {
+  MemoryRouter,
+  Route,
+  Routes
+} from 'react-router-dom'
+
 import { SesionContext } from '../context/SesionContext'
 import Login from './Login'
 
-function renderLogin(iniciarSesion = jasmine.createSpy('iniciarSesion')) {
+function renderLogin(
+  iniciarSesion = jasmine.createSpy('iniciarSesion')
+) {
   render(
     <MemoryRouter initialEntries={['/login']}>
       <SesionContext.Provider
-        value={{ sesion: null, iniciarSesion, cerrarSesion: () => {} }}
+        value={{
+          sesion: null,
+          iniciarSesion,
+          cerrarSesion: () => {}
+        }}
       >
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<div>Página de inicio</div>} />
-          <Route path="/admin" element={<div>Panel de administración</div>} />
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+          <Route
+            path="/"
+            element={<div>Página de inicio</div>}
+          />
+
+          <Route
+            path="/admin"
+            element={<div>Panel de administración</div>}
+          />
         </Routes>
       </SesionContext.Provider>
     </MemoryRouter>
@@ -22,45 +51,120 @@ function renderLogin(iniciarSesion = jasmine.createSpy('iniciarSesion')) {
 }
 
 function llenarCredenciales(correo, contrasena) {
-  fireEvent.change(screen.getByLabelText('Correo electrónico'), {
-    target: { value: correo }
-  })
-  fireEvent.change(screen.getByLabelText('Contraseña'), {
-    target: { value: contrasena }
-  })
+  fireEvent.change(
+    screen.getByLabelText('Correo electrónico'),
+    {
+      target: { value: correo }
+    }
+  )
+
+  fireEvent.change(
+    screen.getByLabelText('Contraseña'),
+    {
+      target: { value: contrasena }
+    }
+  )
 }
 
 describe('Página de Login', () => {
-  it('debería mostrar el mensaje de error solo cuando las credenciales son inválidas', () => {
-    const iniciarSesion = renderLogin()
-    iniciarSesion.and.returnValue({ ok: false, error: 'Correo o contraseña incorrectos' })
 
-    expect(screen.queryByRole('alert')).toBeNull()
+  it(
+    'debería mostrar un error cuando las credenciales son incorrectas',
+    async () => {
 
-    llenarCredenciales('camila.silva@gmail.com', 'mala12')
-    fireEvent.click(screen.getByText('Ingresar'))
+      const iniciarSesion = jasmine.createSpy(
+        'iniciarSesion'
+      ).and.returnValue(
+        Promise.resolve({
+          ok: false,
+          error: 'Correo o contraseña incorrectos'
+        })
+      )
 
-    expect(screen.getByRole('alert').textContent).toContain('Correo o contraseña incorrectos')
-  })
+      renderLogin(iniciarSesion)
 
-  it('debería actualizar el valor del campo correo al escribir', () => {
-    renderLogin()
+      expect(
+        screen.queryByRole('alert')
+      ).toBeNull()
 
-    const campoCorreo = screen.getByLabelText('Correo electrónico')
+      llenarCredenciales(
+        'camila.silva@gmail.com',
+        'mala12'
+      )
 
-    fireEvent.change(campoCorreo, { target: { value: 'paolo.munoz@duoc.cl' } })
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: 'Ingresar'
+        })
+      )
 
-    expect(campoCorreo.value).toBe('paolo.munoz@duoc.cl')
-  })
+      const alerta = await screen.findByRole('alert')
 
-  it('debería llamar a iniciarSesion con el correo y la contraseña al enviar', () => {
-    const iniciarSesion = renderLogin()
-    iniciarSesion.and.returnValue({ ok: false, error: 'Correo o contraseña incorrectos' })
+      expect(alerta.textContent).toContain(
+        'Correo o contraseña incorrectos'
+      )
 
-    llenarCredenciales('paolo.munoz@duoc.cl', '1234')
-    fireEvent.click(screen.getByText('Ingresar'))
+      expect(iniciarSesion).toHaveBeenCalledTimes(1)
+    }
+  )
 
-    expect(iniciarSesion).toHaveBeenCalledTimes(1)
-    expect(iniciarSesion).toHaveBeenCalledWith('paolo.munoz@duoc.cl', '1234')
-  })
+  it(
+    'debería actualizar el correo al escribir',
+    () => {
+
+      renderLogin()
+
+      const campoCorreo = screen.getByLabelText(
+        'Correo electrónico'
+      )
+
+      fireEvent.change(campoCorreo, {
+        target: {
+          value: 'paolo.munoz@duoc.cl'
+        }
+      })
+
+      expect(campoCorreo.value).toBe(
+        'paolo.munoz@duoc.cl'
+      )
+    }
+  )
+
+  it(
+    'debería enviar el correo y contraseña al iniciar sesión',
+    async () => {
+
+      const iniciarSesion = jasmine.createSpy(
+        'iniciarSesion'
+      ).and.returnValue(
+        Promise.resolve({
+          ok: false,
+          error: 'Correo o contraseña incorrectos'
+        })
+      )
+
+      renderLogin(iniciarSesion)
+
+      llenarCredenciales(
+        'paolo.munoz@duoc.cl',
+        '1234'
+      )
+
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: 'Ingresar'
+        })
+      )
+
+      await waitFor(() => {
+        expect(iniciarSesion).toHaveBeenCalledTimes(1)
+
+        expect(iniciarSesion).toHaveBeenCalledWith(
+          'paolo.munoz@duoc.cl',
+          '1234'
+        )
+      })
+    }
+  )
+
 })

@@ -51,8 +51,6 @@ function UsuarioEditar() {
 
     if (esAdmin) {
       cargarUsuario()
-    } else {
-      setCargando(false)
     }
 
     return () => {

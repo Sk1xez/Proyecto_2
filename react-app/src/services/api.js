@@ -1,16 +1,30 @@
 
 const API_BASE = '/api/v1'
 
-export async function solicitarApi(ruta, opciones = {}) {
-  let sesion = null
-
+function obtenerSesion() {
   try {
-    sesion = JSON.parse(
+    return JSON.parse(
       localStorage.getItem('sesion') || 'null'
     )
   } catch {
-    sesion = null
+    return null
   }
+}
+
+function interpretarRespuesta(texto) {
+  if (!texto) {
+    return null
+  }
+
+  try {
+    return JSON.parse(texto)
+  } catch {
+    return texto
+  }
+}
+
+export async function solicitarApi(ruta, opciones = {}) {
+  const sesion = obtenerSesion()
 
   const headers = new Headers(opciones.headers)
 
@@ -37,13 +51,7 @@ export async function solicitarApi(ruta, opciones = {}) {
   )
 
   const texto = await respuesta.text()
-  let datos = null
-
-  try {
-    datos = texto ? JSON.parse(texto) : null
-  } catch {
-    datos = texto
-  }
+  const datos = interpretarRespuesta(texto)
 
   if (!respuesta.ok) {
     throw new Error(

@@ -45,8 +45,6 @@ function Perfil() {
 
     if (sesion?.token) {
       cargarPerfil()
-    } else {
-      setCargando(false)
     }
 
     return () => {

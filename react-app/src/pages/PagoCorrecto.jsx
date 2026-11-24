@@ -76,8 +76,6 @@ function PagoCorrecto() {
 
     if (esCliente) {
       cargarOrden()
-    } else {
-      setCargando(false)
     }
 
     return () => {

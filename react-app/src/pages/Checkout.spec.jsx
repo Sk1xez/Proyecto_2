@@ -1,16 +1,25 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { MemoryRouter, Routes, Route, useParams } from 'react-router-dom'
+
+import {
+  render,
+  screen,
+  fireEvent
+} from '@testing-library/react'
+
+import { MemoryRouter } from 'react-router-dom'
+
 import Checkout from './Checkout'
 import { CarritoProvider } from '../context/CarritoProvider'
 import { SesionContext } from '../context/SesionContext'
-import servicioPago from '../services/pago'
 
 const PRODUCTOS = [
   {
     id: 1,
     codigo: 'P001',
     nombre: 'Croquetas Premium',
-    categoria: 'alimentos',
+    categoria: {
+      id: 1,
+      nombre: 'Alimentos'
+    },
     precio: 4990,
     oferta: 0,
     stock: 10,
@@ -19,104 +28,259 @@ const PRODUCTOS = [
   }
 ]
 
-function PagoCorrectoPrueba() {
-  const { numero } = useParams()
-
-  return <div>¡Pago correcto! {numero}</div>
+const CLIENTE = {
+  id: 5,
+  nombre: 'Juan',
+  apellidos: 'Pérez',
+  correo: 'juan@gmail.com',
+  rol: 'Cliente',
+  token: 'token-simulado'
 }
 
-function PagoErrorPrueba() {
-  const { numero } = useParams()
-
-  return <div>Pago rechazado {numero}</div>
+function crearPedido(estado = 'pendiente') {
+  return {
+    id: 11,
+    numero: 'ORD-0011',
+    fecha: '2026-11-24T12:00:00Z',
+    estado,
+    total: 9980,
+    clienteId: 5,
+    cliente: {
+      nombre: 'Juan',
+      apellidos: 'Pérez',
+      correo: 'juan@gmail.com',
+      calle: 'Calle Falsa 123',
+      departamento: '',
+      region: 'Región Metropolitana',
+      comuna: 'Santiago',
+      indicaciones: ''
+    },
+    lineas: [
+      {
+        id: 1,
+        nombre: 'Croquetas Premium',
+        cantidad: 2,
+        unitario: 4990,
+        subtotal: 9980
+      }
+    ]
+  }
 }
 
-function CarritoPrueba() {
-  return <div>Carrito</div>
+function respuestaExitosa(datos) {
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    text: async () => JSON.stringify(datos)
+  })
 }
 
 function completarFormulario() {
-  fireEvent.change(screen.getByLabelText('Nombre'), { target: { value: 'Juan' } })
-  fireEvent.change(screen.getByLabelText('Apellidos'), { target: { value: 'Pérez' } })
-  fireEvent.change(screen.getByLabelText('Correo electrónico'), {
-    target: { value: 'juan@gmail.com' }
-  })
-  fireEvent.change(screen.getByLabelText('Calle'), { target: { value: 'Calle Falsa 123' } })
-  fireEvent.change(screen.getByLabelText('Región'), {
-    target: { value: 'Región Metropolitana' }
-  })
-  fireEvent.change(screen.getByLabelText('Comuna'), { target: { value: 'Santiago' } })
+  fireEvent.change(
+    screen.getByLabelText('Nombre'),
+    { target: { value: 'Juan' } }
+  )
+
+  fireEvent.change(
+    screen.getByLabelText('Apellidos'),
+    { target: { value: 'Pérez' } }
+  )
+
+  fireEvent.change(
+    screen.getByLabelText('Correo electrónico'),
+    { target: { value: 'juan@gmail.com' } }
+  )
+
+  fireEvent.change(
+    screen.getByLabelText('Calle'),
+    { target: { value: 'Calle Falsa 123' } }
+  )
+
+  fireEvent.change(
+    screen.getByLabelText('Región'),
+    { target: { value: 'Región Metropolitana' } }
+  )
+
+  fireEvent.change(
+    screen.getByLabelText('Comuna'),
+    { target: { value: 'Santiago' } }
+  )
 }
 
-describe('Checkout', () => {
+function pintarCheckout() {
+  render(
+    <MemoryRouter initialEntries={['/checkout']}>
+      <SesionContext.Provider
+        value={{
+          sesion: CLIENTE,
+          iniciarSesion: () => {},
+          cerrarSesion: () => {}
+        }}
+      >
+        <CarritoProvider>
+          <Checkout />
+        </CarritoProvider>
+      </SesionContext.Provider>
+    </MemoryRouter>
+  )
+}
+
+describe('Checkout conectado con Spring Boot', () => {
   let almacen
+  let fetchEspia
+  let estadoPago
 
   beforeEach(() => {
     almacen = new Map()
+    estadoPago = 'pagada'
 
-    spyOn(Storage.prototype, 'getItem').and.callFake((clave) =>
-      almacen.has(clave) ? almacen.get(clave) : null
+    spyOn(Storage.prototype, 'getItem')
+      .and.callFake((clave) =>
+        almacen.has(clave)
+          ? almacen.get(clave)
+          : null
+      )
+
+    spyOn(Storage.prototype, 'setItem')
+      .and.callFake((clave, valor) => {
+        almacen.set(clave, valor)
+      })
+
+    almacen.set(
+      'petshop-carrito-api',
+      JSON.stringify([
+        { id: 1, cantidad: 2 }
+      ])
     )
-    spyOn(Storage.prototype, 'setItem').and.callFake((clave, valor) => {
-      almacen.set(clave, valor)
-    })
 
-    almacen.set('petshop-productos', JSON.stringify(PRODUCTOS))
-    almacen.set('carrito', JSON.stringify([{ id: 1, cantidad: 2 }]))
+    fetchEspia = spyOn(window, 'fetch')
+      .and.callFake((ruta, opciones = {}) => {
+
+        const metodo = opciones.method || 'GET'
+
+        if (
+          ruta === '/api/v1/productos' &&
+          metodo === 'GET'
+        ) {
+          return respuestaExitosa(PRODUCTOS)
+        }
+
+        if (
+          ruta === '/api/v1/pedidos' &&
+          metodo === 'POST'
+        ) {
+          return respuestaExitosa(
+            crearPedido('pendiente')
+          )
+        }
+
+        if (
+          ruta === '/api/v1/pedidos/11/pagar-simulado' &&
+          metodo === 'POST'
+        ) {
+          return respuestaExitosa(
+            crearPedido(estadoPago)
+          )
+        }
+
+        return Promise.reject(
+          new Error(`Solicitud inesperada: ${metodo} ${ruta}`)
+        )
+      })
   })
 
-  function pintar() {
-    render(
-      <MemoryRouter initialEntries={['/checkout']}>
-        <SesionContext.Provider
-          value={{ sesion: null, iniciarSesion: () => {}, cerrarSesion: () => {} }}
-        >
-          <CarritoProvider>
-            <Routes>
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/pago-correcto/:numero" element={<PagoCorrectoPrueba />} />
-              <Route path="/pago-error/:numero" element={<PagoErrorPrueba />} />
-              <Route path="/carrito" element={<CarritoPrueba />} />
-            </Routes>
-          </CarritoProvider>
-        </SesionContext.Provider>
-      </MemoryRouter>
-    )
-  }
+  it(
+    'debería registrar un pedido pagado cuando Spring Boot aprueba el pago',
+    async () => {
 
-  it('debería marcar la orden como pagada cuando el pago es aprobado', async () => {
-    spyOn(servicioPago, 'procesarPago').and.returnValue({ ok: true, motivo: '' })
-    pintar()
+      estadoPago = 'pagada'
 
-    completarFormulario()
-    fireEvent.click(screen.getByRole('button', { name: 'Pagar ahora' }))
+      pintarCheckout()
 
-    expect(await screen.findByText(/Pago correcto/)).toBeTruthy()
-    expect(screen.getByText(/ORD-0001/)).toBeTruthy()
+      const boton = await screen.findByRole(
+        'button',
+        { name: 'Pagar (simulación)' }
+      )
 
-    const ordenes = JSON.parse(almacen.get('petshop-ordenes'))
-    expect(ordenes[0].estado).toBe('pagada')
-    expect(ordenes[0].fecha).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+      completarFormulario()
 
-    const productos = JSON.parse(almacen.get('petshop-productos'))
-    expect(productos[0].stock).toBe(8)
-  })
+      fireEvent.click(boton)
 
-  it('debería marcar la orden como fallida cuando el pago es rechazado', async () => {
-    spyOn(servicioPago, 'procesarPago').and.returnValue({
-      ok: false,
-      motivo: 'Rechazado por la tarjeta'
-    })
-    pintar()
+      const mensaje = await screen.findByText(
+        'Pago simulado aprobado correctamente.'
+      )
 
-    completarFormulario()
-    fireEvent.click(screen.getByRole('button', { name: 'Pagar ahora' }))
+      expect(mensaje).toBeTruthy()
 
-    expect(await screen.findByText(/Pago rechazado/)).toBeTruthy()
-    expect(screen.getByText(/ORD-0001/)).toBeTruthy()
+      expect(
+        screen.getByText('ORD-0011')
+      ).toBeTruthy()
 
-    const ordenes = JSON.parse(almacen.get('petshop-ordenes'))
-    expect(ordenes[0].estado).toBe('fallida')
-    expect(ordenes[0].motivo).toBe('Rechazado por la tarjeta')
-  })
+      const llamadas = fetchEspia.calls.allArgs()
+
+      const crear = llamadas.find(
+        ([ruta, opciones]) =>
+          ruta === '/api/v1/pedidos' &&
+          opciones?.method === 'POST'
+      )
+
+      expect(crear).toBeDefined()
+
+      const cuerpo = JSON.parse(crear[1].body)
+
+      expect(cuerpo.lineas).toEqual([
+        {
+          productoId: 1,
+          cantidad: 2
+        }
+      ])
+
+      const pago = llamadas.find(
+        ([ruta, opciones]) =>
+          ruta === '/api/v1/pedidos/11/pagar-simulado' &&
+          opciones?.method === 'POST'
+      )
+
+      expect(pago).toBeDefined()
+    }
+  )
+
+  it(
+    'debería mostrar el rechazo cuando Spring Boot devuelve un pago fallido',
+    async () => {
+
+      estadoPago = 'fallida'
+
+      pintarCheckout()
+
+      const boton = await screen.findByRole(
+        'button',
+        { name: 'Pagar (simulación)' }
+      )
+
+      completarFormulario()
+
+      fireEvent.click(boton)
+
+      const mensaje = await screen.findByText(
+        'El pago simulado fue rechazado.'
+      )
+
+      expect(mensaje).toBeTruthy()
+
+      expect(
+        screen.getByText('ORD-0011')
+      ).toBeTruthy()
+
+      const llamadas = fetchEspia.calls.allArgs()
+
+      const pago = llamadas.find(
+        ([ruta, opciones]) =>
+          ruta === '/api/v1/pedidos/11/pagar-simulado' &&
+          opciones?.method === 'POST'
+      )
+
+      expect(pago).toBeDefined()
+    }
+  )
 })

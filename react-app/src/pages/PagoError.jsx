@@ -75,8 +75,6 @@ function PagoError() {
 
     if (esCliente) {
       cargarOrden()
-    } else {
-      setCargando(false)
     }
 
     return () => {
