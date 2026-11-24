@@ -1,210 +1,329 @@
-import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+
+import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { api } from '../services/api'
 import { useCarrito } from '../context/useCarrito'
 import { useSesion } from '../context/useSesion'
-import { obtenerPorId as obtenerProducto, actualizar as actualizarProducto } from '../data/productos'
-import { obtenerPorId as obtenerUsuario } from '../data/usuarios'
 import { listar as listarRegiones, comunasDe } from '../data/regiones'
-import { crear as crearOrden, actualizar as actualizarOrden, listar as listarOrdenes } from '../data/ordenes'
-import servicioPago from '../services/pago'
-import { totalConCupon } from '../utils/cupon'
 import formatoPrecio, { precioFinal } from '../utils/precio'
 import CampoFormulario from '../components/CampoFormulario'
+import DetalleOrden from '../components/DetalleOrden'
 import {
-  LIMITES,
   requerido,
   largoMaximo,
-  correoValido,
-  comentarioValido
+  correoValido
 } from '../utils/validaciones'
 
-const VALORES_INICIALES = {
-  nombre: '',
-  apellidos: '',
-  correo: '',
-  calle: '',
-  departamento: '',
-  region: '',
-  comuna: '',
-  indicaciones: ''
-}
-
-const ERRORES_INICIALES = {
-  nombre: '',
-  apellidos: '',
-  correo: '',
-  calle: '',
-  departamento: '',
-  region: '',
-  comuna: '',
-  indicaciones: ''
-}
-
 function Checkout() {
-  const { lineas, total, vaciar } = useCarrito()
+  const {
+    lineas,
+    total,
+    vaciar,
+    obtenerProducto,
+    cargandoCatalogo,
+    errorCatalogo
+  } = useCarrito()
+
   const { sesion } = useSesion()
-  const navigate = useNavigate()
   const location = useLocation()
-  const cupon = location.state ? location.state.cupon : null
 
-  const [valores, setValores] = useState(() => {
-    const usuario = sesion ? obtenerUsuario(sesion.id) : null
-
-    if (!usuario) {
-      return VALORES_INICIALES
-    }
-
-    return {
-      nombre: usuario.nombre || '',
-      apellidos: usuario.apellidos || '',
-      correo: usuario.correo || '',
-      calle: usuario.direccion || '',
-      departamento: '',
-      region: usuario.region || '',
-      comuna: usuario.comuna || '',
-      indicaciones: ''
-    }
+  const [valores, setValores] = useState({
+    nombre: sesion?.nombre || '',
+    apellidos: sesion?.apellidos || '',
+    correo: sesion?.correo || '',
+    calle: '',
+    departamento: '',
+    region: '',
+    comuna: '',
+    indicaciones: ''
   })
 
-  const [errores, setErrores] = useState(ERRORES_INICIALES)
-  const [pagoConfirmado, setPagoConfirmado] = useState(false)
+  const [errores, setErrores] = useState({})
+  const [errorGeneral, setErrorGeneral] = useState('')
+  const [procesando, setProcesando] = useState(false)
+  const [pedidoPendiente, setPedidoPendiente] = useState(null)
+  const [resultadoPedido, setResultadoPedido] = useState(null)
 
-  const totalFinal = totalConCupon(total, cupon)
-  const carritoVacio = lineas.length === 0
-
-  useEffect(() => {
-    if (carritoVacio && !pagoConfirmado) {
-      navigate('/carrito', { replace: true })
-    }
-  }, [carritoVacio, pagoConfirmado, navigate])
-
-  if (carritoVacio && !pagoConfirmado) {
-    return null
-  }
+  const cuponNoAplicado = location.state?.cupon
 
   function cambiar(campo, valor) {
-    setValores((previos) => ({ ...previos, [campo]: valor }))
-    setErrores((previos) => ({ ...previos, [campo]: '' }))
+    setValores((actuales) => ({
+      ...actuales,
+      [campo]: valor,
+      ...(campo === 'region' ? { comuna: '' } : {})
+    }))
+
+    setErrores((actuales) => ({
+      ...actuales,
+      [campo]: ''
+    }))
+
+    setErrorGeneral('')
   }
 
   function validar() {
-    const v = valores
-
     return {
-      nombre: requerido(v.nombre) || largoMaximo(v.nombre, LIMITES.nombre),
-      apellidos: requerido(v.apellidos) || largoMaximo(v.apellidos, LIMITES.apellidosUsuario),
-      correo: requerido(v.correo) || correoValido(v.correo),
-      calle: requerido(v.calle) || largoMaximo(v.calle, LIMITES.direccion),
-      departamento: largoMaximo(v.departamento, LIMITES.direccion),
-      region: requerido(v.region),
-      comuna: requerido(v.comuna),
-      indicaciones: comentarioValido(v.indicaciones)
+      nombre:
+        requerido(valores.nombre) ||
+        largoMaximo(valores.nombre, 50),
+
+      apellidos:
+        requerido(valores.apellidos) ||
+        largoMaximo(valores.apellidos, 100),
+
+      correo:
+        requerido(valores.correo) ||
+        correoValido(valores.correo),
+
+      calle:
+        requerido(valores.calle) ||
+        largoMaximo(valores.calle, 200),
+
+      departamento: largoMaximo(valores.departamento, 100),
+
+      region: requerido(valores.region),
+
+      comuna: requerido(valores.comuna),
+
+      indicaciones: largoMaximo(valores.indicaciones, 500)
     }
   }
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault()
+
+    if (procesando || resultadoPedido) return
+
+    setErrorGeneral('')
+
+    if (!sesion || sesion.rol !== 'Cliente') {
+      setErrorGeneral('Debes iniciar sesión como cliente.')
+      return
+    }
 
     const nuevosErrores = validar()
     setErrores(nuevosErrores)
 
-    const hayErrores = Object.values(nuevosErrores).some((error) => error !== '')
-
-    if (hayErrores) {
+    if (Object.values(nuevosErrores).some(Boolean)) {
       return
     }
 
-    const lineasOrden = lineas.map((linea) => {
-      const producto = obtenerProducto(linea.id)
-      const unitario = precioFinal(producto)
+    if (
+      cargandoCatalogo ||
+      errorCatalogo ||
+      lineas.length === 0 ||
+      lineas.some((linea) => !obtenerProducto(linea.id))
+    ) {
+      setErrorGeneral('No se pudo validar el carrito.')
+      return
+    }
 
-      return {
-        id: linea.id,
-        nombre: producto.nombre,
-        cantidad: linea.cantidad,
-        unitario,
-        subtotal: unitario * linea.cantidad
+    setProcesando(true)
+
+    try {
+      let pedido = pedidoPendiente
+
+      if (!pedido) {
+        pedido = await api.post('/pedidos', {
+          nombreEntrega: valores.nombre.trim(),
+          apellidosEntrega: valores.apellidos.trim(),
+          correoEntrega: valores.correo.trim(),
+          calle: valores.calle.trim(),
+          departamento: valores.departamento.trim(),
+          region: valores.region,
+          comuna: valores.comuna,
+          indicaciones: valores.indicaciones.trim(),
+
+          lineas: lineas.map((linea) => ({
+            productoId: linea.id,
+            cantidad: linea.cantidad
+          }))
+        })
+
+        setPedidoPendiente(pedido)
       }
-    })
 
-    const numeros = listarOrdenes().map((orden) =>
-      Number(String(orden.numero).replace('ORD-', ''))
-    )
-    const siguiente = (numeros.length ? Math.max(...numeros) : 0) + 1
-    const numero = 'ORD-' + String(siguiente).padStart(4, '0')
+      const pago = await api.post(
+        `/pedidos/${pedido.id}/pagar-simulado`
+      )
 
-    const orden = crearOrden({
-      numero,
-      fecha: new Date().toISOString(),
-      cliente: { ...valores },
-      lineas: lineasOrden,
-      total: totalFinal,
-      estado: 'pendiente'
-    })
+      setResultadoPedido(pago)
+      setPedidoPendiente(null)
 
-    const resultado = servicioPago.procesarPago(orden)
-
-    if (resultado.ok) {
-      actualizarOrden(orden.id, { estado: 'pagada' })
-
-      lineasOrden.forEach((linea) => {
-        const producto = obtenerProducto(linea.id)
-        const stockRestante = Math.max(producto.stock - linea.cantidad, 0)
-        actualizarProducto(linea.id, { stock: stockRestante })
-      })
-
-      setPagoConfirmado(true)
-      vaciar()
-      navigate(`/pago-correcto/${orden.numero}`, { replace: true })
-      return
+      if (pago.estado === 'pagada') {
+        vaciar()
+      }
+    } catch (error) {
+      setErrorGeneral(
+        error.message ||
+        'No se pudo completar la operación. Revisa el estado del pedido antes de repetir el pago.'
+      )
+    } finally {
+      setProcesando(false)
     }
+  }
 
-    actualizarOrden(orden.id, { estado: 'fallida', motivo: resultado.motivo })
-    navigate(`/pago-error/${orden.numero}`, { replace: true })
+  if (resultadoPedido) {
+    const aprobado = resultadoPedido.estado === 'pagada'
+
+    return (
+      <section className="seccion-pagina container py-4 text-center">
+        <div
+          className={`alert alert-${aprobado ? 'success' : 'danger'}`}
+          role="status"
+        >
+          {aprobado
+            ? 'Pago simulado aprobado correctamente.'
+            : 'El pago simulado fue rechazado.'}
+        </div>
+
+        <h1>
+          {aprobado ? 'Gracias por tu compra' : 'Pago no completado'}
+        </h1>
+
+        <p>
+          Pedido: <strong>{resultadoPedido.numero}</strong>
+        </p>
+
+        <DetalleOrden
+          orden={resultadoPedido}
+          etiquetaTotal={
+            aprobado ? 'Total pagado' : 'Total no pagado'
+          }
+        />
+
+        <div className="mt-4">
+          {aprobado && (
+            <button
+              type="button"
+              className="btn btn-primary me-2"
+              onClick={() => window.print()}
+            >
+              Imprimir comprobante
+            </button>
+          )}
+
+          <Link to="/productos" className="btn btn-outline-primary">
+            Seguir comprando
+          </Link>
+        </div>
+      </section>
+    )
+  }
+
+  if (!sesion || sesion.rol !== 'Cliente') {
+    return (
+      <section className="container py-5">
+        <div className="alert alert-warning">
+          Para comprar debes iniciar sesión como cliente.
+        </div>
+        <Link to="/login" className="btn btn-primary">
+          Iniciar sesión
+        </Link>
+      </section>
+    )
+  }
+
+  if (cargandoCatalogo) {
+    return (
+      <section className="container py-5">
+        Cargando carrito...
+      </section>
+    )
+  }
+
+  if (errorCatalogo) {
+    return (
+      <section className="container py-5">
+        <div className="alert alert-danger">
+          {errorCatalogo}
+        </div>
+      </section>
+    )
+  }
+
+  if (lineas.length === 0) {
+    return (
+      <section className="container py-5">
+        <div className="alert alert-info">
+          Tu carrito está vacío.
+        </div>
+        <Link to="/productos" className="btn btn-primary">
+          Ver productos
+        </Link>
+      </section>
+    )
   }
 
   return (
     <section className="seccion-pagina container py-4">
       <h1>Checkout</h1>
 
+      {errorGeneral && (
+        <div className="alert alert-danger" role="alert">
+          {errorGeneral}
+        </div>
+      )}
+
+      {pedidoPendiente && (
+        <div className="alert alert-warning">
+          Ya se creó el pedido {pedidoPendiente.numero}.
+          Si el pago no respondió, comprueba su estado antes
+          de intentarlo nuevamente.
+        </div>
+      )}
+
+      {cuponNoAplicado && (
+        <div className="alert alert-warning">
+          Los cupones todavía no están integrados en el backend.
+          Esta compra se procesará sin el descuento del cupón.
+        </div>
+      )}
+
       <div className="row g-4 mt-1">
         <div className="col-lg-7">
           <div className="card mb-4">
             <div className="card-body">
-              <h2 className="h5 card-title">Resumen de compra</h2>
+              <h2 className="h5">Resumen de compra</h2>
 
               <div className="table-responsive">
                 <table className="table align-middle">
                   <thead>
                     <tr>
-                      <th scope="col">Producto</th>
-                      <th scope="col">Cantidad</th>
-                      <th scope="col">Subtotal</th>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Subtotal</th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {lineas.map((linea) => {
                       const producto = obtenerProducto(linea.id)
+
+                      if (!producto) return null
 
                       return (
                         <tr key={linea.id}>
                           <td>{producto.nombre}</td>
                           <td>{linea.cantidad}</td>
-                          <td>{formatoPrecio(precioFinal(producto) * linea.cantidad)}</td>
+                          <td>
+                            {formatoPrecio(
+                              precioFinal(producto) * linea.cantidad
+                            )}
+                          </td>
                         </tr>
                       )
                     })}
                   </tbody>
+
                   <tfoot>
-                    {cupon && (
-                      <tr>
-                        <td colSpan="2">Cupón {cupon.codigo} (-{cupon.porcentaje}%)</td>
-                        <td>-{formatoPrecio(total - totalFinal)}</td>
-                      </tr>
-                    )}
                     <tr className="table-light">
-                      <td colSpan="2" className="fw-bold">Total a pagar</td>
-                      <td className="fw-bold">{formatoPrecio(totalFinal)}</td>
+                      <td colSpan="2">
+                        <strong>Total a pagar</strong>
+                      </td>
+                      <td>
+                        <strong>{formatoPrecio(total)}</strong>
+                      </td>
                     </tr>
                   </tfoot>
                 </table>
@@ -214,7 +333,7 @@ function Checkout() {
 
           <div className="card">
             <div className="card-body">
-              <h2 className="h5 card-title mb-3">Datos de entrega</h2>
+              <h2 className="h5 mb-3">Datos de entrega</h2>
 
               <form onSubmit={enviar} noValidate>
                 <div className="row g-3">
@@ -223,7 +342,7 @@ function Checkout() {
                       etiqueta="Nombre"
                       id="nombre"
                       valor={valores.nombre}
-                      onChange={(valor) => cambiar('nombre', valor)}
+                      onChange={(v) => cambiar('nombre', v)}
                       error={errores.nombre}
                     />
                   </div>
@@ -233,7 +352,7 @@ function Checkout() {
                       etiqueta="Apellidos"
                       id="apellidos"
                       valor={valores.apellidos}
-                      onChange={(valor) => cambiar('apellidos', valor)}
+                      onChange={(v) => cambiar('apellidos', v)}
                       error={errores.apellidos}
                     />
                   </div>
@@ -244,7 +363,7 @@ function Checkout() {
                       id="correo"
                       tipoEntrada="email"
                       valor={valores.correo}
-                      onChange={(valor) => cambiar('correo', valor)}
+                      onChange={(v) => cambiar('correo', v)}
                       error={errores.correo}
                     />
                   </div>
@@ -254,7 +373,7 @@ function Checkout() {
                       etiqueta="Calle"
                       id="calle"
                       valor={valores.calle}
-                      onChange={(valor) => cambiar('calle', valor)}
+                      onChange={(v) => cambiar('calle', v)}
                       error={errores.calle}
                     />
                   </div>
@@ -264,7 +383,7 @@ function Checkout() {
                       etiqueta="Departamento (opcional)"
                       id="departamento"
                       valor={valores.departamento}
-                      onChange={(valor) => cambiar('departamento', valor)}
+                      onChange={(v) => cambiar('departamento', v)}
                       error={errores.departamento}
                     />
                   </div>
@@ -275,13 +394,13 @@ function Checkout() {
                       id="region"
                       tipo="select"
                       valor={valores.region}
-                      onChange={(valor) => cambiar('region', valor)}
+                      onChange={(v) => cambiar('region', v)}
                       error={errores.region}
                       opciones={[
                         { valor: '', texto: 'Seleccione la región' },
-                        ...listarRegiones().map((region) => ({
-                          valor: region.nombre,
-                          texto: region.nombre
+                        ...listarRegiones().map((r) => ({
+                          valor: r.nombre,
+                          texto: r.nombre
                         }))
                       ]}
                     />
@@ -293,13 +412,13 @@ function Checkout() {
                       id="comuna"
                       tipo="select"
                       valor={valores.comuna}
-                      onChange={(valor) => cambiar('comuna', valor)}
+                      onChange={(v) => cambiar('comuna', v)}
                       error={errores.comuna}
                       opciones={[
                         { valor: '', texto: 'Seleccione la comuna' },
-                        ...comunasDe(valores.region).map((comuna) => ({
-                          valor: comuna,
-                          texto: comuna
+                        ...comunasDe(valores.region).map((c) => ({
+                          valor: c,
+                          texto: c
                         }))
                       ]}
                     />
@@ -311,15 +430,22 @@ function Checkout() {
                       id="indicaciones"
                       tipo="textarea"
                       valor={valores.indicaciones}
-                      onChange={(valor) => cambiar('indicaciones', valor)}
+                      onChange={(v) => cambiar('indicaciones', v)}
                       error={errores.indicaciones}
-                      contador={LIMITES.comentario}
                     />
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100">
-                  Pagar ahora
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100 mt-3"
+                  disabled={procesando || !!pedidoPendiente}
+                >
+                  {procesando
+                    ? 'Procesando pago...'
+                    : pedidoPendiente
+                      ? 'Pago pendiente de verificación'
+                      : 'Pagar (simulación)'}
                 </button>
               </form>
             </div>
@@ -329,8 +455,14 @@ function Checkout() {
         <div className="col-lg-5">
           <div className="card">
             <div className="card-body">
-              <h2 className="h5 card-title">Total a pagar</h2>
-              <p className="display-6 mb-0">{formatoPrecio(totalFinal)}</p>
+              <h2 className="h5">Total a pagar</h2>
+              <p className="display-6">
+                {formatoPrecio(total)}
+              </p>
+              <p className="text-muted small mb-0">
+                Pago simulado para desarrollo. No se realiza
+                ningún cobro real.
+              </p>
             </div>
           </div>
         </div>
