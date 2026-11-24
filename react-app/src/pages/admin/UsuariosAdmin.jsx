@@ -158,8 +158,6 @@ function UsuariosAdmin() {
           Cargando usuarios desde MySQL...
         </div>
       ) : (
-        !error || usuarios.length > 0
-      ) && !cargando && (
         <>
           <div className="table-responsive">
             <table className="table table-hover align-middle bg-white">
@@ -220,13 +218,12 @@ function UsuariosAdmin() {
                             Editar
                           </Link>
 
-                          <button
-                            type="button"
+                          <Link
+                            to={`/admin/usuarios/${usuario.id}/historial`}
                             className="btn btn-sm btn-outline-secondary"
-                            disabled
                           >
                             Historial
-                          </button>
+                          </Link>
 
                           <button
                             type="button"
@@ -252,7 +249,7 @@ function UsuariosAdmin() {
             </table>
           </div>
 
-          {usuarios.length === 0 && (
+          {usuarios.length === 0 && !error && (
             <div className="alert alert-info">
               No hay usuarios registrados en MySQL.
             </div>
