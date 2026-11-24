@@ -1,7 +1,8 @@
+
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { api } from '../services/api'
 import { listar as listarRegiones, comunasDe } from '../data/regiones'
-import { crear, buscarPorCorreo, buscarPorRun } from '../data/usuarios'
 import CampoFormulario from '../components/CampoFormulario'
 import {
   LIMITES,
@@ -9,7 +10,6 @@ import {
   largoMaximo,
   correoValido,
   runValido,
-  contrasenaValida,
   coincideClave,
   fechaNoFutura,
   telefonoValido,
@@ -30,101 +30,111 @@ const VALORES_INICIALES = {
   direccion: ''
 }
 
-const ERRORES_INICIALES = {
-  run: '',
-  nombre: '',
-  apellidos: '',
-  correo: '',
-  contrasena: '',
-  confirmar: '',
-  fecha: '',
-  telefono: '',
-  region: '',
-  comuna: '',
-  direccion: ''
+const ERRORES_INICIALES = Object.fromEntries(
+  Object.keys(VALORES_INICIALES).map((campo) => [campo, ''])
+)
+
+function validarClave(valor) {
+  if (valor.length < 8) {
+    return 'La contraseña debe tener al menos 8 caracteres.'
+  }
+
+  if (new TextEncoder().encode(valor).length > 72) {
+    return 'La contraseña es demasiado larga.'
+  }
+
+  return ''
 }
 
 function Registro() {
   const regiones = listarRegiones()
-
   const [valores, setValores] = useState(VALORES_INICIALES)
   const [errores, setErrores] = useState(ERRORES_INICIALES)
   const [mensajeExito, setMensajeExito] = useState('')
+  const [errorGeneral, setErrorGeneral] = useState('')
+  const [cargando, setCargando] = useState(false)
 
   const comunas = comunasDe(valores.region)
 
   function cambiar(campo, valor) {
-    setValores((previos) => {
-      const nuevos = { ...previos, [campo]: valor }
+    setValores((previos) => ({
+      ...previos,
+      [campo]: valor,
+      ...(campo === 'region' ? { comuna: '' } : {})
+    }))
 
-      if (campo === 'region') {
-        nuevos.comuna = ''
-      }
+    setErrores((previos) => ({
+      ...previos,
+      [campo]: ''
+    }))
 
-      return nuevos
-    })
-    setErrores((previos) => ({ ...previos, [campo]: '' }))
     setMensajeExito('')
+    setErrorGeneral('')
   }
 
   function validar() {
     const v = valores
 
-    const nuevos = {
+    return {
       run: requerido(v.run) || runValido(v.run),
-      nombre: requerido(v.nombre) || largoMaximo(v.nombre, LIMITES.nombreUsuario),
-      apellidos: requerido(v.apellidos) || largoMaximo(v.apellidos, LIMITES.apellidosUsuario),
+      nombre: requerido(v.nombre) ||
+        largoMaximo(v.nombre, LIMITES.nombreUsuario),
+      apellidos: requerido(v.apellidos) ||
+        largoMaximo(v.apellidos, LIMITES.apellidosUsuario),
       correo: requerido(v.correo) || correoValido(v.correo),
-      contrasena: requerido(v.contrasena) || contrasenaValida(v.contrasena),
-      confirmar: requerido(v.confirmar) || coincideClave(v.confirmar, v.contrasena),
+      contrasena: requerido(v.contrasena) || validarClave(v.contrasena),
+      confirmar: requerido(v.confirmar) ||
+        coincideClave(v.confirmar, v.contrasena),
       fecha: fechaNoFutura(v.fecha),
       telefono: telefonoValido(v.telefono),
       region: requerido(v.region),
       comuna: requerido(v.comuna),
       direccion: direccionValida(v.direccion)
     }
-
-    if (!nuevos.correo && buscarPorCorreo(v.correo.trim())) {
-      nuevos.correo = 'Ese correo ya está registrado.'
-    }
-
-    if (!nuevos.run && buscarPorRun(v.run.trim())) {
-      nuevos.run = 'Ese RUN ya está registrado.'
-    }
-
-    return nuevos
   }
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault()
+
+    if (cargando) return
 
     const nuevosErrores = validar()
     setErrores(nuevosErrores)
 
-    const hayErrores = Object.values(nuevosErrores).some((error) => error !== '')
-
-    if (hayErrores) {
+    if (Object.values(nuevosErrores).some(Boolean)) {
       setMensajeExito('')
       return
     }
 
-    crear({
-      run: valores.run.trim().toUpperCase(),
-      nombre: valores.nombre.trim(),
-      apellidos: valores.apellidos.trim(),
-      correo: valores.correo.trim(),
-      contrasena: valores.contrasena,
-      fecha: valores.fecha,
-      telefono: valores.telefono,
-      region: valores.region,
-      comuna: valores.comuna,
-      direccion: valores.direccion,
-      rol: 'Cliente'
-    })
+    setCargando(true)
+    setErrorGeneral('')
+    setMensajeExito('')
 
-    setValores(VALORES_INICIALES)
-    setErrores(ERRORES_INICIALES)
-    setMensajeExito('Usuario registrado correctamente.')
+    try {
+      await api.post('/auth/registro', {
+        run: valores.run.trim().toUpperCase(),
+        nombre: valores.nombre.trim(),
+        apellidos: valores.apellidos.trim(),
+        correo: valores.correo.trim().toLowerCase(),
+        contrasena: valores.contrasena
+      })
+
+      setValores(VALORES_INICIALES)
+      setErrores(ERRORES_INICIALES)
+      setMensajeExito(
+        'Usuario registrado correctamente. Ya puedes iniciar sesión.'
+      )
+    } catch (error) {
+      if (error.message.includes('409')) {
+        setErrorGeneral('El correo o RUN ya está registrado.')
+      } else {
+        setErrorGeneral(
+          error.message || 'No se pudo registrar el usuario.'
+        )
+      }
+    } finally {
+      setCargando(false)
+    }
   }
 
   return (
@@ -133,11 +143,19 @@ function Registro() {
         <div className="col-lg-9">
           <div className="card">
             <div className="card-body">
-              <h1 className="card-title h3 mb-4 text-center">Registrar usuario</h1>
+              <h1 className="card-title h3 mb-4 text-center">
+                Registrar usuario
+              </h1>
 
               {mensajeExito && (
-                <div className="alert alert-success" role="alert">
+                <div className="alert alert-success" role="status">
                   {mensajeExito}
+                </div>
+              )}
+
+              {errorGeneral && (
+                <div className="alert alert-danger" role="alert">
+                  {errorGeneral}
                 </div>
               )}
 
@@ -240,7 +258,10 @@ function Registro() {
                       error={errores.region}
                       opciones={[
                         { valor: '', texto: 'Seleccione la región' },
-                        ...regiones.map((region) => ({ valor: region.nombre, texto: region.nombre }))
+                        ...regiones.map((region) => ({
+                          valor: region.nombre,
+                          texto: region.nombre
+                        }))
                       ]}
                     />
                   </div>
@@ -255,7 +276,10 @@ function Registro() {
                       error={errores.comuna}
                       opciones={[
                         { valor: '', texto: 'Seleccione la comuna' },
-                        ...comunas.map((comuna) => ({ valor: comuna, texto: comuna }))
+                        ...comunas.map((comuna) => ({
+                          valor: comuna,
+                          texto: comuna
+                        }))
                       ]}
                     />
                   </div>
@@ -273,13 +297,18 @@ function Registro() {
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100">
-                  Registrarme
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100"
+                  disabled={cargando}
+                >
+                  {cargando ? 'Registrando...' : 'Registrarme'}
                 </button>
               </form>
 
               <p className="text-center mt-3 mb-0">
-                ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+                ¿Ya tienes cuenta?{' '}
+                <Link to="/login">Inicia sesión</Link>
               </p>
             </div>
           </div>
