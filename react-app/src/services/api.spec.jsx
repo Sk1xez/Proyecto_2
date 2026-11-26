@@ -1,5 +1,5 @@
 import { api } from './api'
-import { AVISO_SESION, CAMBIO_SESION, CLAVE_SESION, leerSesion } from './sesion'
+import { AVISO_SESION, CAMBIO_SESION, CLAVE_SESION, guardarSesion, leerSesion } from './sesion'
 
 function credencial(segundos, identificador = 'prueba') {
   return `prueba.${btoa(JSON.stringify({ exp: Math.floor(Date.now() / 1000) + segundos }))}.${identificador}`
@@ -12,7 +12,7 @@ function respuesta(datos, status = 200) {
 describe('Sesión de las solicitudes a la API', () => {
   const cuenta = { id: 1, correo: 'cliente@petshop.test', rol: 'Cliente' }
 
-  afterEach(() => localStorage.removeItem(CLAVE_SESION))
+  afterEach(() => guardarSesion(null))
 
   it('renueva una sola vez cuando varias solicitudes están cerca del vencimiento', async () => {
     const token = credencial(20)

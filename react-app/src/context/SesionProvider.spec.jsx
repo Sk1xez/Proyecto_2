@@ -3,7 +3,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import RutaProtegida from '../components/RutaProtegida'
 import Login from '../pages/Login'
 import { api } from '../services/api'
-import { CLAVE_SESION } from '../services/sesion'
+import { CLAVE_SESION, guardarSesion } from '../services/sesion'
 import { SesionProvider } from './SesionProvider'
 import { useSesion } from './useSesion'
 
@@ -36,7 +36,7 @@ describe('Sesión al recargar', () => {
       token: `prueba.${btoa(JSON.stringify({ exp }))}.prueba`
     }))
   })
-  afterEach(() => localStorage.removeItem(CLAVE_SESION))
+  afterEach(() => guardarSesion(null))
 
   it('recupera la sesión al volver a montar la aplicación y la elimina al salir', () => {
     const primera = montar()
@@ -49,9 +49,9 @@ describe('Sesión al recargar', () => {
     expect(localStorage.getItem(CLAVE_SESION)).toBeNull()
   })
 
-  it('lleva al formulario con un aviso cuando la API rechaza la sesión', async () => {
+  it('muestra el aviso del 401 aunque la aplicación cargue de nuevo', async () => {
     spyOn(window, 'fetch').and.resolveTo(new Response(null, { status: 401 }))
-    montar('/mis-pedidos')
+    const primera = montar('/mis-pedidos')
     await act(async () => {
       await expectAsync(api.get('/pedidos/mis-pedidos')).toBeRejected()
     })
@@ -59,5 +59,9 @@ describe('Sesión al recargar', () => {
     expect(screen.getByRole('heading', { name: 'Iniciar sesión' })).toBeTruthy()
     expect(screen.getByRole('alert').textContent).toContain('Vuelve a iniciar sesión')
     expect(localStorage.getItem(CLAVE_SESION)).toBeNull()
+    primera.unmount()
+
+    montar('/mis-pedidos')
+    expect(screen.getByRole('alert').textContent).toContain('Vuelve a iniciar sesión')
   })
 })

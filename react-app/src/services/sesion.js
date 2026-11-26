@@ -2,6 +2,7 @@ export const CLAVE_SESION = 'sesion'
 export const CAMBIO_SESION = 'petshop:cambio-sesion'
 export const AVISO_SESION = 'Tu sesión venció o ya no es válida. Vuelve a iniciar sesión.'
 export const ANTICIPACION_MS = 45_000
+const CLAVE_AVISO_SESION = 'petshop-aviso-sesion'
 
 const roles = { CLIENTE: 'Cliente', VENDEDOR: 'Vendedor', ADMINISTRADOR: 'Administrador' }
 
@@ -12,6 +13,10 @@ export function leerSesion() {
   } catch {
     return null
   }
+}
+
+export function leerAvisoSesion() {
+  return sessionStorage.getItem(CLAVE_AVISO_SESION) || ''
 }
 
 // Leer la fecha solo sirve para programar la renovación. El servidor verifica la firma y los permisos.
@@ -40,6 +45,9 @@ export function guardarSesion(sesion, aviso) {
   if (sesion) localStorage.setItem(CLAVE_SESION, JSON.stringify(sesion))
   else localStorage.removeItem(CLAVE_SESION)
   sessionStorage.removeItem(CLAVE_SESION)
+  // Conserva solo el aviso en esta pestaña aunque el navegador cargue otra página.
+  if (aviso) sessionStorage.setItem(CLAVE_AVISO_SESION, aviso)
+  else sessionStorage.removeItem(CLAVE_AVISO_SESION)
   window.dispatchEvent(new CustomEvent(CAMBIO_SESION, { detail: aviso }))
 }
 

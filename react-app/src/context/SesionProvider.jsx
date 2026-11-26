@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { api, renovarSesionSiHaceFalta } from '../services/api'
 import {
   ANTICIPACION_MS, CAMBIO_SESION, CLAVE_SESION, cerrarSesionSiCoincide,
-  guardarSesion, leerSesion, sesionDesdeRespuesta, vencimiento
+  guardarSesion, leerAvisoSesion, leerSesion, sesionDesdeRespuesta, vencimiento
 } from '../services/sesion'
 import { SesionContext } from './SesionContext'
 
@@ -15,7 +15,7 @@ function leerSesionVigente() {
 function SesionProvider({ children }) {
   // Al recargar, el contexto recupera la sesión guardada en este navegador si no venció.
   const [sesion, setSesion] = useState(leerSesionVigente)
-  const [avisoSesion, setAvisoSesion] = useState('')
+  const [avisoSesion, setAvisoSesion] = useState(leerAvisoSesion)
   const navigate = useNavigate()
 
   useEffect(() => {
