@@ -1,7 +1,9 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useSesion } from '../context/useSesion'
 
-function RutaProtegida({ rolesPermitidos }) {
+const ROLES_PANEL = ['Administrador', 'Vendedor']
+
+function RutaProtegida({ rolesPermitidos = ROLES_PANEL }) {
   const { sesion } = useSesion()
   const ubicacion = useLocation()
 
@@ -9,12 +11,10 @@ function RutaProtegida({ rolesPermitidos }) {
     return <Navigate to="/login" replace state={{ desde: ubicacion.pathname }} />
   }
 
-  if (sesion.rol === 'Cliente') {
-    return <Navigate to="/" replace />
-  }
-
-  if (rolesPermitidos && !rolesPermitidos.includes(sesion.rol)) {
-    return <Navigate to="/admin" replace />
+  if (!rolesPermitidos.includes(sesion.rol)) {
+    const destino = sesion.rol === 'Vendedor' ? '/admin/ordenes'
+      : sesion.rol === 'Administrador' ? '/admin' : '/'
+    return <Navigate to={destino} replace state={{ sinPermiso: true }} />
   }
 
   return <Outlet />

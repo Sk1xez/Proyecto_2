@@ -187,9 +187,9 @@ function ProductosAdmin() {
                             </button>
                           </div>
                         ) : (
-                          <span className="text-muted">
-                            Solo lectura
-                          </span>
+                          <Link to={`/admin/productos/${producto.id}`} className="btn btn-sm btn-outline-primary">
+                            Ver detalle
+                          </Link>
                         )}
                       </td>
                     </tr>
@@ -232,14 +232,14 @@ function ProductosAdmin() {
             </ul>
           )}
 
-          <p className="mt-3">
+          {esAdmin && <p className="mt-3">
             <Link
               to="/admin/reportes"
               className="btn btn-outline-secondary btn-sm"
             >
               Ver reportes
             </Link>
-          </p>
+          </p>}
         </>
       )}
     </section>

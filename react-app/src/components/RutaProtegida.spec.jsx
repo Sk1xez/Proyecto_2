@@ -48,7 +48,7 @@ describe('RutaProtegida', () => {
     expect(screen.queryByText('Panel de administración')).toBeNull()
   })
 
-  it('debería redirigir a /admin cuando un Vendedor entra a una ruta solo de Administrador', () => {
+  it('debería llevar a sus órdenes al Vendedor que intenta entrar a una ruta de Administrador', () => {
     render(
       <MemoryRouter initialEntries={['/admin/usuarios']}>
         <SesionContext.Provider
@@ -62,13 +62,13 @@ describe('RutaProtegida', () => {
             <Route element={<RutaProtegida rolesPermitidos={['Administrador']} />}>
               <Route path="/admin/usuarios" element={<div>Lista de usuarios</div>} />
             </Route>
-            <Route path="/admin" element={<div>Dashboard del panel</div>} />
+            <Route path="/admin/ordenes" element={<div>Órdenes del panel</div>} />
           </Routes>
         </SesionContext.Provider>
       </MemoryRouter>
     )
 
-    expect(screen.getByText('Dashboard del panel')).toBeTruthy()
+    expect(screen.getByText('Órdenes del panel')).toBeTruthy()
     expect(screen.queryByText('Lista de usuarios')).toBeNull()
   })
 })

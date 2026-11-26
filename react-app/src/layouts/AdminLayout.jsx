@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useSesion } from '../context/useSesion'
 
 function EnlacesAdmin({ esAdmin, alCerrar, alNavegar }) {
@@ -14,7 +14,7 @@ function EnlacesAdmin({ esAdmin, alCerrar, alNavegar }) {
         </NavLink>
       )}
       <NavLink to="/admin/ordenes" className={claseEnlace} onClick={alNavegar}>
-        Ã“rdenes y boletas
+        Órdenes y boletas
       </NavLink>
       <NavLink to="/admin/productos" className={claseEnlace} onClick={alNavegar}>
         Productos
@@ -22,7 +22,7 @@ function EnlacesAdmin({ esAdmin, alCerrar, alNavegar }) {
       {esAdmin && (
         <>
           <NavLink to="/admin/categorias" className={claseEnlace} onClick={alNavegar}>
-            CategorÃ­as
+            Categorías
           </NavLink>
           <NavLink to="/admin/usuarios" className={claseEnlace} onClick={alNavegar}>
             Usuarios
@@ -40,7 +40,7 @@ function EnlacesAdmin({ esAdmin, alCerrar, alNavegar }) {
         </>
       )}
       <button type="button" className="btn btn-outline-light btn-sm mt-2" onClick={alCerrar}>
-        Cerrar sesiÃ³n
+        Cerrar sesión
       </button>
     </>
   )
@@ -49,6 +49,7 @@ function EnlacesAdmin({ esAdmin, alCerrar, alNavegar }) {
 function AdminLayout() {
   const { sesion, cerrarSesion } = useSesion()
   const navigate = useNavigate()
+  const { state } = useLocation()
   const [menuAbierto, setMenuAbierto] = useState(false)
 
   const esAdmin = sesion && sesion.rol === 'Administrador'
@@ -70,7 +71,7 @@ function AdminLayout() {
         style={{ width: '250px', minHeight: '100vh', flexShrink: 0 }}
       >
         <div className="h4 mb-1">PetShop Chile</div>
-        <div className="small text-white-50 mb-3">Panel de administración</div>
+        <div className="small text-white-50 mb-3">{esAdmin ? 'Panel de administración' : 'Panel de ventas'}</div>
 
         <nav className="nav flex-column gap-1">
           <EnlacesAdmin
@@ -93,6 +94,7 @@ function AdminLayout() {
           <span className="fw-bold">Panel</span>
         </div>
 
+        {state?.sinPermiso && <div role="alert" className="alert alert-warning">No tienes permiso</div>}
         <Outlet />
       </main>
     </div>

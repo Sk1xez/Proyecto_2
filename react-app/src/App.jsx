@@ -52,12 +52,14 @@ function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blogs/:id" element={<DetalleBlog />} />
         <Route path="/contacto" element={<Contacto />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/pago-correcto/:numero" element={<PagoCorrecto />} />
-        <Route path="/pago-error/:numero" element={<PagoError />} />
+        <Route element={<RutaProtegida rolesPermitidos={['Cliente']} />}>
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/pago-correcto/:numero" element={<PagoCorrecto />} />
+          <Route path="/pago-error/:numero" element={<PagoError />} />
+          <Route path="/mis-pedidos" element={<MisPedidos />} />
+        </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
-        <Route path="/mis-pedidos" element={<MisPedidos />} />
 
         <Route path="*" element={<NotFound />} />
       </Route>
@@ -68,15 +70,16 @@ function App() {
           <Route path="ordenes" element={<OrdenesAdmin />} />
           <Route path="ordenes/:numero" element={<DetalleOrdenAdmin />} />
           <Route path="productos" element={<ProductosAdmin />} />
-          <Route path="productos/:id/editar" element={<ProductoEditar />} />
-          <Route path="categorias" element={sesion?.rol === "Administrador" ? <CategoriasAdmin /> : <Navigate to="/admin/ordenes" replace />} />
-          <Route path="categorias/:id/editar" element={sesion?.rol === "Administrador" ? <CategoriaEditar /> : <Navigate to="/admin/ordenes" replace />} />
-          <Route path="reportes" element={sesion?.rol === "Administrador" ? <Reportes /> : <Navigate to="/admin/ordenes" replace />} />
-          <Route path="perfil" element={sesion?.rol === "Administrador" ? <Perfil /> : <Navigate to="/admin/ordenes" replace />} />
+          <Route path="productos/:id" element={<ProductoEditar soloLectura />} />
 
           <Route element={<RutaProtegida rolesPermitidos={['Administrador']} />}>
             <Route path="productos/nuevo" element={<ProductoNuevo />} />
+            <Route path="productos/:id/editar" element={<ProductoEditar />} />
+            <Route path="categorias" element={<CategoriasAdmin />} />
             <Route path="categorias/nueva" element={<CategoriaNueva />} />
+            <Route path="categorias/:id/editar" element={<CategoriaEditar />} />
+            <Route path="reportes" element={<Reportes />} />
+            <Route path="perfil" element={<Perfil />} />
             <Route path="usuarios" element={<UsuariosAdmin />} />
             <Route path="usuarios/nuevo" element={<UsuarioNuevo />} />
             <Route path="usuarios/:id/editar" element={<UsuarioEditar />} />

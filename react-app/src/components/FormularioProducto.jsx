@@ -22,7 +22,7 @@ const VALORES_VACIOS = {
 
 const ERRORES_VACIOS = { ...VALORES_VACIOS }
 
-function FormularioProducto({ valoresIniciales, onGuardar, categorias, deshabilitado = false }) {
+function FormularioProducto({ valoresIniciales, onGuardar, categorias, deshabilitado = false, soloLectura = false }) {
   const [valores, setValores] = useState({ ...VALORES_VACIOS, ...valoresIniciales })
   const [errores, setErrores] = useState(ERRORES_VACIOS)
 
@@ -46,6 +46,7 @@ function FormularioProducto({ valoresIniciales, onGuardar, categorias, deshabili
 
   function enviar(evento) {
     evento.preventDefault()
+    if (deshabilitado) return
 
     const v = valores
 
@@ -191,7 +192,7 @@ function FormularioProducto({ valoresIniciales, onGuardar, categorias, deshabili
           </button>
         )}
         <Link to="/admin/productos" className="btn btn-outline-secondary">
-          Cancelar
+          {soloLectura ? 'Volver al listado' : 'Cancelar'}
         </Link>
       </div>
     </form>

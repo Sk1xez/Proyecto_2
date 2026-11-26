@@ -2,15 +2,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../services/api'
-import { useSesion } from '../../context/useSesion'
 import FormularioProducto from '../../components/FormularioProducto'
 
-function ProductoEditar() {
+function ProductoEditar({ soloLectura = false }) {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { sesion } = useSesion()
-
-  const soloLectura = sesion?.rol !== 'Administrador'
 
   const [producto, setProducto] = useState(null)
   const [categorias, setCategorias] = useState([])
@@ -28,13 +24,13 @@ function ProductoEditar() {
       try {
         const [datosProducto, datosCategorias] = await Promise.all([
           api.get(`/productos/${id}`),
-          api.get('/categorias')
+          soloLectura ? null : api.get('/categorias')
         ])
 
         if (!activo) return
 
         setProducto(datosProducto)
-        setCategorias(datosCategorias)
+        setCategorias(datosCategorias ?? (datosProducto.categoria ? [datosProducto.categoria] : []))
       } catch (error) {
         if (activo) {
           setError(
@@ -53,7 +49,7 @@ function ProductoEditar() {
     return () => {
       activo = false
     }
-  }, [id])
+  }, [id, soloLectura])
 
   async function guardar(datos) {
     if (soloLectura || guardando) return
@@ -100,7 +96,7 @@ function ProductoEditar() {
   if (cargando) {
     return (
       <section>
-        <h1 className="h3 mb-4">Editar producto</h1>
+        <h1 className="h3 mb-4">{soloLectura ? 'Detalle del producto' : 'Editar producto'}</h1>
         <div className="alert alert-info" role="status">
           Cargando producto desde MySQL...
         </div>
@@ -165,6 +161,7 @@ function ProductoEditar() {
         }}
         onGuardar={guardar}
         categorias={categorias}
+        soloLectura={soloLectura}
         deshabilitado={soloLectura || guardando}
       />
     </section>
