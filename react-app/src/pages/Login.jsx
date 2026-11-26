@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSesion } from '../context/useSesion'
 import CampoFormulario from '../components/CampoFormulario'
 import {
@@ -16,6 +16,7 @@ function destinoPorRol(rol) {
 function Login() {
   const { sesion, iniciarSesion } = useSesion()
   const navigate = useNavigate()
+  const { state } = useLocation()
 
   const [valores, setValores] = useState({
     correo: '',
@@ -104,6 +105,10 @@ function Login() {
                 <div className="alert alert-danger" role="alert">
                   {errorGeneral}
                 </div>
+              )}
+
+              {!errorGeneral && state?.avisoSesion && (
+                <div className="alert alert-warning" role="alert">{state.avisoSesion}</div>
               )}
 
               <form onSubmit={enviar} noValidate>
