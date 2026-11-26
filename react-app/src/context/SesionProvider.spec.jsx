@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import RutaProtegida from '../components/RutaProtegida'
 import Login from '../pages/Login'
 import { api } from '../services/api'
 import { CLAVE_SESION } from '../services/sesion'
@@ -13,12 +14,15 @@ function VistaSesion() {
     : <p>No hay sesión</p>
 }
 
-function montar() {
-  return render(<MemoryRouter>
+function montar(ruta = '/') {
+  return render(<MemoryRouter initialEntries={[ruta]}>
     <SesionProvider>
       <Routes>
         <Route path="/" element={<VistaSesion />} />
         <Route path="/login" element={<Login />} />
+        <Route element={<RutaProtegida rolesPermitidos={['Cliente']} />}>
+          <Route path="/mis-pedidos" element={<VistaSesion />} />
+        </Route>
       </Routes>
     </SesionProvider>
   </MemoryRouter>)
@@ -47,7 +51,7 @@ describe('Sesión al recargar', () => {
 
   it('lleva al formulario con un aviso cuando la API rechaza la sesión', async () => {
     spyOn(window, 'fetch').and.resolveTo(new Response(null, { status: 401 }))
-    montar()
+    montar('/mis-pedidos')
     await act(async () => {
       await expectAsync(api.get('/pedidos/mis-pedidos')).toBeRejected()
     })

@@ -15,6 +15,7 @@ function leerSesionVigente() {
 function SesionProvider({ children }) {
   // Al recargar, el contexto recupera la sesión guardada en este navegador si no venció.
   const [sesion, setSesion] = useState(leerSesionVigente)
+  const [avisoSesion, setAvisoSesion] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -24,8 +25,9 @@ function SesionProvider({ children }) {
 
     function cambioLocal(evento) {
       sincronizar()
+      setAvisoSesion(evento.detail || '')
       if (evento.detail) {
-        navigate('/login', { replace: true, state: { avisoSesion: evento.detail } })
+        navigate('/login', { replace: true })
       }
     }
 
@@ -72,7 +74,7 @@ function SesionProvider({ children }) {
   }
 
   return (
-    <SesionContext.Provider value={{ sesion, iniciarSesion, cerrarSesion }}>
+    <SesionContext.Provider value={{ sesion, avisoSesion, iniciarSesion, cerrarSesion }}>
       {children}
     </SesionContext.Provider>
   )
