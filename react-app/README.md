@@ -14,6 +14,10 @@ Frontend de la Evaluación Parcial 3 (DSY1104): tienda de artículos para mascot
 
 3. Entra a <http://localhost:5173>. Vite redirige `/api` a <http://localhost:8080>. Usa las [cuentas de prueba del README principal](../README.md#usuarios-de-prueba), una por cada rol.
 
+## Cómo se conserva la sesión
+
+Después de iniciar sesión, el navegador guarda el JWT y los datos básicos de la cuenta bajo la clave `sesion` de `localStorage`. Por eso se conserva al recargar la página si sigue vigente. No se guarda la contraseña. React pide renovar el JWT antes de que venza y lo borra al salir o cuando la API rechaza la sesión. El backend siempre verifica la firma y los permisos: esconder un menú en React no reemplaza esa revisión.
+
 ## Otros comandos
 
 ```bash
