@@ -1,12 +1,22 @@
 # PetShop Chile — React + Vite
 
-Aplicación de la Evaluación Parcial 2 (DSY1104): tienda online de artículos para mascotas migrada de HTML/CSS/JS a **React 19 + Vite**, con Bootstrap 5, panel de administración, persistencia en `localStorage` y pruebas con Karma + Jasmine.
+Frontend de la Evaluación Parcial 3 (DSY1104): tienda de artículos para mascotas con **React 19, Vite y Bootstrap 5**. Los datos de la tienda están en MySQL y se consultan a través de la API de Spring Boot. `localStorage` conserva la sesión y el carrito en el navegador.
 
-## Comandos
+## Cómo arrancar
+
+1. Abre `petshop-backend/` y sigue su `README.md` para preparar MySQL y las variables `DB_PASSWORD` y `JWT_SECRET`. Levanta el backend con `./mvnw spring-boot:run` en el puerto 8080 y carga `docs/base-de-datos.sql` la primera vez.
+2. Con Node.js 22.12 o superior, ejecuta desde `Proyecto_2/react-app/`:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+3. Entra a <http://localhost:5173>. Vite redirige `/api` a <http://localhost:8080>. Usa las [cuentas de prueba del README principal](../README.md#usuarios-de-prueba), una por cada rol.
+
+## Otros comandos
 
 ```bash
-npm install   # primera vez: instala dependencias
-npm run dev   # servidor de desarrollo con HMR
 npm test      # pruebas (Karma + Jasmine, ChromeHeadless con cobertura)
 npm run build # build de producción en dist/
 npm run lint  # ESLint
@@ -18,9 +28,10 @@ npm run lint  # ESLint
 - `src/components/` — componentes reutilizables (`TarjetaProducto`, `ResumenCarrito`, `RutaProtegida`, formularios del panel).
 - `src/layouts/` — `TiendaLayout` (Header + Footer) y `AdminLayout` (sidebar del panel).
 - `src/context/` — contextos de carrito y sesión (cada uno en contexto, provider y hook).
-- `src/data/` — repositorio genérico y entidades (productos, categorías, usuarios, órdenes) sobre `localStorage`.
+- `src/data/` — contenido local para el blog y listado de regiones.
 - `src/utils/` — funciones puras (`precio`, `cupon`, `validaciones`).
-- `src/services/pago.js` — pasarela de pago simulada.
+- `src/services/api.js` — comunicación con la API REST y envío de la sesión en las solicitudes.
+- `src/pages/Checkout.jsx` — envío del pedido y solicitud de pago simulado al backend.
 - `karma.conf.js` + `webpack.test.config.js` — entorno de pruebas (Karma no se integra con Vite, por eso webpack + babel-loader solo para tests).
 
 ## Documentación

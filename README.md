@@ -1,24 +1,26 @@
 # PetShop Chile
 
-Tienda online de artículos y servicios para mascotas. Proyecto frontend migrado de HTML, CSS y JavaScript a React + Vite (Evaluación Parcial 2 - Fullstack).
+Tienda online de artículos y servicios para mascotas. En la Evaluación Parcial 3 de DSY1104, el frontend React se conecta a una API de Spring Boot. El catálogo, los usuarios y los pedidos se guardan en MySQL. El navegador conserva la sesión y el carrito, no la base de datos.
 
 ## Integrantes
 - Paolo Muñoz
 - Vicente Muñoz
 - Alexis Valencia
 
-## Cómo instalar, ejecutar y probar
+## Cómo levantar ambos proyectos
 
-La aplicación React vive en `react-app/`:
+1. En `petshop-backend/`, sigue su `README.md` para preparar MySQL, ingresar `DB_PASSWORD` sin mostrarla en pantalla, generar `JWT_SECRET` y ejecutar `./mvnw spring-boot:run`. En el primer arranque, carga `docs/base-de-datos.sql` según esa guía. El backend escucha en <http://localhost:8080>.
+2. Con el backend encendido y Node.js 22.12 o superior, abre una segunda terminal en `Proyecto_2/`:
 
-```bash
-cd react-app
-npm install   # primera vez: instala dependencias
-npm run dev   # servidor de desarrollo (Vite) en el navegador
-npm test      # suite de pruebas Karma + Jasmine (20 pruebas)
-```
+   ```bash
+   cd react-app
+   npm install
+   npm run dev
+   ```
 
-Otros comandos útiles: `npm run build` (build de producción en `dist/`) y `npm run lint` (ESLint).
+3. Visita <http://localhost:5173>. Vite envía las solicitudes de `/api` al backend. Para explorar la API, visita <http://localhost:8080/swagger-ui.html>.
+
+Desde `react-app/` puedes correr `npm test` (Karma y Jasmine), `npm run lint` (revisión de código) y `npm run build` (genera `dist/`).
 
 ## Documentación
 - [ERS — Especificación de Requisitos de Software](docs/ERS.md)
@@ -26,10 +28,11 @@ Otros comandos útiles: `npm run build` (build de producción en `dist/`) y `npm
 - [Decisiones de diseño](docs/Decisiones-ERS.txt)
 
 ## Usuarios de prueba
-| Rol | Correo | Clave |
-|-----|--------|-------|
-| Administrador | paolo.munoz@duoc.cl | 1234 |
-| Administrador | vicente.munoz@duoc.cl | 1234 |
-| Administrador | alexis.valencia@duoc.cl | 1234 |
-| Vendedor | pedro.soto@duoc.cl | 1234 |
-| Cliente | camila.silva@gmail.com | 1234 |
+
+Estas cuentas de uso local se crean al cargar `docs/base-de-datos.sql` en el backend.
+
+| Rol | Correo | Clave pública de prueba |
+| --- | --- | --- |
+| Administrador | `admin@petshop.test` | `DemoAdminEP3!` |
+| Vendedor | `vendedor@petshop.test` | `DemoVentaEP3!` |
+| Cliente | `cliente@petshop.test` | `DemoClienteEP3!` |
