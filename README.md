@@ -26,6 +26,7 @@ Desde `react-app/` puedes correr `npm test` (Karma y Jasmine), `npm run lint` (r
 - [ERS — Especificación de Requisitos de Software](docs/ERS.md)
 - [Documento de cobertura de testing](docs/Cobertura-Testing.md)
 - [Decisiones de diseño](docs/Decisiones-ERS.txt)
+- [Versión anterior de la EP1](legacy/index.html), conservada como referencia. La versión que se ejecuta para esta entrega está en `react-app/`.
 
 ## Usuarios de prueba
 
