@@ -89,7 +89,7 @@ describe('Página de Login', () => {
 
       llenarCredenciales(
         'camila.silva@gmail.com',
-        'mala12'
+        'ClaveMala12'
       )
 
       fireEvent.click(
@@ -146,8 +146,8 @@ describe('Página de Login', () => {
       renderLogin(iniciarSesion)
 
       llenarCredenciales(
-        'paolo.munoz@duoc.cl',
-        '1234'
+        'admin@petshop.test',
+        'DemoAdminEP3!'
       )
 
       fireEvent.click(
@@ -160,8 +160,8 @@ describe('Página de Login', () => {
         expect(iniciarSesion).toHaveBeenCalledTimes(1)
 
         expect(iniciarSesion).toHaveBeenCalledWith(
-          'paolo.munoz@duoc.cl',
-          '1234'
+          'admin@petshop.test',
+          'DemoAdminEP3!'
         )
       })
     }

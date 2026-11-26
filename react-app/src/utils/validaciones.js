@@ -1,11 +1,9 @@
-const DOMINIOS_CORREO = ["@duoc.cl", "@profesor.duoc.cl", "@gmail.com"]
-
 export const LIMITES = {
   nombre: 100,
   correo: 100,
   comentario: 500,
-  claveMinima: 4,
-  claveMaxima: 10,
+  claveMinima: 8,
+  claveMaximaBytes: 72,
   nombreUsuario: 50,
   apellidosUsuario: 100,
   direccion: 300
@@ -16,8 +14,7 @@ export const MENSAJES = {
   maximo: "El texto es demasiado largo.",
   minimo: "El texto es demasiado corto.",
   correoFormato: "El correo no tiene un formato válido.",
-  correoDominio: "El correo debe terminar en @duoc.cl, @profesor.duoc.cl o @gmail.com.",
-  claveLargo: "La contraseña debe tener entre 4 y 10 caracteres.",
+  claveLargo: "La contraseña debe tener al menos 8 caracteres y no superar 72 bytes.",
   runInvalido: "El RUN no es válido.",
   claveNoCoincide: "Las contraseñas no coinciden.",
   fechaFutura: "La fecha no puede ser en el futuro.",
@@ -51,7 +48,11 @@ export function largoEntre(valor, minimo, maximo, mensaje = MENSAJES.maximo) {
 }
 
 export function contrasenaValida(valor) {
-  return largoEntre(valor, LIMITES.claveMinima, LIMITES.claveMaxima, MENSAJES.claveLargo)
+  if (vacio(valor)) return ""
+  const clave = String(valor)
+  return clave.length >= LIMITES.claveMinima &&
+    new TextEncoder().encode(clave).length <= LIMITES.claveMaximaBytes
+    ? "" : MENSAJES.claveLargo
 }
 
 export function coincideClave(valor, contrasena) {
@@ -73,11 +74,7 @@ export function correoValido(valor) {
     return MENSAJES.correoFormato
   }
 
-  if (!DOMINIOS_CORREO.some((dominio) => correo.endsWith(dominio))) {
-    return MENSAJES.correoDominio
-  }
-
-  return ""
+  return largoMaximo(correo, LIMITES.correo)
 }
 
 function calcularDigitoVerificador(cuerpo) {
@@ -106,7 +103,9 @@ export function runValido(valor) {
     return ""
   }
 
-  const run = String(valor).trim().toUpperCase()
+  const entrada = String(valor).trim().toUpperCase()
+  const run = /^\d{1,2}\.\d{3}\.\d{3}-[0-9K]$/.test(entrada) || /^\d{6,8}-[0-9K]$/.test(entrada)
+    ? entrada.replace(/[.-]/g, "") : entrada
 
   if (!/^\d{6,8}[0-9K]$/.test(run)) {
     return MENSAJES.runInvalido

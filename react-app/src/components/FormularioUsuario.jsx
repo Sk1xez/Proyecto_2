@@ -6,6 +6,7 @@ import {
   requerido,
   largoMaximo,
   correoValido,
+  contrasenaValida,
   runValido,
   coincideClave
 } from '../utils/validaciones'
@@ -25,20 +26,6 @@ const VALORES_VACIOS = {
   contrasena: '',
   confirmar: '',
   rol: ''
-}
-
-function validarClaveAdmin(valor) {
-  const cantidadBytes = new TextEncoder().encode(valor).length
-
-  if (valor.length < 8) {
-    return 'La contraseña debe tener al menos 8 caracteres.'
-  }
-
-  if (cantidadBytes > 72) {
-    return 'La contraseña no puede superar 72 bytes.'
-  }
-
-  return ''
 }
 
 function FormularioUsuario({
@@ -99,7 +86,7 @@ function FormularioUsuario({
 
       contrasena: claveObligatoria
         ? requerido(v.contrasena) ||
-          validarClaveAdmin(v.contrasena)
+          contrasenaValida(v.contrasena)
         : '',
 
       confirmar: claveObligatoria

@@ -2,7 +2,7 @@ import { runValido, correoValido, contrasenaValida, fechaNoFutura, MENSAJES } fr
 
 describe('Validaciones de usuario', () => {
   it('debería validar RUN con casos válidos e inválidos (módulo 11)', () => {
-    const validos = ['202824846', '17345672', '21555223', '20456787', '20123451']
+    const validos = ['202824846', '17345672', '21555223', '20456787', '20123451', '90.000.001-4']
 
     validos.forEach((run) => {
       expect(runValido(run)).withContext(`RUN ${run}`).toBe('')
@@ -17,11 +17,12 @@ describe('Validaciones de usuario', () => {
     expect(correoValido('paolo.munoz@duoc.cl')).toBe('')
     expect(correoValido('camila.silva@gmail.com')).toBe('')
     expect(correoValido('no-es-correo')).not.toBe('')
-    expect(correoValido('alumno@empresa.cl')).not.toBe('')
+    expect(correoValido('admin@petshop.test')).toBe('')
 
-    expect(contrasenaValida('1234')).toBe('')
-    expect(contrasenaValida('123')).not.toBe('')
-    expect(contrasenaValida('12345678901')).not.toBe('')
+    expect(contrasenaValida('DemoAdminEP3!')).toBe('')
+    expect(contrasenaValida('1234567')).toBe(MENSAJES.claveLargo)
+    expect(contrasenaValida('á'.repeat(36))).toBe('')
+    expect(contrasenaValida('á'.repeat(37))).toBe(MENSAJES.claveLargo)
   })
 
   it('debería rechazar una fecha futura usando jasmine.clock', () => {

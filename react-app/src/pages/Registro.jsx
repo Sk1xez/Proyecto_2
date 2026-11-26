@@ -9,6 +9,7 @@ import {
   requerido,
   largoMaximo,
   correoValido,
+  contrasenaValida,
   runValido,
   coincideClave,
   fechaNoFutura,
@@ -33,18 +34,6 @@ const VALORES_INICIALES = {
 const ERRORES_INICIALES = Object.fromEntries(
   Object.keys(VALORES_INICIALES).map((campo) => [campo, ''])
 )
-
-function validarClave(valor) {
-  if (valor.length < 8) {
-    return 'La contraseña debe tener al menos 8 caracteres.'
-  }
-
-  if (new TextEncoder().encode(valor).length > 72) {
-    return 'La contraseña es demasiado larga.'
-  }
-
-  return ''
-}
 
 function Registro() {
   const regiones = listarRegiones()
@@ -82,7 +71,7 @@ function Registro() {
       apellidos: requerido(v.apellidos) ||
         largoMaximo(v.apellidos, LIMITES.apellidosUsuario),
       correo: requerido(v.correo) || correoValido(v.correo),
-      contrasena: requerido(v.contrasena) || validarClave(v.contrasena),
+      contrasena: requerido(v.contrasena) || contrasenaValida(v.contrasena),
       confirmar: requerido(v.confirmar) ||
         coincideClave(v.confirmar, v.contrasena),
       fecha: fechaNoFutura(v.fecha),
