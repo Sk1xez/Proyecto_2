@@ -44,4 +44,6 @@ Pasaron **25 pruebas de frontend**. La compilación genera `react-app/dist/`.
 - [Pruebas automáticas y de integración](docs/Cobertura-Testing.md)
 - [Documentación de APIs e integración — Anexos 2 y 3](https://github.com/Paolo-x/petshop-backend#documentación-de-la-ep3)
 
+**Formato de entrega:** se usan los dos repositorios de GitHub. El enunciado oficial también pide ambos proyectos comprimidos; esta entrega no incluye esos archivos.
+
 La versión de la EP1 se conserva en [`legacy/`](legacy/) como referencia histórica.
