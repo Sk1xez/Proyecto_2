@@ -1,16 +1,21 @@
-# PetShop Chile
+# PetShop Chile — Frontend
 
-Tienda online de artículos y servicios para mascotas. En la Evaluación Parcial 3 de DSY1104, el frontend React se conecta a una API de Spring Boot. El catálogo, los usuarios y los pedidos se guardan en MySQL. El navegador conserva la sesión y el carrito, no la base de datos.
+Tienda en línea de artículos para mascotas. El cliente puede comprar de forma simulada; administrador y vendedor usan un panel con funciones según su rol. React consulta la API de Spring Boot y los datos del negocio se guardan en MySQL.
 
-## Integrantes
-- Paolo Muñoz
-- Vicente Muñoz
-- Alexis Valencia
+**Evaluación Parcial 3 · DSY1104 Desarrollo Fullstack II · Duoc UC**
 
-## Cómo levantar ambos proyectos
+**Equipo:** Paolo Muñoz, Vicente Muñoz y Alexis Valencia.
 
-1. En `petshop-backend/`, sigue su `README.md` para preparar MySQL, ingresar `DB_PASSWORD` sin mostrarla en pantalla, generar `JWT_SECRET` y ejecutar `./mvnw spring-boot:run`. En el primer arranque, carga `docs/base-de-datos.sql` según esa guía. El backend escucha en <http://localhost:8080>.
-2. Con el backend encendido y Node.js 22.12 o superior, abre una segunda terminal en `Proyecto_2/`:
+## Tecnologías y requisitos
+
+- React 19, React Router 7, Vite 8, Bootstrap 5 y JavaScript.
+- Node.js 22.12 o superior, npm y un navegador con JavaScript. Para ejecutar ambos proyectos se necesitan JDK 21 y MySQL 8.
+- Karma, Jasmine y Puppeteer para las pruebas; ESLint para la revisión de código.
+
+## Instalación y ejecución
+
+1. Sigue la [guía del backend](https://github.com/Paolo-x/petshop-backend#readme) para preparar MySQL, iniciar Spring Boot en el puerto 8080 y cargar los datos de demostración.
+2. En otra terminal, desde la raíz de `Proyecto_2`, ejecuta:
 
    ```bash
    cd react-app
@@ -18,22 +23,25 @@ Tienda online de artículos y servicios para mascotas. En la Evaluación Parcial
    npm run dev
    ```
 
-3. Visita <http://localhost:5173>. Vite envía las solicitudes de `/api` al backend. Para explorar la API, visita <http://localhost:8080/swagger-ui.html>.
+3. Abre <http://localhost:5173>. El proxy de Vite reenvía `/api` al puerto 8080; el frontend no necesita un archivo `.env` para el uso local. Usa las cuentas de prueba del README del backend. Detén los servidores con `Ctrl+C` en sus terminales.
 
-Desde `react-app/` puedes correr `npm test` (Karma y Jasmine), `npm run lint` (revisión de código) y `npm run build` (genera `dist/`).
+## Pruebas y compilación
 
-## Documentación
-- [ERS — Especificación de Requisitos de Software](docs/ERS.md)
-- [Documento de cobertura de testing](docs/Cobertura-Testing.md)
-- [Decisiones de diseño](docs/Decisiones-ERS.txt)
-- [Versión anterior de la EP1](legacy/index.html), conservada como referencia. La versión que se ejecuta para esta entrega está en `react-app/`.
+Desde `react-app/`:
 
-## Usuarios de prueba
+```bash
+npm run lint
+npm test
+npm run build
+```
 
-Estas cuentas de uso local se crean al cargar `docs/base-de-datos.sql` en el backend.
+Pasaron **25 pruebas de frontend**. La compilación genera `react-app/dist/`.
 
-| Rol | Correo | Clave pública de prueba |
-| --- | --- | --- |
-| Administrador | `admin@petshop.test` | `DemoAdminEP3!` |
-| Vendedor | `vendedor@petshop.test` | `DemoVentaEP3!` |
-| Cliente | `cliente@petshop.test` | `DemoClienteEP3!` |
+## Documentación de la EP3
+
+- [ERS — Especificación de requisitos de software](docs/ERS.md)
+- [Manual de usuario — Anexo 4](docs/Manual-de-usuario.docx)
+- [Pruebas automáticas y de integración](docs/Cobertura-Testing.md)
+- [Documentación de APIs e integración — Anexos 2 y 3](https://github.com/Paolo-x/petshop-backend#documentación-de-la-ep3)
+
+La versión de la EP1 se conserva en [`legacy/`](legacy/) como referencia histórica.
